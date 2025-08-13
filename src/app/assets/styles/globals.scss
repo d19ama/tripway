@@ -1,0 +1,27 @@
+@import './vars/vars.module';
+@import './colors/colors.module';
+@import './breakpoints/breakpoints.module';
+
+@import 'mixins';
+
+:root {
+  // colors
+  --color-white: #{$white};
+  --color-black: #{$black};
+  --color-black-50: #{$black-50};
+  --color-primary: #{$primary};
+  --color-primary-2: #{$primary-2};
+  --color-secondary: #{$secondary};
+  --color-secondary-2: #{$secondary-2};
+  --color-secondary-3: #{$secondary-3};
+
+  // breakpoint
+  --breakpoint-default: #{$breakpoint-default};
+  --breakpoint-desktop: #{$breakpoint-desktop};
+  --breakpoint-tablet: #{$breakpoint-tablet};
+  --breakpoint-modile: #{$breakpoint-mobile};
+  --breakpoint-v-mobile: #{$breakpoint-v-mobile};
+
+  // vars
+  --transition: #{$transition}
+}

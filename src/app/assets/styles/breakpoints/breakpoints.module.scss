@@ -1,0 +1,13 @@
+$breakpoint-default: 1600px;
+$breakpoint-desktop: 1240px;
+$breakpoint-tablet: 1024px;
+$breakpoint-mobile: 768px;
+$breakpoint-v-mobile: 480px;
+
+:export {
+  breakpoint-default: $breakpoint-default;
+  breakpoint-desktop: $breakpoint-desktop;
+  breakpoint-tablet: $breakpoint-tablet;
+  breakpoint-mobile: $breakpoint-mobile;
+  breakpoint-v-mobile: $breakpoint-v-mobile;
+}

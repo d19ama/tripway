@@ -1,0 +1,31 @@
+$white: #ffffff;
+$black: #212121;
+$black-50: rgba($black, 0.5);
+
+$blue-dark: #404b68;
+$primary: #ed174b;
+$primary-2: #c20f3b;
+$secondary: #2d2d2d;
+$secondary-2: #f1f1f1;
+$secondary-3: #E6E6E6;
+
+$green: #9fe218;
+$green-dark: #96d418;
+$gray-lite: #eef0f5;
+$gray-dark: #2E3033;
+$red: #f73656;
+$red-dark: #ec1c4f;
+$yellow: #ffe17f;
+$yellow-dark: #ffd54c;
+$blue-lite: #009ddc;
+
+:export {
+  white: $white;
+  black: $black;
+  black-50: $black-50;
+  primary: $primary;
+  primary-2: $primary-2;
+  secondary: $secondary;
+  secondary-2: $secondary-2;
+  secondary-3: $secondary-3;
+}

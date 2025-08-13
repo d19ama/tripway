@@ -1,0 +1,9 @@
+@font-face {
+  font-family: 'Pacifico';
+  src: url('@/app/assets/fonts/pacifico/Pacifico-Regular.woff2') format('woff2'),
+  url('@/app/assets/fonts/pacifico/Pacifico-Regular.woff') format('woff'),
+  url('@/app/assets/fonts/pacifico/Pacifico-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
