@@ -65,11 +65,11 @@ function addNewSection(): void {}
     }
 
     &--end {
-      background-color: $yellow;
+      background-color: $yellow-dark;
       transition: background-color var(--transition);
 
       &:hover {
-        background-color: $yellow-dark;
+        background-color: $yellow;
       }
     }
   }

@@ -8,6 +8,8 @@ export interface Route {
   route: RouteSection[];
 }
 
+export type RouteSectionTransportType = 'airplane' | 'train' | 'bus' | 'car' | 'bicycle' | 'other';
+
 export interface RouteSectionPrice {
   price?: string;
 }
@@ -25,6 +27,7 @@ export interface RouteSectionLocation {
 export interface RouteSectionTransport extends RouteSectionPrice {
   departure: string;
   arrival: string;
+  type: RouteSectionTransportType;
 }
 
 export interface RouteSectionHabitation extends RouteSectionPrice {
@@ -34,6 +37,6 @@ export interface RouteSectionHabitation extends RouteSectionPrice {
 export interface RouteSection {
   id: string;
   location: RouteSectionLocation;
-  transport?: RouteSectionTransport;
+  transport: RouteSectionTransport;
   habitation?: RouteSectionHabitation;
 }

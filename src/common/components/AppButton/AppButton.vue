@@ -153,55 +153,55 @@ function onClick(event: Event): void {
 
     &-red {
       color: $white;
-      background-color: $red;
+      background-color: $red-dark;
 
       &:hover {
-        background-color: $red-dark;
+        background-color: $red;
       }
     }
 
     &-yellow {
       color: $white;
-      background-color: $yellow;
+      background-color: $yellow-dark;
 
       &:hover {
-        background-color: $yellow-dark;
+        background-color: $yellow;
       }
     }
 
     &-green {
       color: $white;
-      background-color: $green;
+      background-color: $green-dark;
 
       &:hover {
-        background-color: $green-dark;
+        background-color: $green;
       }
     }
 
     &-border-red {
       color: $red;
-      border: 2px solid $red;
+      border: 2px solid $red-dark;
 
       &:hover {
-        border-color: $red-dark;
+        border-color: $red;
       }
     }
 
     &-border-yellow {
       color: $yellow;
-      border: 2px solid $yellow;
+      border: 2px solid $yellow-dark;
 
       &:hover {
-        border-color: $yellow-dark;
+        border-color: $yellow;
       }
     }
 
     &-border-green {
       color: $green;
-      border: 2px solid $green;
+      border: 2px solid $green-dark;
 
       &:hover {
-        border-color: $green-dark;
+        border-color: $green;
       }
     }
 

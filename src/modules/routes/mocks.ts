@@ -9,6 +9,7 @@ export const MOCKED_ROUTE: RouteSection[] = [
     transport: {
       departure: '24.08/23:30',
       arrival: '25.08/07:50',
+      type: 'airplane',
     },
     location: {
       from: {
@@ -26,6 +27,7 @@ export const MOCKED_ROUTE: RouteSection[] = [
     transport: {
       departure: '25.08/18:00',
       arrival: '25.08/20:00',
+      type: 'airplane',
     },
     location: {
       from: {
@@ -43,6 +45,7 @@ export const MOCKED_ROUTE: RouteSection[] = [
     transport: {
       departure: '31.08/07:40',
       arrival: '31.08/12:35',
+      type: 'train',
     },
     location: {
       from: {
@@ -60,6 +63,7 @@ export const MOCKED_ROUTE: RouteSection[] = [
     transport: {
       departure: '01.09/20:35',
       arrival: '01.09/22:35',
+      type: 'airplane',
     },
     location: {
       from: {
@@ -77,6 +81,7 @@ export const MOCKED_ROUTE: RouteSection[] = [
     transport: {
       departure: '05.09/08:00',
       arrival: '05.09/13:45',
+      type: 'bus',
     },
     location: {
       from: {
@@ -94,6 +99,7 @@ export const MOCKED_ROUTE: RouteSection[] = [
     transport: {
       departure: '07.09/14:20',
       arrival: '07.09/16:20',
+      type: 'bus',
     },
     location: {
       from: {
@@ -111,6 +117,7 @@ export const MOCKED_ROUTE: RouteSection[] = [
     transport: {
       departure: '08.09/09:40',
       arrival: '08.09/13:05',
+      type: 'airplane',
     },
     location: {
       from: {
@@ -128,6 +135,7 @@ export const MOCKED_ROUTE: RouteSection[] = [
     transport: {
       departure: '09.09/12:00',
       arrival: '09.09/13:20',
+      type: 'airplane',
     },
     location: {
       from: {

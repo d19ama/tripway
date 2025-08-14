@@ -1,5 +1,17 @@
 <script setup lang="ts">
-import type { RouteSection } from '../../types';
+import { computed } from 'vue';
+import type {
+  RouteSection,
+  RouteSectionTransportType,
+} from '../../types';
+import { DASH_SYMBOL } from '@/common/constants';
+import {
+  iconAirplane,
+  iconBicycle,
+  iconBus,
+  iconCar,
+  iconTrain,
+} from '@/app/assets/images/icons';
 
 interface Props {
   data: RouteSection;
@@ -7,10 +19,23 @@ interface Props {
 
 const props = defineProps<Props>();
 
+const transport = computed<string>(() => {
+  const resolver: Record<RouteSectionTransportType, string> = {
+    airplane: iconAirplane,
+    train: iconTrain,
+    bus: iconBus,
+    car: iconCar,
+    bicycle: iconBicycle,
+    other: '',
+  };
+
+  return resolver[props.data.transport.type];
+});
+
 function price(value: string | undefined): string {
   return value
     ? `${value} ₽`
-    : '—';
+    : DASH_SYMBOL;
 }
 </script>
 
@@ -18,14 +43,21 @@ function price(value: string | undefined): string {
   <div class="route-section">
     <div class="route-section__inner">
       <div class="route-section__info">
-        <div
-          v-if="props.data.transport"
-          class="route-section__date"
-        >
+        <div class="route-section__date">
           <span class="icon icon-calendar" />
           {{ props.data.transport.departure }}
           &dash;
           {{ props.data.transport.arrival }}
+          <div
+            v-if="transport"
+            class="route-section__transport"
+          >
+            <img
+              :src="transport"
+              :alt="props.data.transport.type"
+              class="route-section__transport-img"
+            >
+          </div>
         </div>
         <div class="route-section__location">
           <span class="icon icon-location" />
@@ -184,15 +216,10 @@ function price(value: string | undefined): string {
     flex-flow: row nowrap;
     align-items: center;
     justify-content: flex-start;
+    gap: 0 .5rem;
     height: calc(100% / 3);
     box-sizing: border-box;
-
-    .icon {
-      width: 20px;
-      height: 19px;
-      margin: 0 6px 0 0;
-      transition: fill 0.3s;
-    }
+    user-select: none;
   }
 
   &__date {
@@ -265,6 +292,22 @@ function price(value: string | undefined): string {
 
   &__value {
     font-size: 13px;
+  }
+
+  &__transport {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-left: auto;
+    opacity: .25;
+  }
+
+  &__transport-img {
+    max-width: 100%;
+    max-height: 100%;
   }
 
   &:hover {
