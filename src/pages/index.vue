@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AppPage } from '@/app/layouts';
+import { AppPage } from '@/common';
 </script>
 
 <template>

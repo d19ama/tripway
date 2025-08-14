@@ -1,8 +1,8 @@
 export interface Route {
-  id: string | null;
+  id: string;
   name: string;
   costs?: number;
   opened: boolean;
-  selected: boolean;
+  active: boolean;
   date: [number, number];
 }

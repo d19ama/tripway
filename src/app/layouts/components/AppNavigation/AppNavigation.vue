@@ -35,8 +35,6 @@ function goTo(name: RouteNames): RouteLocationRaw {
   display: flex;
   justify-content: center;
   height: 100%;
-  padding: 0 2rem;
-  margin: auto;
 
   &__list {
     display: flex;
@@ -49,7 +47,7 @@ function goTo(name: RouteNames): RouteLocationRaw {
     display: flex;
     align-items: center;
     height: 100%;
-    padding: 0 1.5rem;
+    padding: 0 1rem;
     position: relative;
     color: $red;
     font-size: .875rem;

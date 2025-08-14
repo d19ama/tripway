@@ -12,7 +12,7 @@ const goTo: RouteLocationRaw = {
     :to="goTo"
     class="app-logo"
   >
-    TripWay
+    TripRoute
   </RouterLink>
 </template>
 

@@ -1,23 +1,35 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import {
+  computed,
+  watch,
+} from 'vue';
+import { useRouter } from 'vue-router';
 import type { HTMLElementClass } from '@/common/types';
 import { AppButton } from '@/common';
-import type { Route } from '@/modules/routes';
+import {
+  type Route,
+  useRoutes,
+} from '@/modules/routes';
+import { RouteNames } from '@/app/router/route-names';
 
-interface Emits {
-  'close:route': [id: Route['id']];
-  'select:route': [id: Route['id']];
-}
+const {
+  routes,
+  closeRoute,
+  closeAllRoutes,
+} = useRoutes();
 
-const emit = defineEmits<Emits>();
-
-const routes = defineModel<Route[]>('routes', {
-  required: false,
-  default: () => [],
-});
+const router = useRouter();
 
 const selected = computed<Route[]>(() => {
   return routes.value.filter((item: Route) => item.opened);
+});
+
+const isClearAllButtonVisible = computed<boolean>(() => {
+  const opened: Route[] | undefined = routes.value.filter((item) => {
+    return item.opened;
+  });
+
+  return opened && opened.length > 1;
 });
 
 function tabClass(selected: boolean): HTMLElementClass {
@@ -29,13 +41,40 @@ function tabClass(selected: boolean): HTMLElementClass {
   ];
 }
 
-function selectTab(id: Route['id']): void {
-  emit('select:route', id);
+function goToList(): void {
+  router.push({
+    name: RouteNames.RoutesList,
+  });
 }
 
-function closeRoute(id: Route['id']): void {
-  emit('close:route', id);
+function selectTab(id: Route['id']): void {
+  router.push({
+    name: RouteNames.RoutePage,
+    params: {
+      id,
+    },
+  });
 }
+
+function changeView(): void {
+  console.warn('View changed!');
+}
+
+watch(
+  routes,
+  (value) => {
+    const allClosed = value.every((item) => {
+      return !item.opened;
+    });
+
+    if (allClosed) {
+      goToList();
+    }
+  },
+  {
+    deep: true,
+  },
+);
 </script>
 
 <template>
@@ -44,13 +83,13 @@ function closeRoute(id: Route['id']): void {
       <div class="navigation__tab navigation__tab--first">
         <span
           class="navigation__tab-name"
-          @click="selectTab(null)"
+          @click="goToList"
         >Маршруты</span>
       </div>
       <div
         v-for="item in selected"
         :key="String(item.id)"
-        :class="tabClass(item.selected)"
+        :class="tabClass(item.active)"
       >
         <span
           class="navigation__tab-name"
@@ -62,12 +101,27 @@ function closeRoute(id: Route['id']): void {
           @click="closeRoute(item.id)"
         />
       </div>
+      <div
+        v-if="isClearAllButtonVisible"
+        class="navigation__tab navigation__tab--last"
+      >
+        <span
+          class="navigation__tab-name"
+          @click="closeAllRoutes"
+        >Закрыть все</span>
+      </div>
     </div>
     <div class="navigation__view">
-      <AppButton theme="icon-red">
+      <AppButton
+        theme="icon-red"
+        @click="changeView"
+      >
         <span class="icon icon-map" />
       </AppButton>
-      <AppButton theme="icon-red">
+      <AppButton
+        theme="icon-red"
+        @click="changeView"
+      >
         <span class="icon icon-list" />
       </AppButton>
     </div>
@@ -100,37 +154,9 @@ function closeRoute(id: Route['id']): void {
     max-width: 12rem;
     padding: .75rem 1rem;
     position: relative;
-    color: $white;
+    color: var(--color-white);
     font-size: .875rem;
     white-space: nowrap;
-
-    &-name {
-      overflow: hidden;
-      position: relative;
-      z-index: 1;
-      text-overflow: ellipsis;
-      border-bottom: 1px dotted rgba($white, .8);
-      cursor: pointer;
-
-      &:hover {
-        border-bottom-color: transparent;
-      }
-    }
-
-    &-close {
-      position: relative;
-      right: -.75rem;
-      z-index: 1;
-      font-size: .6rem;
-      border-radius: 50%;
-      color: $white;
-      cursor: pointer;
-      transition: opacity $transition;
-
-      &:hover {
-        opacity: .8;
-      }
-    }
 
     &--first {
       z-index: 1;
@@ -152,6 +178,12 @@ function closeRoute(id: Route['id']): void {
         border-bottom-width: #{$height / 2};
         border-left-color: $blue-dark;
       }
+    }
+
+    &--last {
+      margin-left: 1rem;
+      font-size: .75rem;
+      color: var(--color-black);
     }
 
     &--route {
@@ -199,6 +231,34 @@ function closeRoute(id: Route['id']): void {
     }
   }
 
+  &__tab-name {
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    text-overflow: ellipsis;
+    border-bottom: 1px dotted rgba($white, .8);
+    cursor: pointer;
+
+    &:hover {
+      border-bottom-color: transparent;
+    }
+  }
+
+  &__tab-close {
+    position: relative;
+    right: -.75rem;
+    z-index: 1;
+    font-size: .6rem;
+    border-radius: 50%;
+    color: var(--color-white);
+    cursor: pointer;
+    transition: opacity var(--transition);
+
+    &:hover {
+      opacity: .8;
+    }
+  }
+
   &__view {
     display: flex;
     height: 100%;
@@ -210,11 +270,6 @@ function closeRoute(id: Route['id']): void {
       height: 0;
       border-top: #{$height} solid transparent;
       border-right: #{$height / 2} solid $red;
-    }
-
-    .app-button {
-      width: 4rem;
-      height: 100%;
     }
   }
 }

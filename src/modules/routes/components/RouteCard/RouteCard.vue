@@ -5,73 +5,72 @@ import {
 } from '@/common';
 import type { Route } from '@/modules/routes';
 
+interface Props {
+  route: Route;
+}
+
 interface Emits {
   'open:route': [id: Route['id']];
   'close:route': [id: Route['id']];
 }
 
+const props = defineProps<Props>();
+
 const emit = defineEmits<Emits>();
 
-const route = defineModel<Route>('route', {
-  required: false,
-});
-
-function openRoute(id: Route['id']): void {
-  emit('open:route', id);
+function openRoute(): void {
+  emit('open:route', props.route.id);
 }
 
-function closeRoute(id: Route['id']): void {
-  emit('close:route', id);
+function closeRoute(): void {
+  emit('close:route', props.route.id);
 }
 </script>
 
 <template>
-  <section class="list-item">
-    <div
-      v-if="route"
-      class="row"
-    >
+  <section class="route-card">
+    <div class="row">
       <div class="col-default-8">
-        <div class="list-item__info">
-          <span class="list-item__caption icon icon-file-text2 margin-right--xs" />
+        <div class="route-card__info">
+          <span class="route-card__caption icon icon-file-text2 margin-right--xs" />
           <AppTitle
             tag="h4"
             weight="normal"
-            class="list-item__value"
+            class="route-card__value"
           >
-            {{ route.name }}
+            {{ props.route.name }}
           </AppTitle>
         </div>
-        <div class="list-item__info margin-top--xxs">
-          <span class="list-item__caption icon icon-calendar margin-right--xs" />
-          <span class="list-item__value list-item__value--date">
-            {{ route.date[0] }}
+        <div class="route-card__info margin-top--xs">
+          <span class="route-card__caption icon icon-calendar margin-right--xs" />
+          <span class="route-card__value route-card__value--date">
+            {{ props.route.date[0] }}
             &#8212;
-            {{ route.date[1] }}
+            {{ props.route.date[1] }}
           </span>
         </div>
-        <div class="list-item__info margin-top--xxs">
-          <span class="list-item__caption icon icon-credit-card margin-right--xs" />
-          <span class="list-item__value">
-            {{ route.costs?.toLocaleString() }}
+        <div class="route-card__info margin-top--xs">
+          <span class="route-card__caption icon icon-credit-card margin-right--xs" />
+          <span class="route-card__value">
+            {{ props.route.costs?.toLocaleString() }}
           </span>
         </div>
       </div>
       <div class="col-default-4">
-        <div class="list-item__buttons">
+        <div class="route-card__buttons">
           <AppButton
-            v-if="!route.opened"
+            v-if="!props.route.opened"
             rounded
-            theme="border-green"
-            @click="openRoute(route.id)"
+            theme="green"
+            @click="openRoute"
           >
             Открыть
           </AppButton>
           <AppButton
-            v-if="route.opened"
+            v-if="props.route.opened"
             rounded
-            theme="border-yellow"
-            @click="closeRoute(route.id)"
+            theme="yellow"
+            @click="closeRoute"
           >
             Закрыть
           </AppButton>
@@ -87,15 +86,11 @@ function closeRoute(id: Route['id']): void {
 </template>
 
 <style lang="scss">
-.list-item {
+.route-card {
   padding: 1.5rem;
   border-radius: .25rem;
   background-color: var(--color-white);
   cursor: default;
-
-  &+& {
-    margin-top: 1rem;
-  }
 
   &__info {
     display: flex;

@@ -16,6 +16,7 @@ import {
   AppLink,
   AppList,
   AppModal,
+  AppPage,
   AppRadio,
   type AppRadioOption,
   AppSanitizedHtml,
@@ -32,7 +33,6 @@ import {
   type AppTitleTags,
   AppTooltip,
 } from '@/common';
-import { AppPage } from '@/app/layouts';
 
 interface TableData {
   id: string;
