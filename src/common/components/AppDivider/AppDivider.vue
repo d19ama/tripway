@@ -7,6 +7,6 @@
   width: 100%;
   height: .125rem;
   margin: .5rem 0;
-  background-color: var(--color-secondary-2);
+  background-color: var(--color-gray-lite);
 }
 </style>

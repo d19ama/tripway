@@ -135,7 +135,7 @@ function validate(): void {
       top: 0;
       left: 0;
       border-radius: 100%;
-      border: 1px solid var(--color-secondary);
+      border: 1px solid var(--color-gray-dark);
       background-color: var(--color-white);
       transition: border-color var(--transition), background-color var(--transition), opacity var(--transition);
     }
@@ -143,14 +143,14 @@ function validate(): void {
     &:hover {
 
       &::before {
-        border-color: var(--color-primary);
+        border-color: var(--color-red);
       }
     }
 
     &:active {
 
       &:before {
-        background-color: var(--color-primary);
+        background-color: var(--color-red);
       }
     }
   }
@@ -158,14 +158,14 @@ function validate(): void {
   &__input:checked + #{$parent}__label {
 
     &::before {
-      border-color: var(--color-primary);
-      background-color: var(--color-primary);
+      border-color: var(--color-red);
+      background-color: var(--color-red);
       box-shadow: inset 0 0 0 4px var(--color-white);
     }
   }
 
   &__error {
-    color: var(--color-primary);
+    color: var(--color-red);
     font-size: 1rem;
     line-height: 1.4;
   }

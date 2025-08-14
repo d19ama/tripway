@@ -144,7 +144,7 @@ watch(props.options, (value) => {
   width: 100%;
   position: relative;
   background-color: var(--color-white);
-  border: 1px solid var(--color-secondary);
+  border: 1px solid var(--color-gray-dark);
   user-select: none;
 
   &--opened {
@@ -173,7 +173,7 @@ watch(props.options, (value) => {
     text-overflow: ellipsis;
     font-weight: 400;
     line-height: 1.4;
-    color: var(--color-secondary);
+    color: var(--color-gray-dark);
     font-size: .875rem;
     pointer-events: none;
   }
@@ -186,7 +186,7 @@ watch(props.options, (value) => {
     font-weight: 400;
     line-height: 1.4;
     font-size: .875rem;
-    color: rgba(var(--color-secondary-2), .5);
+    color: rgba(var(--color-gray-lite), .5);
     pointer-events: none;
   }
 
@@ -201,7 +201,7 @@ watch(props.options, (value) => {
     z-index: 2;
     border-radius: 50%;
     background-color: var(--color-white);
-    box-shadow: inset 0 0 0 1px var(--color-secondary);
+    box-shadow: inset 0 0 0 1px var(--color-gray-dark);
     transform: translateY(-50%);
     transition: background-color var(--transition), box-shadow var(--transition);
 
@@ -216,7 +216,7 @@ watch(props.options, (value) => {
       left: 0;
       right: 0;
       bottom: 0;
-      background-color: var(--color-secondary);
+      background-color: var(--color-gray-dark);
       margin: auto;
       transition: background-color var(--transition);
       z-index: 1;
@@ -231,12 +231,12 @@ watch(props.options, (value) => {
     }
 
     &:hover {
-      background-color: var(--color-secondary-2);
+      background-color: var(--color-gray-lite);
       box-shadow: none;
 
       &:before,
       &:after {
-        background-color: var(--color-primary-2);
+        background-color: var(--color-red-dark);
       }
     }
   }
@@ -252,7 +252,7 @@ watch(props.options, (value) => {
     bottom: 0;
     z-index: 2;
     border: 4px solid transparent;
-    border-top: 8px solid var(--color-secondary);
+    border-top: 8px solid var(--color-gray-dark);
     border-bottom: 0;
     pointer-events: none;
   }
@@ -265,7 +265,7 @@ watch(props.options, (value) => {
     top: 100%;
     left: -1px;
     z-index: 10;
-    border: 1px solid var(--color-secondary);
+    border: 1px solid var(--color-gray-dark);
     background-color: var(--color-white);
     filter: drop-shadow(0px 2px 12px rgba(8, 61, 140, 0.14));
     transition: opacity var(--transition);
@@ -284,12 +284,12 @@ watch(props.options, (value) => {
     font-weight: 400;
     line-height: 1.4;
     font-size: .875rem;
-    color: rgba(var(--color-secondary), .5);
+    color: rgba(var(--color-gray-dark), .5);
     transition: background-color var(--transition);
     cursor: pointer;
 
     &:hover {
-      background-color: var(--color-secondary-2);
+      background-color: var(--color-gray-lite);
     }
 
     &--selected {
@@ -303,7 +303,7 @@ watch(props.options, (value) => {
         transform: translateY(-50%);
         width: 1.5rem;
         height: 1.5rem;
-        color: var(--color-primary);
+        color: var(--color-red);
         font-family: 'icon-font', sans-serif;
       }
     }

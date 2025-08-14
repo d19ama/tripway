@@ -18,7 +18,7 @@ const goTo: RouteLocationRaw = {
 
 <style lang="scss">
 .app-logo {
-  color: $red;
+  color: var(--color-red);
   font-size: 1.5rem;
   font-weight: 400;
   line-height: 2;

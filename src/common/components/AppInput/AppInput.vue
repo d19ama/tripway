@@ -151,7 +151,7 @@ $padding: 1rem;
   padding: $padding;
   position: relative;
   background-color: var(--color-white);
-  border: 1px solid var(--color-secondary);
+  border: 1px solid var(--color-gray-dark);
 
   &__input {
     width: 100%;
@@ -178,7 +178,7 @@ $padding: 1rem;
     font-weight: 400;
     line-height: 1.5;
     font-size: .875rem;
-    color: rgba(var(--color-secondary-2), .5);
+    color: rgba(var(--color-gray-lite), .5);
   }
 
   &__placeholder {
@@ -195,7 +195,7 @@ $padding: 1rem;
   }
 
   &__error {
-    color: var(--color-primary);
+    color: var(--color-red);
     font-size: .75rem;
     font-weight: 400;
     line-height: 1.4;
@@ -207,7 +207,7 @@ $padding: 1rem;
   }
 
   &--error {
-    box-shadow: inset 0 0 0 1px var(--color-primary);
+    box-shadow: inset 0 0 0 1px var(--color-red);
   }
 }
 </style>

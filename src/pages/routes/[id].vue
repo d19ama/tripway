@@ -61,15 +61,15 @@ function addNewSection(): void {}
 
     &--start {
       margin-right: 1rem;
-      background-color: $green;
+      background-color: var(--color-green);
     }
 
     &--end {
-      background-color: $yellow-dark;
+      background-color: var(--color-yellow-dark);
       transition: background-color var(--transition);
 
       &:hover {
-        background-color: $yellow;
+        background-color: var(--color-yellow);
       }
     }
   }

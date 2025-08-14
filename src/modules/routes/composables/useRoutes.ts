@@ -51,7 +51,7 @@ export function useRoutes(): UseRoutesReturn {
     ];
   }
 
-  function toggleOpenRoute(id: Route['id'], opened: boolean) {
+  function toggleRouteOpened(id: Route['id'], opened: boolean) {
     _routes.value = _routes.value.map((item) => {
       if (item.id === id) {
         return {
@@ -65,7 +65,7 @@ export function useRoutes(): UseRoutesReturn {
   }
 
   function openRoute(id: Route['id']): void {
-    toggleOpenRoute(id, true);
+    toggleRouteOpened(id, true);
 
     _openedRoutesIds.value.push(id);
 
@@ -78,7 +78,7 @@ export function useRoutes(): UseRoutesReturn {
   }
 
   async function closeRoute(id: Route['id']): Promise<void> {
-    toggleOpenRoute(id, false);
+    toggleRouteOpened(id, false);
 
     _openedRoutesIds.value = _openedRoutesIds.value.filter((item) => {
       return item !== id;
@@ -101,7 +101,7 @@ export function useRoutes(): UseRoutesReturn {
 
   async function closeAllRoutes(): Promise<void> {
     _routes.value.forEach((item) => {
-      toggleOpenRoute(item.id, false);
+      toggleRouteOpened(item.id, false);
     });
 
     await router.replace({

@@ -173,8 +173,8 @@ $padding: 1rem;
     flex-flow: row nowrap;
     width: 100%;
     position: relative;
-    background-color: var(--color-secondary-2);
-    border: 1px solid var(--color-secondary);
+    background-color: var(--color-gray-lite);
+    border: 1px solid var(--color-gray-dark);
     user-select: none;
     cursor: pointer;
   }
@@ -183,7 +183,7 @@ $padding: 1rem;
     padding: $padding;
     color: var(--color-white);
     white-space: nowrap;
-    background-color: var(--color-secondary);
+    background-color: var(--color-gray-dark);
   }
 
   &__text {
@@ -203,7 +203,7 @@ $padding: 1rem;
     left: 0;
     z-index: 1;
     font-size: .75rem;
-    color: var(--color-primary);
+    color: var(--color-red);
   }
 }
 </style>

@@ -2,30 +2,40 @@ $white: #ffffff;
 $black: #212121;
 $black-50: rgba($black, 0.5);
 
+$gray-dark: #2E3033;
+$gray-middle: #E6E6E6;
+$gray-lite: #eef0f5;
+
 $blue-dark: #404b68;
-$primary: #ed174b;
-$primary-2: #c20f3b;
-$secondary: #2d2d2d;
-$secondary-2: #f1f1f1;
-$secondary-3: #E6E6E6;
+$blue-lite: #009ddc;
 
 $green: #9fe218;
 $green-dark: #96d418;
-$gray-lite: #eef0f5;
-$gray-dark: #2E3033;
+
 $red: #f73656;
 $red-dark: #ec1c4f;
+
 $yellow: #ffe17f;
 $yellow-dark: #ffd54c;
-$blue-lite: #009ddc;
 
 :export {
   white: $white;
   black: $black;
   black-50: $black-50;
-  primary: $primary;
-  primary-2: $primary-2;
-  secondary: $secondary;
-  secondary-2: $secondary-2;
-  secondary-3: $secondary-3;
+
+  gray-dark: $gray-dark;
+  gray-lite: $gray-lite;
+  gray-middle: $gray-middle;
+
+  blue-dark: $blue-dark;
+  blue-lite: $blue-lite;
+
+  red: $red;
+  red-dark: $red-dark;
+
+  green: $green;
+  green-dark: $green-dark;
+
+  yellow: $yellow;
+  yellow-dark: $yellow-dark;
 }

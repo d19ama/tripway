@@ -138,8 +138,8 @@ function price(value: string | undefined): string {
     bottom: 0;
     left: -40px;
     z-index: 1;
-    background-color: $gray-lite;
-    box-shadow: 6px 6px 20px rgba(0, 0, 0, 0.2);
+    background-color: var(--color-gray-lite);
+    box-shadow: 6px 6px 20px rgba($black, 0.2);
   }
 
   &:after {
@@ -154,7 +154,7 @@ function price(value: string | undefined): string {
     border-right-width: 4px;
     border-top-width: 75px;
     border-bottom-width: 75px;
-    border-left-color: $gray-lite;
+    border-left-color: var(--color-gray-lite);
     transition: border 0.3s;
 
     @include breakpoint(mobile) {
@@ -259,13 +259,13 @@ function price(value: string | undefined): string {
 
     &--delete {
       .icon {
-        color: $red;
+        color: var(--color-red);
       }
     }
 
     &--edit {
       .icon {
-        color: $blue-dark;
+        color: var(--color-blue-dark);
       }
     }
   }
@@ -275,7 +275,7 @@ function price(value: string | undefined): string {
     font-size: 16px;
     font-weight: 300;
     font-style: italic;
-    background-color: $gray-lite;
+    background-color: var(--color-gray-lite);
     transition: background-color 0.3s, color 0.3s;
   }
 
@@ -313,12 +313,12 @@ function price(value: string | undefined): string {
   &:hover {
 
     &:after {
-      border-left-color: $green;
+      border-left-color: var(--color-green);
     }
 
     #{$parent}__location {
       color: var(--color-white);
-      background-color: $green;
+      background-color: var(--color-green);
     }
 
     #{$parent}__options {

@@ -45,7 +45,7 @@ defineSlots<AppListItemSlots>();
       left: 0;
       z-index: 1;
       font-weight: 700;
-      color: var(--color-secondary-3);
+      color: var(--color-gray-middle);
     }
   }
 
@@ -57,7 +57,7 @@ defineSlots<AppListItemSlots>();
       width: 1.25rem;
       text-align: left;
       font-weight: 500;
-      color: var(--color-secondary-3);
+      color: var(--color-gray-middle);
     }
   }
 

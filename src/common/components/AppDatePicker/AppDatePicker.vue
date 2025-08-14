@@ -38,12 +38,12 @@ const date = defineModel<AppDatePickerModel>('date', {
 <style lang="scss">
 .dp__theme_light {
   --dp-background-color: var(--color-white);
-  --dp-text-color: rgba(var(--color-secondary), .5);
-  --dp-border-color: var(--color-secondary);
-  --dp-menu-border-color: var(--color-secondary);
-  --dp-border-color-hover: var(--color-secondary);
-  --dp-border-color-focus: var(--color-secondary);
-  --dp-icon-color: var(--color-secondary);
+  --dp-text-color: rgba(var(--color-gray-dark), .5);
+  --dp-border-color: var(--color-gray-dark);
+  --dp-menu-border-color: var(--color-gray-dark);
+  --dp-border-color-hover: var(--color-gray-dark);
+  --dp-border-color-focus: var(--color-gray-dark);
+  --dp-icon-color: var(--color-gray-dark);
 
   --dp-border-radius: 0;
   --dp-font-size: .875rem;
@@ -52,7 +52,7 @@ const date = defineModel<AppDatePickerModel>('date', {
   --dp-input-padding: 1rem;
 
   ::placeholder {
-    color: rgba(var(--color-secondary-2), .75);
+    color: rgba(var(--color-gray-lite), .75);
   }
 }
 </style>

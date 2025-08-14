@@ -120,7 +120,7 @@ function changeView(): void {
   align-items: center;
   justify-content: space-between;
   height: $height;
-  background-color: $white;
+  background-color: var(--color-white);
   box-shadow: inset 0 1px 0 0 rgba($gray-dark, .2), 0 0 10px 0 rgba($gray-dark, .5);
   user-select: none;
 
@@ -143,7 +143,7 @@ function changeView(): void {
 
     &--first {
       z-index: 1;
-      background-color: $blue-dark;
+      background-color: var(--color-blue-dark);
 
       &:after {
         content: '';
@@ -159,7 +159,7 @@ function changeView(): void {
         border: 10px solid transparent;
         border-top-width: #{$height / 2};
         border-bottom-width: #{$height / 2};
-        border-left-color: $blue-dark;
+        border-left-color: var(--color-blue-dark);
       }
     }
 
@@ -171,7 +171,7 @@ function changeView(): void {
 
     &--route {
       padding-left: 2rem;
-      background-color: $red-dark;
+      background-color:var(--color-red-dark);
 
       &+& {
         padding-left: 1rem;
@@ -188,8 +188,8 @@ function changeView(): void {
         left: -1rem;
         transform-origin: center;
         transform: skewX(22deg);
-        background-color: $red-dark;
-        transition: background-color $transition;
+        background-color: var(--color-red-dark);
+        transition: background-color var(--transition);
       }
     }
 
@@ -200,7 +200,7 @@ function changeView(): void {
         &--route {
 
           &:after {
-            background-color: $red;
+            background-color: var(--color-red);
           }
         }
       }
@@ -250,7 +250,7 @@ function changeView(): void {
       width: 0;
       height: 0;
       border-top: #{$height} solid transparent;
-      border-right: #{$height / 2} solid $red;
+      border-right: #{$height / 2} solid var(--color-red);
     }
   }
 }

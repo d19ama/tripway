@@ -110,7 +110,7 @@ function closeRoute(): void {
       font-size: .875rem;
       color: rgba($blue-dark, .5);
       border-radius: .25rem;
-      background-color: $gray-lite;
+      background-color: var(--color-gray-lite);
     }
   }
 
