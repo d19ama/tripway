@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import {
-  computed,
-  watch,
-} from 'vue';
-import { useRouter } from 'vue-router';
+  useRoute,
+  useRouter,
+} from 'vue-router';
 import type { HTMLElementClass } from '@/common/types';
 import { AppButton } from '@/common';
 import {
@@ -17,6 +17,8 @@ const {
   closeRoute,
   closeAllRoutes,
 } = useRoutes();
+
+const route = useRoute();
 
 const router = useRouter();
 
@@ -32,19 +34,10 @@ const isClearAllButtonVisible = computed<boolean>(() => {
   return opened && opened.length > 1;
 });
 
-function tabClass(selected: boolean): HTMLElementClass {
-  return [
-    'navigation__tab navigation__tab--route',
-    {
-      'navigation__tab--active': selected,
-    },
-  ];
-}
-
-function goToList(): void {
-  router.push({
-    name: RouteNames.RoutesList,
-  });
+function tabClass(id: Route['id']): HTMLElementClass {
+  return {
+    'navigation__tab--active': String(route.params.id) === id,
+  };
 }
 
 function selectTab(id: Route['id']): void {
@@ -59,37 +52,26 @@ function selectTab(id: Route['id']): void {
 function changeView(): void {
   console.warn('View changed!');
 }
-
-watch(
-  routes,
-  (value) => {
-    const allClosed = value.every((item) => {
-      return !item.opened;
-    });
-
-    if (allClosed) {
-      goToList();
-    }
-  },
-  {
-    deep: true,
-  },
-);
 </script>
 
 <template>
   <div class="navigation">
     <div class="navigation__tabs">
       <div class="navigation__tab navigation__tab--first">
-        <span
+        <RouterLink
           class="navigation__tab-name"
-          @click="goToList"
-        >Маршруты</span>
+          :to="{
+            name: RouteNames.RoutesList,
+          }"
+        >
+          Маршруты
+        </RouterLink>
       </div>
       <div
         v-for="item in selected"
         :key="String(item.id)"
-        :class="tabClass(item.active)"
+        class="navigation__tab navigation__tab--route"
+        :class="tabClass(item.id)"
       >
         <span
           class="navigation__tab-name"
@@ -140,6 +122,7 @@ watch(
   height: $height;
   background-color: $white;
   box-shadow: inset 0 1px 0 0 rgba($gray-dark, .2), 0 0 10px 0 rgba($gray-dark, .5);
+  user-select: none;
 
   &__tabs {
     height: 100%;
@@ -188,7 +171,7 @@ watch(
 
     &--route {
       padding-left: 2rem;
-      background-color: $red;
+      background-color: $red-dark;
 
       &+& {
         padding-left: 1rem;
@@ -205,7 +188,7 @@ watch(
         left: -1rem;
         transform-origin: center;
         transform: skewX(22deg);
-        background-color: $red;
+        background-color: $red-dark;
         transition: background-color $transition;
       }
     }
@@ -217,16 +200,13 @@ watch(
         &--route {
 
           &:after {
-            background-color: $red-dark;
+            background-color: $red;
           }
         }
       }
 
-      #{$parent}__tab {
-
-        &-name {
-          border-bottom-color: transparent;
-        }
+      #{$parent}__tab-name {
+        border-bottom-color: transparent;
       }
     }
   }
@@ -235,6 +215,7 @@ watch(
     overflow: hidden;
     position: relative;
     z-index: 1;
+    color: var(--color-white);
     text-overflow: ellipsis;
     border-bottom: 1px dotted rgba($white, .8);
     cursor: pointer;

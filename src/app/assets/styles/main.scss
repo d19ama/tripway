@@ -37,8 +37,9 @@ body {
   width: 100%;
   color: var(--color-black);
   font-weight: 400;
-  font-family: 'Roboto', Arial, Helvetica, sans-serif;
+  font-family: 'Roboto', Arial, 'Helvetica Neue', Helvetica, sans-serif;
   background-color: var(--color-white);
+  -webkit-font-smoothing: subpixel-antialiased;
 }
 
 h1,

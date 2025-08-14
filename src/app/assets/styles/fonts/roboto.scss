@@ -1,0 +1,26 @@
+@font-face {
+  font-family: Roboto;
+  src: url('@/app/assets/fonts/roboto/roboto-regular.woff2') format('woff2'),
+  url('@/app/assets/fonts/roboto/roboto-regular.woff') format('woff'),
+  url('@/app/assets/fonts/roboto/roboto-regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Roboto;
+  src: url('@/app/assets/fonts/roboto/roboto-bold.woff2') format('woff2'),
+  url('@/app/assets/fonts/roboto/roboto-bold.woff') format('woff'),
+  url('@/app/assets/fonts/roboto/roboto-bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Roboto;
+  src: url('@/app/assets/fonts/roboto/roboto-light.woff2') format('woff2'),
+  url('@/app/assets/fonts/roboto/roboto-light.woff') format('woff'),
+  url('@/app/assets/fonts/roboto/roboto-light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}

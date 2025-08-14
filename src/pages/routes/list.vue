@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {
   RouteCard,
-  RoutesWrapper,
   useRoutes,
 } from '@/modules/routes';
 import { AppButton } from '@/common';
@@ -14,7 +13,7 @@ const {
 </script>
 
 <template>
-  <RoutesWrapper>
+  <div class="routes-list-page">
     <AppButton
       size="l"
       rounded
@@ -29,5 +28,17 @@ const {
       @open:route="openRoute"
       @close:route="closeRoute"
     />
-  </RoutesWrapper>
+  </div>
 </template>
+
+<style lang="scss">
+.routes-list-page {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 1rem;
+  width: 740px;
+  margin: auto;
+}
+</style>

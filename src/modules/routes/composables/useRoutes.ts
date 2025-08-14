@@ -1,15 +1,20 @@
 import {
+  type ComputedRef,
   type WritableComputedRef,
   computed,
   ref,
 } from 'vue';
-import { useRouter } from 'vue-router';
+import {
+  useRoute,
+  useRouter,
+} from 'vue-router';
 import { MOCKED_ROUTES } from '../mocks';
 import type { Route } from '../';
 import { RouteNames } from '@/app/router/route-names';
 
 interface UseRoutesReturn {
   getRoutes: () => void;
+  activeRoute: ComputedRef<Route | undefined>;
   routes: WritableComputedRef<Route[]>;
   openRoute: (id: Route['id']) => void;
   closeRoute: (id: Route['id']) => void;
@@ -17,8 +22,10 @@ interface UseRoutesReturn {
 }
 
 const _routes = ref<Route[]>([]);
+const _openedRoutesIds = ref<Route['id'][]>([]);
 
 export function useRoutes(): UseRoutesReturn {
+  const route = useRoute();
   const router = useRouter();
 
   const routes = computed<Route[]>({
@@ -30,6 +37,12 @@ export function useRoutes(): UseRoutesReturn {
         ...value,
       };
     },
+  });
+
+  const activeRoute = computed<Route | undefined>(() => {
+    return routes.value.find((item) => {
+      return item.id === String(route.params.id);
+    });
   });
 
   function getRoutes(): void {
@@ -54,6 +67,8 @@ export function useRoutes(): UseRoutesReturn {
   function openRoute(id: Route['id']): void {
     toggleOpenRoute(id, true);
 
+    _openedRoutesIds.value.push(id);
+
     router.push({
       name: RouteNames.RoutePage,
       params: {
@@ -62,18 +77,41 @@ export function useRoutes(): UseRoutesReturn {
     });
   }
 
-  function closeRoute(id: Route['id']): void {
+  async function closeRoute(id: Route['id']): Promise<void> {
     toggleOpenRoute(id, false);
+
+    _openedRoutesIds.value = _openedRoutesIds.value.filter((item) => {
+      return item !== id;
+    });
+
+    if (_openedRoutesIds.value.length > 0) {
+      await router.replace({
+        name: RouteNames.RoutePage,
+        params: {
+          id: _openedRoutesIds.value[_openedRoutesIds.value.length - 1],
+        },
+      });
+      return;
+    }
+
+    await router.replace({
+      name: RouteNames.RoutesList,
+    });
   }
 
-  function closeAllRoutes(): void {
+  async function closeAllRoutes(): Promise<void> {
     _routes.value.forEach((item) => {
       toggleOpenRoute(item.id, false);
+    });
+
+    await router.replace({
+      name: RouteNames.RoutesList,
     });
   }
 
   return {
     routes,
+    activeRoute,
     getRoutes,
     openRoute,
     closeRoute,
