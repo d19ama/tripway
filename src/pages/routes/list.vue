@@ -1,15 +1,31 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router';
 import {
+  type Route,
   RouteCard,
   useRoutes,
 } from '@/modules/routes';
 import { AppButton } from '@/common';
+import { RouteNames } from '@/app/router/route-names';
 
 const {
   routes,
   openRoute,
   closeRoute,
 } = useRoutes();
+
+const router = useRouter();
+
+function openRoutePage(id: Route['id']): void {
+  openRoute(id);
+
+  router.push({
+    name: RouteNames.RoutePage,
+    params: {
+      id,
+    },
+  });
+}
 </script>
 
 <template>
@@ -25,7 +41,7 @@ const {
       v-for="item in routes"
       :key="item.id"
       :route="item"
-      @open:route="openRoute"
+      @open:route="openRoutePage"
       @close:route="closeRoute"
     />
   </div>
