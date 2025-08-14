@@ -54,5 +54,9 @@ const hasHeader = computed<boolean>(() => {
   display: flex;
   flex-flow: column nowrap;
   gap: 2rem;
+
+  &__content {
+    padding: 0 2rem;
+  }
 }
 </style>

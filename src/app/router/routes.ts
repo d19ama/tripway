@@ -13,9 +13,30 @@ export const routes: RouteRecordRaw[] = [
   {
     path: '/routes',
     name: RouteNames.Routes,
-    component: () => import('@/pages/routes.vue'),
+    component: () => import('@/pages/routes/index.vue'),
     meta: {
       title: 'Routes',
     },
+    redirect: {
+      name: RouteNames.RoutesList,
+    },
+    children: [
+      {
+        path: 'list',
+        name: RouteNames.RoutesList,
+        component: () => import('@/pages/routes/list.vue'),
+        meta: {
+          title: 'Route page',
+        },
+      },
+      {
+        path: ':id',
+        name: RouteNames.RoutePage,
+        component: () => import('@/pages/routes/[id].vue'),
+        meta: {
+          title: 'Route page',
+        },
+      },
+    ],
   },
 ];

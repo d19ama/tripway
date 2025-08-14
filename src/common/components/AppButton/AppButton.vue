@@ -152,62 +152,62 @@ function onClick(event: Event): void {
   &--theme {
 
     &-red {
-      color: $white;
-      background-color: $red;
+      color: var(--color-white);
+      background-color: var(--color-red-dark);
 
       &:hover {
-        background-color: $red-dark;
+        background-color: var(--color-red);
       }
     }
 
     &-yellow {
-      color: $white;
-      background-color: $yellow;
+      color: var(--color-white);
+      background-color: var(--color-yellow-dark);
 
       &:hover {
-        background-color: $yellow-dark;
+        background-color: var(--color-yellow);
       }
     }
 
     &-green {
-      color: $white;
-      background-color: $green;
+      color: var(--color-white);
+      background-color: var(--color-green-dark);
 
       &:hover {
-        background-color: $green-dark;
+        background-color: var(--color-green);
       }
     }
 
     &-border-red {
-      color: $red;
-      border: 2px solid $red;
+      color: var(--color-red);
+      border: 2px solid var(--color-red-dark);
 
       &:hover {
-        border-color: $red-dark;
+        border-color: var(--color-red);
       }
     }
 
     &-border-yellow {
-      color: $yellow;
-      border: 2px solid $yellow;
+      color: var(--color-white);
+      border: 2px solid var(--color-yellow-dark);
 
       &:hover {
-        border-color: $yellow-dark;
+        border-color: var(--color-yellow);
       }
     }
 
     &-border-green {
-      color: $green;
-      border: 2px solid $green;
+      color: var(--color-green);
+      border: 2px solid var(--color-green-dark);
 
       &:hover {
-        border-color: $green-dark;
+        border-color: var(--color-green);
       }
     }
 
     &-icon-red {
-      color: $white;
-      background-color: $red;
+      color: var(--color-white);
+      background-color: var(--color-red);
 
       &:hover {
         color: rgba($white, .5);

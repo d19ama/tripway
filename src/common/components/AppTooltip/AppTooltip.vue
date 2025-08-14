@@ -84,7 +84,7 @@ const trigger = computed<TippyComponent['trigger']>(() => {
   &__tooltip {
     max-width: 320px;
     background: var(--color-white);
-    color: var(--color-secondary);
+    color: var(--color-gray-dark);
     padding: 8px 12px;
     overflow: hidden;
     overflow-wrap: break-word;
@@ -98,7 +98,7 @@ const trigger = computed<TippyComponent['trigger']>(() => {
     width: 1.5rem;
     height: 1.5rem;
     overflow: hidden;
-    color: var(--color-primary);
+    color: var(--color-red);
     font-weight: 700;
     font-size: 1rem;
     border: none;

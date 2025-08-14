@@ -68,7 +68,7 @@ function onClick(event: Event): void {
   &--hover-red {
 
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-red);
     }
   }
 
@@ -77,11 +77,11 @@ function onClick(event: Event): void {
   }
 
   &--primary {
-    color: var(--color-primary);
+    color: var(--color-red);
   }
 
   &--secondary {
-    color: var(--color-secondary-3);
+    color: var(--color-gray-middle);
   }
 }
 </style>

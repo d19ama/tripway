@@ -19,10 +19,11 @@ import {
   flex-flow: row nowrap;
   justify-content: flex-start;
   flex: 0 0 auto;
+  gap: 0 3rem;
   height: 3rem;
-  padding: 0 1.25rem;
+  padding: 0 1rem;
   position: relative;
   z-index: 10;
-  background-color: $white;
+  background-color: var(--color-white);
 }
 </style>

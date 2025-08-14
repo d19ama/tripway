@@ -9,11 +9,22 @@
   --color-white: #{$white};
   --color-black: #{$black};
   --color-black-50: #{$black-50};
-  --color-primary: #{$primary};
-  --color-primary-2: #{$primary-2};
-  --color-secondary: #{$secondary};
-  --color-secondary-2: #{$secondary-2};
-  --color-secondary-3: #{$secondary-3};
+
+  --color-gray-dark: #{$gray-dark};
+  --color-gray-lite: #{$gray-lite};
+  --color-gray-middle: #{$gray-middle};
+
+  --color-blue-dark: #{$blue-dark};
+  --color-blue-lite: #{$blue-lite};
+
+  --color-red: #{$red};
+  --color-red-dark: #{$red-dark};
+
+  --color-green: #{$green};
+  --color-green-dark: #{$green-dark};
+
+  --color-yellow: #{$yellow};
+  --color-yellow-dark: #{$yellow-dark};
 
   // breakpoint
   --breakpoint-default: #{$breakpoint-default};

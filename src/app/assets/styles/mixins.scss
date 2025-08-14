@@ -14,7 +14,7 @@
 }
 
 @mixin box-shadow-main() {
-    box-shadow: 0 0 40px rgba(var(--color-secondary), .2);
+    box-shadow: 0 0 40px rgba(var(--color-gray-dark), .2);
 }
 
 @mixin svg($width, $height, $svg, $color: null, $colorType: "color") {

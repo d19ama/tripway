@@ -1,8 +1,42 @@
 export interface Route {
-  id: string | null;
+  id: string;
   name: string;
   costs?: number;
   opened: boolean;
-  selected: boolean;
+  active: boolean;
   date: [number, number];
+  route: RouteSection[];
+}
+
+export type RouteSectionTransportType = 'airplane' | 'train' | 'bus' | 'car' | 'bicycle' | 'other';
+
+export interface RouteSectionPrice {
+  price?: string;
+}
+
+export interface RouteSectionLocationEntity {
+  city: string;
+  country: string;
+}
+
+export interface RouteSectionLocation {
+  from: RouteSectionLocationEntity;
+  to: RouteSectionLocationEntity;
+}
+
+export interface RouteSectionTransport extends RouteSectionPrice {
+  departure: string;
+  arrival: string;
+  type: RouteSectionTransportType;
+}
+
+export interface RouteSectionHabitation extends RouteSectionPrice {
+  address?: string;
+}
+
+export interface RouteSection {
+  id: string;
+  location: RouteSectionLocation;
+  transport: RouteSectionTransport;
+  habitation?: RouteSectionHabitation;
 }

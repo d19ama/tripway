@@ -106,7 +106,7 @@ function validate(): boolean {
   position: relative;
   border-radius: 0;
   background-color: var(--color-white);
-  border: 1px solid var(--color-secondary);
+  border: 1px solid var(--color-gray-dark);
 
   &__textarea {
     display: block;
@@ -128,7 +128,7 @@ function validate(): boolean {
     font-weight: 400;
     line-height: 1.4;
     font-size: .875rem;
-    color: rgba(var(--color-secondary-2), .5);
+    color: rgba(var(--color-gray-lite), .5);
   }
 
   &__placeholder {
@@ -150,7 +150,7 @@ function validate(): boolean {
     top: 100%;
     left: 0;
     z-index: 1;
-    color: var(--color-primary);
+    color: var(--color-red);
     font-size: .65rem;
   }
 
@@ -171,7 +171,7 @@ function validate(): boolean {
   }
 
   &--error {
-    box-shadow: inset 0 0 0 1px var(--color-primary);
+    box-shadow: inset 0 0 0 1px var(--color-red);
   }
 
   &--disabled {
