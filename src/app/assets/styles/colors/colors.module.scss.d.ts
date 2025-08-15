@@ -8,6 +8,7 @@ export interface Styles {
   'gray-middle': string;
 
   'blue-dark': string;
+  'blue-middle': string;
   'blue-lite': string;
 
   'red': string;

@@ -14,7 +14,7 @@ const props = defineProps<AppPageProps>();
 const slots = defineSlots<AppPageSlots>();
 
 const hasHeader = computed<boolean>(() => {
-  return !!slots.header || props.title;
+  return !!slots.header! || props.title;
 });
 </script>
 

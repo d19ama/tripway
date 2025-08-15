@@ -7,11 +7,19 @@ import {
 import { useRoute } from 'vue-router';
 import { MOCKED_ROUTES } from '../mocks';
 import type { Route } from '../';
+import { DEFAULT_ROUTE } from '@/modules/routes/constants';
 
 interface UseRoutesReturn {
-  getRoutes: () => void;
-  activeRoute: ComputedRef<Route | undefined>;
+  // variables
   routes: WritableComputedRef<Route[]>;
+  activeRoute: ComputedRef<Route | undefined>;
+
+  // requests
+  readRoutes: () => void;
+
+  // actions
+  addRoute: (name: string) => void;
+  removeRoute: (id: Route['id']) => void;
   openRoute: (id: Route['id']) => void;
   closeRoute: (id: Route['id']) => void;
   closeAllRoutes: () => void;
@@ -39,7 +47,7 @@ export function useRoutes(): UseRoutesReturn {
     });
   });
 
-  function getRoutes(): void {
+  function readRoutes(): void {
     _routes.value = [
       ...MOCKED_ROUTES,
     ];
@@ -72,10 +80,30 @@ export function useRoutes(): UseRoutesReturn {
     });
   }
 
+  function addRoute(name: string): void {
+    _routes.value.unshift({
+      ...DEFAULT_ROUTE,
+      name,
+    });
+  }
+
+  function removeRoute(id: Route['id']): void {
+    _routes.value = _routes.value.filter((item) => {
+      return item.id === id;
+    });
+  }
+
   return {
+    // variables
     routes,
     activeRoute,
-    getRoutes,
+
+    // requests
+    readRoutes,
+
+    // actions
+    addRoute,
+    removeRoute,
     openRoute,
     closeRoute,
     closeAllRoutes,

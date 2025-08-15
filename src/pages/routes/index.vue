@@ -9,14 +9,14 @@ import {
 import { AppPage } from '@/common/components';
 
 const {
-  getRoutes,
+  readRoutes,
   openRoute,
 } = useRoutes();
 
 const route = useRoute();
 
 onMounted(() => {
-  getRoutes();
+  readRoutes();
 
   if (route.params.id) {
     openRoute(String(route.params.id));

@@ -153,6 +153,7 @@ export const MOCKED_ROUTE: RouteSection[] = [
 export const MOCKED_ROUTES: Route[] = [
   {
     id: 'first',
+    status: 'completed',
     name: 'First route',
     opened: false,
     active: false,
@@ -161,12 +162,13 @@ export const MOCKED_ROUTES: Route[] = [
       '2025-06-12',
       '2025-07-12',
     ],
-    route: {
+    route: [
       ...MOCKED_ROUTE,
-    },
+    ],
   },
   {
     id: 'second',
+    status: 'edit',
     name: 'Second route',
     opened: false,
     active: false,
@@ -175,8 +177,6 @@ export const MOCKED_ROUTES: Route[] = [
       '2025-08-03',
       '2025-09-05',
     ],
-    route: {
-      ...MOCKED_ROUTE,
-    },
+    route: [],
   },
 ];

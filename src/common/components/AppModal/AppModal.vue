@@ -10,6 +10,7 @@ import type {
   AppModalProps,
   AppModalSlots,
 } from './types';
+import { AppModalTitle } from './components';
 import type { HTMLElementClass } from '@/common/types';
 import { AppButton } from '@/common/components';
 import { useComponentId } from '@/common/composables';
@@ -126,11 +127,9 @@ watch(
         data-testid="dialog-container"
       >
         <AppButton
-          class="app-modal__button-close"
-          data-testid="dialog-close-btn"
-          text="Закрыть"
-          rounded
+          class="app-modal__button-close icon icon-cross"
           auto-width
+          theme="transparent"
           @click="close"
         />
 
@@ -139,7 +138,9 @@ watch(
           class="app-modal__header app-modal__shrink"
         >
           <slot name="header">
-            {{ title }}
+            <AppModalTitle>
+              {{ title }}
+            </AppModalTitle>
           </slot>
         </div>
 
@@ -169,7 +170,7 @@ watch(
   --modal-width: inherit;
   --modal-x-padding: inherit;
   --modal-height: auto;
-  --modal-content-padding: 56px;
+  --modal-content-padding: 2rem;
 
   position: fixed;
   top: 0;
@@ -256,19 +257,17 @@ watch(
   }
 
   &__header {
-    padding-bottom: 28px;
+    padding-right: var(--modal-content-padding);
+    padding-left: var(--modal-content-padding);
   }
 
   &__body {
-    padding-right: var(--modal-content-padding);
-    padding-left: var(--modal-content-padding);
-    overflow: auto;
     flex-grow: 1;
+    padding: var(--modal-content-padding);
     white-space: pre-line;
   }
 
   &__footer {
-    margin-top: 40px;
     padding-right: var(--modal-content-padding);
     padding-left: var(--modal-content-padding);
   }

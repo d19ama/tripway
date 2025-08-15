@@ -1,0 +1,92 @@
+<script setup lang="ts">
+import {
+  computed,
+  ref,
+} from 'vue';
+import {
+  type ValidationArgs,
+  useVuelidate,
+} from '@vuelidate/core';
+import {
+  AppButton,
+  AppInput,
+  AppModal,
+  AppModalActions,
+} from '@/common/components';
+import { useRoutes } from '@/modules/routes';
+import {
+  maxLength,
+  minLength,
+  required,
+} from '@/common/validators';
+
+const {
+  addRoute,
+} = useRoutes();
+
+const visible = defineModel<boolean>('visible', {
+  required: false,
+  default: false,
+});
+
+const name = ref<string>('');
+
+const rules = computed<ValidationArgs>(() => {
+  return {
+    required,
+    maxLength: maxLength(100),
+    minLength: minLength(3),
+  };
+});
+
+const validation = useVuelidate<string>(rules, name);
+
+function onApply(): void {
+  visible.value = false;
+  addRoute(name.value);
+}
+</script>
+
+<template>
+  <AppModal
+    v-model:visible="visible"
+    title="Создать маршрут"
+  >
+    <p class="margin-bottom--xs">
+      Укажите название нового маршрута
+    </p>
+    <AppInput
+      v-model:value="name"
+      placeholder="Название..."
+      required
+    />
+
+    <template #footer="{ close }">
+      <AppModalActions>
+        <AppButton
+          theme="blue-dark"
+          rounded
+          size="m"
+          :disabled="validation.$invalid"
+          @click="onApply"
+        >
+          Завершить
+        </AppButton>
+
+        <AppButton
+          rounded
+          size="m"
+          @click="close"
+        >
+          Отмена
+        </AppButton>
+      </AppModalActions>
+    </template>
+  </AppModal>
+</template>
+
+<style lang="scss">
+.container {
+  // styles
+}
+</style>

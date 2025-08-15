@@ -1,10 +1,13 @@
+export type RouteStatus = 'new' | 'completed' | 'edit';
+
 export interface Route {
   id: string;
   name: string;
+  date: string[];
   costs?: number;
   opened: boolean;
   active: boolean;
-  date: string[];
+  status: RouteStatus;
   route: RouteSection[];
 }
 

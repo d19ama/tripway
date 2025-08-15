@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
+import { ref } from 'vue';
 import {
+  AddRouteModal,
   type Route,
   RouteCard,
   useRoutes,
@@ -16,6 +18,8 @@ const {
 
 const router = useRouter();
 
+const isAddRouteModalVisible = ref<boolean>(false);
+
 function openRoutePage(id: Route['id']): void {
   openRoute(id);
 
@@ -26,6 +30,10 @@ function openRoutePage(id: Route['id']): void {
     },
   });
 }
+
+function addRoutePage(): void {
+  isAddRouteModalVisible.value = true;
+}
 </script>
 
 <template>
@@ -34,6 +42,7 @@ function openRoutePage(id: Route['id']): void {
       size="l"
       rounded
       theme="yellow"
+      @click="addRoutePage"
     >
       <span class="icon icon-plus" />Создать маршрут
     </AppButton>
@@ -45,6 +54,10 @@ function openRoutePage(id: Route['id']): void {
       @close:route="closeRoute"
     />
   </div>
+
+  <AddRouteModal
+    v-model:visible="isAddRouteModalVisible"
+  />
 </template>
 
 <style lang="scss">
