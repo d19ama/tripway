@@ -4,7 +4,7 @@ export interface Route {
   costs?: number;
   opened: boolean;
   active: boolean;
-  date: [number, number];
+  date: string[];
   route: RouteSection[];
 }
 

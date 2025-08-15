@@ -3,7 +3,7 @@ import type {
   AppLangSelectorProps,
   AppLangSelectorVariants,
 } from './types';
-import { AppButton } from '@/common';
+import { AppButton } from '@/common/components';
 
 const props = withDefaults(defineProps<AppLangSelectorProps>(), {
   storageKey: 'BOILERPLATE_',

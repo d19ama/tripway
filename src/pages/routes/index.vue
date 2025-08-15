@@ -6,7 +6,7 @@ import {
   Navigation,
   useRoutes,
 } from '@/modules/routes';
-import { AppPage } from '@/common';
+import { AppPage } from '@/common/components';
 
 const {
   getRoutes,

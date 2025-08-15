@@ -32,9 +32,9 @@ function addNewSection(): void {}
 .route-page {
   display: flex;
   flex-flow: row wrap;
-  align-items: stretch;
   justify-content: flex-start;
   align-content: flex-start;
+  align-items: center;
   flex-grow: 1;
   gap: 2rem 1rem;
 
@@ -44,14 +44,14 @@ function addNewSection(): void {}
     align-items: center;
     justify-content: center;
     flex-grow: 0;
-    width: 150px;
-    height: 150px;
+    width: 7rem;
+    height: 7rem;
     position: relative;
     z-index: 2;
     border-radius: 4px;
     color: var(--color-white);
-    font-size: 6rem;
-    box-shadow: 0 0 0 5px var(--color-white), 6px 6px 20px rgba(0, 0, 0, 0.2);
+    font-size: 4rem;
+    box-shadow: 0 0 0 5px var(--color-white), 6px 6px 20px rgba($black, 0.2);
     cursor: pointer;
 
     @include breakpoint(mobile) {

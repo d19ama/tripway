@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AppPage } from '@/common';
+import { AppPage } from '@/common/components';
 </script>
 
 <template>

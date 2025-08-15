@@ -5,7 +5,7 @@ import {
   useRouter,
 } from 'vue-router';
 import type { HTMLElementClass } from '@/common/types';
-import { AppButton } from '@/common';
+import { AppButton } from '@/common/components';
 import {
   type Route,
   useRoutes,

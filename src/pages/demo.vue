@@ -32,7 +32,7 @@ import {
   AppTitle,
   type AppTitleTags,
   AppTooltip,
-} from '@/common';
+} from '@/common/components';
 
 interface TableData {
   id: string;

@@ -2,8 +2,12 @@
 import {
   AppButton,
   AppTitle,
-} from '@/common';
+} from '@/common/components';
 import type { Route } from '@/modules/routes';
+import {
+  currency,
+  date,
+} from '@/common/format';
 
 interface Props {
   route: Route;
@@ -44,15 +48,15 @@ function closeRoute(): void {
         <div class="route-card__info margin-top--xs">
           <span class="route-card__caption icon icon-calendar margin-right--xs" />
           <span class="route-card__value route-card__value--date">
-            {{ props.route.date[0] }}
+            {{ date(props.route.date[0], 'Long') }}
             &#8212;
-            {{ props.route.date[1] }}
+            {{ date(props.route.date[1], 'Long') }}
           </span>
         </div>
         <div class="route-card__info margin-top--xs">
           <span class="route-card__caption icon icon-credit-card margin-right--xs" />
           <span class="route-card__value">
-            {{ props.route.costs?.toLocaleString() }}
+            {{ currency(props.route.costs) }}
           </span>
         </div>
       </div>

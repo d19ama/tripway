@@ -7,7 +7,7 @@ import type {
 import {
   AppNoData,
   AppTitle,
-} from '@/common';
+} from '@/common/components';
 
 const props = defineProps<AppPageProps>();
 

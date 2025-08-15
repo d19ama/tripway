@@ -4,6 +4,10 @@ import type {
   RouteSection,
   RouteSectionTransportType,
 } from '../../types';
+import {
+  currency,
+  date,
+} from '@/common/format';
 import { DASH_SYMBOL } from '@/common/constants';
 import {
   iconAirplane,
@@ -34,7 +38,7 @@ const transport = computed<string>(() => {
 
 function price(value: string | undefined): string {
   return value
-    ? `${value} ₽`
+    ? currency(+value)
     : DASH_SYMBOL;
 }
 </script>
@@ -45,9 +49,9 @@ function price(value: string | undefined): string {
       <div class="route-section__info">
         <div class="route-section__date">
           <span class="icon icon-calendar" />
-          {{ props.data.transport.departure }}
+          {{ date(props.data.transport.departure) }}
           &dash;
-          {{ props.data.transport.arrival }}
+          {{ date(props.data.transport.arrival) }}
           <div
             v-if="transport"
             class="route-section__transport"

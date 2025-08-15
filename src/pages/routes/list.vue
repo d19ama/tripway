@@ -5,7 +5,7 @@ import {
   RouteCard,
   useRoutes,
 } from '@/modules/routes';
-import { AppButton } from '@/common';
+import { AppButton } from '@/common/components';
 import { RouteNames } from '@/app/router/route-names';
 
 const {

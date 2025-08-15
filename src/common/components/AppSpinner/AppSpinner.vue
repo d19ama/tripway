@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
-import type { HTMLElementClass } from '@/common/types';
-import { AppTransition } from '@/common';
+import { AppTransition } from '../';
+import type { HTMLElementClass } from '../../types';
 
 interface Props {
   overlay?: boolean;

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { AppLink } from '@/common';
+import { AppLink } from '@/common/components';
 
 const currentYear = new Date().getFullYear();
 </script>
