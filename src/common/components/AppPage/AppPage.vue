@@ -7,14 +7,14 @@ import type {
 import {
   AppNoData,
   AppTitle,
-} from '@/common';
+} from '@/common/components';
 
 const props = defineProps<AppPageProps>();
 
 const slots = defineSlots<AppPageSlots>();
 
 const hasHeader = computed<boolean>(() => {
-  return !!slots.header || props.title;
+  return !!slots.header! || props.title;
 });
 </script>
 

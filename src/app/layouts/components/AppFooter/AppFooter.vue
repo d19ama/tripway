@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { AppLink } from '@/common';
+import { AppLink } from '@/common/components';
 
 const currentYear = new Date().getFullYear();
 </script>
@@ -33,44 +33,13 @@ const currentYear = new Date().getFullYear();
   left: 0;
   bottom: 0;
   z-index: 100;
-  pointer-events: none;
-
-  &:before {
-    display: block;
-    width: 100%;
-    height: 120%;
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 31%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=0 );
-    pointer-events: none;
-
-    @include breakpoint(mobile) {
-      content: '';
-    }
-  }
+  background-color: var(--color-white);
 
   &__text {
     font-size: .875rem;
     pointer-events: auto;
     user-select: none;
     cursor: default;
-
-    .love {
-      transition: color .3s;
-    }
-
-    &:hover {
-
-      .love {
-        color: var(--color-red);
-      }
-    }
-  }
-
-  &__social {
-    pointer-events: auto;
   }
 }
 </style>

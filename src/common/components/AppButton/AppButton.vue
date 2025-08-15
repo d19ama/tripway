@@ -115,7 +115,7 @@ function onClick(event: Event): void {
   cursor: pointer;
 
   &--disabled {
-    opacity: .5;
+    opacity: .7;
     pointer-events: none;
   }
 
@@ -149,69 +149,84 @@ function onClick(event: Event): void {
   }
 
   // Themes
-  &--theme {
+  &--theme-red {
+    color: var(--color-white);
+    background-color: var(--color-red-dark);
 
-    &-red {
-      color: var(--color-white);
-      background-color: var(--color-red-dark);
-
-      &:hover {
-        background-color: var(--color-red);
-      }
-    }
-
-    &-yellow {
-      color: var(--color-white);
-      background-color: var(--color-yellow-dark);
-
-      &:hover {
-        background-color: var(--color-yellow);
-      }
-    }
-
-    &-green {
-      color: var(--color-white);
-      background-color: var(--color-green-dark);
-
-      &:hover {
-        background-color: var(--color-green);
-      }
-    }
-
-    &-border-red {
-      color: var(--color-red);
-      border: 2px solid var(--color-red-dark);
-
-      &:hover {
-        border-color: var(--color-red);
-      }
-    }
-
-    &-border-yellow {
-      color: var(--color-white);
-      border: 2px solid var(--color-yellow-dark);
-
-      &:hover {
-        border-color: var(--color-yellow);
-      }
-    }
-
-    &-border-green {
-      color: var(--color-green);
-      border: 2px solid var(--color-green-dark);
-
-      &:hover {
-        border-color: var(--color-green);
-      }
-    }
-
-    &-icon-red {
-      color: var(--color-white);
+    &:hover {
       background-color: var(--color-red);
+    }
+  }
 
-      &:hover {
-        color: rgba($white, .5);
-      }
+  &--theme-yellow {
+    color: var(--color-white);
+    background-color: var(--color-yellow-dark);
+
+    &:hover {
+      background-color: var(--color-yellow);
+    }
+  }
+
+  &--theme-green {
+    color: var(--color-white);
+    background-color: var(--color-green-dark);
+
+    &:hover {
+      background-color: var(--color-green);
+    }
+  }
+
+  &--theme-blue-dark {
+    color: var(--color-white);
+    background-color: var(--color-blue-dark);
+
+    &:hover {
+      background-color: var(--color-blue-middle);
+    }
+  }
+
+  &--theme-border-red {
+    color: var(--color-red);
+    border: 2px solid var(--color-red-dark);
+
+    &:hover {
+      border-color: var(--color-red);
+    }
+  }
+
+  &--theme-border-yellow {
+    color: var(--color-white);
+    border: 2px solid var(--color-yellow-dark);
+
+    &:hover {
+      border-color: var(--color-yellow);
+    }
+  }
+
+  &--theme-border-green {
+    color: var(--color-green);
+    border: 2px solid var(--color-green-dark);
+
+    &:hover {
+      border-color: var(--color-green);
+    }
+  }
+
+  &--theme-icon-red {
+    color: var(--color-white);
+    background-color: var(--color-red);
+
+    &:hover {
+      color: rgba($white, .5);
+    }
+  }
+
+  &--theme-transparent {
+    color: var(--color-black);
+    background-color: transparent;
+
+    &:hover {
+      background-color: transparent;
     }
   }
 }

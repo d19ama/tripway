@@ -134,6 +134,7 @@ function validate(): boolean {
   &__placeholder {
     display: block;
     max-width: 100%;
+    opacity: .5;
     overflow: hidden;
     padding: 1rem;
     position: absolute;
@@ -171,7 +172,7 @@ function validate(): boolean {
   }
 
   &--error {
-    box-shadow: inset 0 0 0 1px var(--color-red);
+    border-color: var(--color-red);
   }
 
   &--disabled {

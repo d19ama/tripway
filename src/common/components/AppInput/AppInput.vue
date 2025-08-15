@@ -184,6 +184,7 @@ $padding: 1rem;
   &__placeholder {
     display: block;
     max-width: 100%;
+    opacity: .5;
     overflow: hidden;
     padding: $padding;
     position: absolute;
@@ -207,7 +208,7 @@ $padding: 1rem;
   }
 
   &--error {
-    box-shadow: inset 0 0 0 1px var(--color-red);
+    border-color: var(--color-red);
   }
 }
 </style>

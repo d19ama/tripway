@@ -11,10 +11,12 @@ export type AppButtonTheme =
   | 'red'
   | 'green'
   | 'yellow'
+  | 'blue-dark'
   | 'icon-red'
   | 'border-red'
   | 'border-green'
-  | 'border-yellow';
+  | 'border-yellow'
+  | 'transparent';
 
 export interface AppButtonProps {
   href?: string;

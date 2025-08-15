@@ -1,0 +1,41 @@
+import dayjs, { type Dayjs } from 'dayjs';
+import locale from 'dayjs/plugin/localizedFormat';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import localeData from 'dayjs/plugin/localeData';
+import duration from 'dayjs/plugin/duration';
+import weekday from 'dayjs/plugin/weekday';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import isToday from 'dayjs/plugin/isToday';
+import isTomorrow from 'dayjs/plugin/isTomorrow';
+import isYesterday from 'dayjs/plugin/isYesterday';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isBetween from 'dayjs/plugin/isBetween';
+import minMax from 'dayjs/plugin/minMax';
+import 'dayjs/locale/ru';
+import 'dayjs/locale/en';
+
+dayjs.extend(locale);
+dayjs.extend(localeData);
+dayjs.extend(relativeTime);
+dayjs.extend(customParseFormat);
+dayjs.extend(duration);
+dayjs.extend(weekday);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(isToday);
+dayjs.extend(isTomorrow);
+dayjs.extend(isYesterday);
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isBetween);
+dayjs.extend(minMax);
+dayjs.locale('ru');
+dayjs.tz.setDefault(dayjs.tz.guess());
+
+export default dayjs;
+
+export { dayjs };
+export { type Dayjs };
