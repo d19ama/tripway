@@ -1,6 +1,7 @@
 import type { VNode } from 'vue';
 
 export interface AppSelectProps {
+  label?: string;
   multiple?: boolean;
   disabled?: boolean;
   required?: boolean;
@@ -20,4 +21,5 @@ export interface AppSelectSlots {
   [key: `checkbox-${AppSelectOption['id']}`]: (scope: {
     text: string;
   }) => VNode[];
+  label?: () => VNode[];
 }

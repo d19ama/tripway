@@ -21,7 +21,7 @@ const props = withDefaults(defineProps<AppSelectProps>(), {
   options: () => [],
 });
 
-defineSlots<AppSelectSlots>();
+const slots = defineSlots<AppSelectSlots>();
 
 const selected = defineModel<string>('selected', {
   required: true,
@@ -30,6 +30,10 @@ const selected = defineModel<string>('selected', {
 const opened = ref<boolean>(false);
 const selectRef = ref<HTMLElement | null>(null);
 const localOptions = ref<AppSelectOption[]>(props.options);
+
+const hasLabel = computed<boolean>(() => {
+  return !!slots.label! || props.label;
+});
 
 const selectClass = computed<HTMLElementClass>(() => {
   return {
@@ -95,6 +99,18 @@ watch(props.options, (value) => {
     :class="selectClass"
   >
     <div
+      v-if="hasLabel"
+      class="app-select__label"
+    >
+      <slot name="label">
+        {{ props.label }}
+      </slot>
+      <span
+        v-if="props.required"
+        class="app-select__label-asterisk"
+      >*</span>
+    </div>
+    <div
       class="app-select__container"
       @click.self="toggleDropdown"
     >
@@ -141,6 +157,11 @@ watch(props.options, (value) => {
   $padding: 1rem;
   $parent: &;
 
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: .5rem;
   width: 100%;
   position: relative;
   user-select: none;
@@ -158,12 +179,29 @@ watch(props.options, (value) => {
   }
 
   &__container {
+    width: 100%;
     overflow: hidden;
     padding: 1rem 2rem 1rem 1rem;
     position: relative;
     border-radius: .5rem;
     background-color: var(--color-gray-lite);
     cursor: pointer;
+  }
+
+  &__label {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: .125rem;
+    width: 100%;
+    font-size: .875rem;
+    color: var(--color-gray-dark);
+    user-select: none;
+  }
+
+  &__label-asterisk {
+    color: var(--color-red);
   }
 
   &__selected {
@@ -268,7 +306,6 @@ watch(props.options, (value) => {
     z-index: 10;
     border-radius: .5rem;
     background-color: var(--color-gray-lite);
-    filter: drop-shadow(0px 2px 12px rgba(8, 61, 140, 0.14));
     transition: opacity var(--transition);
 
     &--opened {
@@ -288,10 +325,6 @@ watch(props.options, (value) => {
     color: var(--color-gray-dark);
     transition: background-color var(--transition);
     cursor: pointer;
-
-    &:hover {
-      background-color: var(--color-gray-dark);
-    }
 
     &--selected {
       position: relative;

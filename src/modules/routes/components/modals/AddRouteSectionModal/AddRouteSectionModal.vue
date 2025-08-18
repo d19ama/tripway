@@ -151,10 +151,11 @@ function onAdd(): void {
           required
         />
       </div>
-      <div class="col-default-12">
+      <div class="col-default-6">
         <AppSelect
           v-model:selected="form.transport.type"
           :options="options"
+          label="Вид транспорта"
         />
       </div>
     </div>
@@ -168,17 +169,15 @@ function onAdd(): void {
       <div class="col-default-6">
         <AppInput
           v-model:value="form.habitation.address"
-          label="Город назначения"
-          placeholder="Введите город назначения"
-          required
+          label="Адрес проживания"
+          placeholder="Введите адрес"
         />
       </div>
       <div class="col-default-6">
         <AppInput
           v-model:value="form.habitation.price"
-          label="Город назначения"
-          placeholder="Введите город назначения"
-          required
+          label="Цена проживания"
+          placeholder="Введите цену"
         />
       </div>
     </div>
