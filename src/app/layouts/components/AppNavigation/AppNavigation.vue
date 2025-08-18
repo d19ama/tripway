@@ -53,12 +53,8 @@ function goTo(name: RouteNames): RouteLocationRaw {
     font-size: .875rem;
     transition: color var(--transition), box-shadow var(--transition);
 
-    &:not(.router-link-active):hover {
-      color: var(--color-black);
-    }
-
-    &.router-link-active {
-      box-shadow: inset 0 -4px 0 0 var(--color-red);
+    &--active {
+      box-shadow: inset 0 4px 0 0 var(--color-red);
     }
   }
 }

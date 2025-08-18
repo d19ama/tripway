@@ -19,6 +19,7 @@ import {
   minLength,
   required,
 } from '@/common/validators';
+import { DASH_SYMBOL } from '@/common/constants';
 
 const {
   addRoute,
@@ -53,7 +54,7 @@ function onCreate(): void {
     title="Создать маршрут"
   >
     <p class="margin-bottom--xs">
-      Укажите название нового маршрута, прим. <span class="text-italic text-color-red">{{ `Евро-тур ${new Date().getFullYear()}` }}</span>
+      Укажите название нового маршрута, прим. <span class="text-italic text-color-red">{{ `Евро ${DASH_SYMBOL} тур ${new Date().getFullYear()}` }}</span>
     </p>
     <AppInput
       v-model:value="name"

@@ -83,8 +83,15 @@ export function useRoutes(): UseRoutesReturn {
     });
   }
 
-  function openRoute(id: Route['id']): void {
+  async function openRoute(id: Route['id']): Promise<void> {
     toggleRouteOpened(id, true);
+
+    await router.push({
+      name: RouteNames.RoutePage,
+      params: {
+        id,
+      },
+    });
   }
 
   async function closeRoute(id: Route['id']): Promise<void> {
@@ -144,14 +151,22 @@ export function useRoutes(): UseRoutesReturn {
     }
   }
 
-  function editRoute(id: Route['id']): void {
+  async function editRoute(id: Route['id']): Promise<void> {
     const currentRoute: Route | undefined = _routes.value.find((item) => {
       return item.id === id;
     });
 
     if (currentRoute) {
       currentRoute.state = 'edit';
+      currentRoute.opened = true;
     }
+
+    await router.replace({
+      name: RouteNames.RoutePage,
+      params: {
+        id,
+      },
+    });
   }
 
   return {

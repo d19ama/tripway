@@ -13,6 +13,7 @@ export type AppButtonTheme =
   | 'yellow'
   | 'blue-dark'
   | 'icon-red'
+  | 'border-blue'
   | 'border-red'
   | 'border-green'
   | 'border-yellow'

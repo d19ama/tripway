@@ -205,7 +205,3 @@ function onAdd(): void {
     </template>
   </AppModal>
 </template>
-
-<style lang="scss">
-.add-route-section-modal {}
-</style>

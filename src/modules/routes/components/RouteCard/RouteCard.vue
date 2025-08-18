@@ -14,21 +14,15 @@ interface Props {
 }
 
 interface Emits {
+  'edit:route': [id: Route['id']];
   'open:route': [id: Route['id']];
   'close:route': [id: Route['id']];
+  'remove:route': [id: Route['id']];
 }
 
 const props = defineProps<Props>();
 
 const emit = defineEmits<Emits>();
-
-function openRoute(): void {
-  emit('open:route', props.route.id);
-}
-
-function closeRoute(): void {
-  emit('close:route', props.route.id);
-}
 </script>
 
 <template>
@@ -65,21 +59,35 @@ function closeRoute(): void {
           <AppButton
             v-if="!props.route.opened"
             rounded
-            theme="green"
-            @click="openRoute"
+            size="s"
+            theme="border-blue"
+            @click="emit('open:route', props.route.id)"
           >
             Открыть
           </AppButton>
           <AppButton
+            v-if="!props.route.opened"
+            rounded
+            size="s"
+            theme="border-green"
+            @click="emit('edit:route', props.route.id)"
+          >
+            Редактировать
+          </AppButton>
+          <AppButton
             v-if="props.route.opened"
             rounded
-            theme="yellow"
-            @click="closeRoute"
+            size="s"
+            theme="border-yellow"
+            @click="emit('close:route', props.route.id)"
           >
             Закрыть
           </AppButton>
           <AppButton
             rounded
+            size="s"
+            theme="border-red"
+            @click="emit('remove:route', props.route.id)"
           >
             Удалить
           </AppButton>
@@ -92,7 +100,7 @@ function closeRoute(): void {
 <style lang="scss">
 .route-card {
   padding: 1.5rem;
-  border-radius: .25rem;
+  border-radius: .5rem;
   background-color: var(--color-white);
   cursor: default;
 
@@ -103,7 +111,7 @@ function closeRoute(): void {
   }
 
   &__caption {
-    color: $blue-dark;
+    color: var(--color-blue-dark);
   }
 
   &__value {
@@ -120,8 +128,9 @@ function closeRoute(): void {
 
   &__buttons {
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: column nowrap;
     align-items: center;
+    justify-content: flex-start;
     height: 100%;
     gap: 1rem;
   }

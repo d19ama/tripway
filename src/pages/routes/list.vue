@@ -1,38 +1,29 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import {
   AddRouteModal,
-  type Route,
+  RemoveConfirmationModal,
   RouteCard,
   useRoutes,
 } from '@/modules/routes';
 import { AppButton } from '@/common/components';
-import { RouteNames } from '@/app/router/route-names';
 
 const {
   routes,
+  editRoute,
   openRoute,
   closeRoute,
 } = useRoutes();
 
-const router = useRouter();
-
 const isAddRouteModalVisible = ref<boolean>(false);
+const isRemoveConfirmationModalVisible = ref<boolean>(false);
 
-function openRoutePage(id: Route['id']): void {
-  openRoute(id);
-
-  router.push({
-    name: RouteNames.RoutePage,
-    params: {
-      id,
-    },
-  });
+function addRoute(): void {
+  isAddRouteModalVisible.value = true;
 }
 
-function addRoutePage(): void {
-  isAddRouteModalVisible.value = true;
+function removeRoute(): void {
+  isRemoveConfirmationModalVisible.value = true;
 }
 </script>
 
@@ -42,7 +33,7 @@ function addRoutePage(): void {
       size="l"
       rounded
       theme="yellow"
-      @click="addRoutePage"
+      @click="addRoute"
     >
       <span class="icon icon-plus" />Создать маршрут
     </AppButton>
@@ -50,13 +41,19 @@ function addRoutePage(): void {
       v-for="item in routes"
       :key="item.id"
       :route="item"
-      @open:route="openRoutePage"
+      @open:route="openRoute"
+      @edit:route="editRoute"
       @close:route="closeRoute"
+      @remove:route="removeRoute"
     />
   </div>
 
   <AddRouteModal
     v-model:visible="isAddRouteModalVisible"
+  />
+
+  <RemoveConfirmationModal
+    v-model:visible="isRemoveConfirmationModalVisible"
   />
 </template>
 
@@ -67,7 +64,7 @@ function addRoutePage(): void {
   align-items: stretch;
   justify-content: flex-start;
   gap: 1rem;
-  width: 740px;
+  width: 640px;
   margin: auto;
 }
 </style>
