@@ -35,9 +35,9 @@ function closeModal(): void {
     <template #footer="{ close }">
       <AppModalActions>
         <AppButton
-          theme="blue-dark"
           rounded
-          size="m"
+          size="l"
+          theme="blue-dark"
           @click="closeModal"
         >
           Удалить
@@ -45,7 +45,8 @@ function closeModal(): void {
 
         <AppButton
           rounded
-          size="m"
+          size="l"
+          theme="gray-lite"
           @click="close"
         >
           Отмена

@@ -13,7 +13,10 @@ import {
   AppModal,
   AppModalActions,
 } from '@/common/components';
-import { useRoutes } from '@/modules/routes';
+import {
+  type Route,
+  useRoutes,
+} from '@/modules/routes';
 import {
   maxLength,
   minLength,
@@ -30,21 +33,29 @@ const visible = defineModel<boolean>('visible', {
   default: false,
 });
 
-const name = ref<string>('');
+const form = ref<Pick<Route, 'name'>>({
+  name: '',
+});
+
+const hint = computed<string>(() => {
+  return `Прим. Евро ${DASH_SYMBOL} тур ${new Date().getFullYear()}`;
+});
 
 const rules = computed<ValidationArgs>(() => {
   return {
-    required,
-    maxLength: maxLength(100),
-    minLength: minLength(3),
+    name: {
+      required,
+      maxLength: maxLength(100),
+      minLength: minLength(3),
+    },
   };
 });
 
-const validation = useVuelidate<string>(rules, name);
+const validation = useVuelidate<Pick<Route, 'name'>>(rules, form);
 
 function onCreate(): void {
   visible.value = false;
-  addRoute(name.value);
+  addRoute(form.value.name);
 }
 </script>
 
@@ -54,21 +65,23 @@ function onCreate(): void {
     title="Создать маршрут"
   >
     <p class="margin-bottom--xs">
-      Укажите название нового маршрута, прим. <span class="text-italic text-color-red">{{ `Евро ${DASH_SYMBOL} тур ${new Date().getFullYear()}` }}</span>
+      Укажите название нового маршрута
     </p>
     <AppInput
-      v-model:value="name"
+      v-model:value="form.name"
       label="Название маршрута"
       placeholder="Введите название"
+      :hint="hint"
+      :validation="validation.name"
       required
     />
 
     <template #footer="{ close }">
       <AppModalActions>
         <AppButton
-          theme="blue-dark"
           rounded
-          size="m"
+          size="l"
+          theme="blue-dark"
           :disabled="validation.$invalid"
           @click="onCreate"
         >
@@ -77,7 +90,8 @@ function onCreate(): void {
 
         <AppButton
           rounded
-          size="m"
+          size="l"
+          theme="gray-lite"
           @click="close"
         >
           Отмена

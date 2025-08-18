@@ -326,6 +326,10 @@ watch(props.options, (value) => {
     transition: background-color var(--transition);
     cursor: pointer;
 
+    &:hover {
+      background-color: var(--color-gray-middle);
+    }
+
     &--selected {
       position: relative;
 

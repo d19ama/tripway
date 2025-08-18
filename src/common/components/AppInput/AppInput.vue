@@ -36,10 +36,22 @@ const hasLabel = computed<boolean>(() => {
   return !!slots.label! || props.label;
 });
 
-const maxLength = computed<string>(() => {
-  return props.type === 'tel'
-    ? '17'
-    : '255';
+const hasHint = computed<boolean>(() => {
+  return !!slots.hint! || props.hint;
+});
+
+const errorMessage = computed<string | undefined>(() => {
+  if (props.errorText) {
+    return props.errorText;
+  }
+
+  if (props.validation) {
+    return props.validation.$errors.map(({
+      $message,
+    }) => $message.toString()).at(0);
+  }
+
+  return undefined;
 });
 
 const isPlaceholderVisible = computed<boolean>(() => {
@@ -50,64 +62,38 @@ const isPlaceholderVisible = computed<boolean>(() => {
 
 const isErrorVisible = computed<boolean>(() => {
   return props.required
-    && error.value;
+    && error.value
+    && !!errorMessage.value;
 });
 
 const elementClass = computed<HTMLElementClass>(() => {
   return {
-    'app-input--error': error.value,
     'app-input--disabled': props.disabled,
   };
 });
 
 function onChange(): void {
-  validate(value.value);
   emit('change', value.value);
 }
 
 function onInput(): void {
-  validate(value.value);
   emit('input', value.value);
 }
 
 function onFocus(): void {
   focus.value = true;
+  emit('focus');
 }
 
 function onBlur(): void {
+  validate();
   focus.value = false;
+  emit('blur');
 }
 
-function checkEmail(value: string): void {
-  if (!validateEmail(value)) {
-    error.value = true;
-  }
-}
-
-function checkTel(value: string): void {
-  if (value.length < 17) {
-    error.value = true;
-  }
-}
-
-function validateEmail(email: string): boolean {
-  const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-  return regex.test(email);
-}
-
-function validate(value: string): void {
-  if (props.required && !value) {
-    error.value = true;
-  } else {
-    error.value = false;
-
-    if (props.type === 'email') {
-      checkEmail(value);
-    } else if (props.type === 'tel') {
-      checkTel(value);
-    }
-  }
+function validate(): void {
+  props.validation?.$touch();
+  error.value = !!props.validation?.$error;
 }
 </script>
 
@@ -128,14 +114,15 @@ function validate(value: string): void {
         class="app-input__label-asterisk"
       >*</span>
     </div>
+
     <div class="app-input__wrapper">
       <input
         v-model="value"
-        :type="props.type"
         autocomplete="off"
-        :maxlength="maxLength"
         class="app-input__input"
+        :type="props.type"
         :disabled="props.disabled"
+        :maxlength="props.maxLength"
         @blur="onBlur"
         @focus="onFocus"
         @input="onInput"
@@ -148,34 +135,50 @@ function validate(value: string): void {
       >
         {{ props.placeholder }}
       </span>
-      <span
-        v-if="isErrorVisible"
-        class="app-input__error"
-      >
-        <slot name="error">
-          {{ props.errorText }}
-        </slot>
-      </span>
     </div>
+    <span
+      v-if="isErrorVisible"
+      class="app-input__error"
+    >
+      <slot name="error">
+        {{ errorMessage }}
+      </slot>
+    </span>
+    <span
+      v-if="hasHint && !isErrorVisible"
+      class="app-input__hint"
+    >
+      <slot name="hint">
+        {{ props.hint }}
+      </slot>
+    </span>
   </div>
 </template>
 
 <style lang="scss">
-$padding: 1rem;
-
 .app-input {
+  $parent: &;
+  $padding: 1rem;
+
   display: flex;
   align-items: flex-start;
   flex-flow: column nowrap;
-  gap: .5rem;
+  gap: .25rem;
   position: relative;
 
   &__wrapper {
     width: 100%;
-    padding: $padding;
     position: relative;
     border-radius: .5rem;
     background-color: var(--color-gray-lite);
+  }
+
+  &__label,
+  &__error,
+  &__hint {
+    font-size: .75rem;
+    font-weight: 400;
+    line-height: 1.4;
   }
 
   &__label {
@@ -185,7 +188,6 @@ $padding: 1rem;
     justify-content: flex-start;
     gap: .125rem;
     width: 100%;
-    font-size: .875rem;
     color: var(--color-gray-dark);
     user-select: none;
   }
@@ -197,7 +199,7 @@ $padding: 1rem;
   &__input {
     width: 100%;
     border: none;
-    padding: 0;
+    padding: $padding;
     background-color: transparent;
 
     &:hover,
@@ -236,20 +238,18 @@ $padding: 1rem;
     pointer-events: none;
   }
 
+  &__hint {
+    opacity: .5;
+    color: var(--color-gray-dark);
+  }
+
   &__error {
     color: var(--color-red);
-    font-size: .75rem;
-    font-weight: 400;
-    line-height: 1.4;
   }
 
   &--disabled {
     opacity: .1;
     pointer-events: none;
-  }
-
-  &--error {
-    border-color: var(--color-red);
   }
 }
 </style>

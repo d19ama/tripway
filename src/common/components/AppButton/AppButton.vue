@@ -111,7 +111,7 @@ function onClick(event: Event): void {
   border: 0;
   outline: 0;
   background-color: transparent;
-  transition: background-color var(--transition), color var(--transition);
+  transition: filter var(--transition), color var(--transition);
   user-select: none;
   cursor: pointer;
 
@@ -182,7 +182,16 @@ function onClick(event: Event): void {
     background-color: var(--color-blue-dark);
 
     &:hover {
-      background-color: var(--color-blue-middle);
+      filter: brightness(1.25);
+    }
+  }
+
+  &--theme-gray-lite {
+    color: var(--color-gray-dark);
+    background-color: var(--color-gray-lite);
+
+    &:hover {
+      filter: brightness(1.025);
     }
   }
 

@@ -25,6 +25,6 @@ defineSlots<AppModalActionsSlots>();
 <style lang="scss">
 .app-modal-actions {
   display: flex;
-  gap: 2rem;
+  gap: 1rem;
 }
 </style>

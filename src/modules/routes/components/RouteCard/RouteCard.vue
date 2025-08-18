@@ -2,6 +2,7 @@
 import {
   AppButton,
   AppTitle,
+  AppTooltip,
 } from '@/common/components';
 import type { Route } from '@/modules/routes';
 import {
@@ -56,41 +57,67 @@ const emit = defineEmits<Emits>();
       </div>
       <div class="col-default-4">
         <div class="route-card__buttons">
-          <AppButton
-            v-if="!props.route.opened"
-            rounded
-            size="s"
-            theme="border-blue"
-            @click="emit('open:route', props.route.id)"
-          >
-            Открыть
-          </AppButton>
-          <AppButton
-            v-if="!props.route.opened"
-            rounded
-            size="s"
-            theme="border-green"
-            @click="emit('edit:route', props.route.id)"
-          >
-            Редактировать
-          </AppButton>
-          <AppButton
-            v-if="props.route.opened"
-            rounded
-            size="s"
-            theme="border-yellow"
-            @click="emit('close:route', props.route.id)"
-          >
-            Закрыть
-          </AppButton>
-          <AppButton
-            rounded
-            size="s"
-            theme="border-red"
-            @click="emit('remove:route', props.route.id)"
-          >
-            Удалить
-          </AppButton>
+          <AppTooltip v-if="!props.route.opened">
+            <template #activator>
+              <AppButton
+                v-if="!props.route.opened"
+                rounded
+                size="l"
+                auto-width
+                theme="border-blue"
+                @click="emit('open:route', props.route.id)"
+              >
+                <span class="icon icon-folder-open" />
+              </AppButton>
+            </template>
+            Открыть маршрут
+          </AppTooltip>
+          <AppTooltip v-if="!props.route.opened">
+            <template #activator>
+              <AppButton
+                v-if="!props.route.opened"
+                rounded
+                size="l"
+                auto-width
+                theme="border-green"
+                @click="emit('edit:route', props.route.id)"
+              >
+                <span class="icon icon-pencil" />
+              </AppButton>
+            </template>
+
+            Редактировать маршрут
+          </AppTooltip>
+          <AppTooltip v-if="props.route.opened">
+            <template #activator>
+              <AppButton
+                v-if="props.route.opened"
+                rounded
+                size="l"
+                auto-width
+                theme="border-yellow"
+                @click="emit('close:route', props.route.id)"
+              >
+                <span class="icon icon-cross" />
+              </AppButton>
+            </template>
+            Закрыть маршрут
+          </AppTooltip>
+          <AppTooltip>
+            <template #activator>
+              <AppButton
+                rounded
+                size="l"
+                auto-width
+                theme="border-red"
+                @click="emit('remove:route', props.route.id)"
+              >
+                <span class="icon icon-bin" />
+              </AppButton>
+            </template>
+
+            Удалить маршрут
+          </AppTooltip>
         </div>
       </div>
     </div>
@@ -99,10 +126,25 @@ const emit = defineEmits<Emits>();
 
 <style lang="scss">
 .route-card {
-  padding: 1.5rem;
-  border-radius: .5rem;
+  margin-left: 1.5rem;
+  padding: 1.5rem 1.5rem 1.5rem 1rem;
+  position: relative;
+  border-radius: 0 .5rem .5rem 0;
   background-color: var(--color-white);
   cursor: default;
+
+  &:before {
+    content: '';
+    display: block;
+    width: 1.5rem;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 100%;
+    border-right: .125rem dashed var(--color-gray-dark);
+    border-radius: .5rem 0 0 .5rem;
+    background-color: var(--color-white);
+  }
 
   &__info {
     display: flex;
@@ -111,6 +153,7 @@ const emit = defineEmits<Emits>();
   }
 
   &__caption {
+    font-size: 1.5rem;
     color: var(--color-blue-dark);
   }
 
@@ -128,9 +171,9 @@ const emit = defineEmits<Emits>();
 
   &__buttons {
     display: flex;
-    flex-flow: column nowrap;
-    align-items: center;
-    justify-content: flex-start;
+    flex-flow: row wrap;
+    align-items: stretch;
+    justify-content: flex-end;
     height: 100%;
     gap: 1rem;
   }

@@ -64,7 +64,7 @@ function removeRoute(): void {
   align-items: stretch;
   justify-content: flex-start;
   gap: 1rem;
-  width: 640px;
+  width: 720px;
   margin: auto;
 }
 </style>
