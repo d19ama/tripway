@@ -53,11 +53,12 @@ function onCreate(): void {
     title="Создать маршрут"
   >
     <p class="margin-bottom--xs">
-      Укажите название нового маршрута
+      Укажите название нового маршрута, прим. <span class="text-italic text-color-red">{{ `Евро-тур ${new Date().getFullYear()}` }}</span>
     </p>
     <AppInput
       v-model:value="name"
-      placeholder="Название..."
+      label="Название маршрута"
+      placeholder="Введите название"
       required
     />
 

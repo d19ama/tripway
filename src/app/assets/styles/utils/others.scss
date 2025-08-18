@@ -2,9 +2,17 @@
   color: var(--color-red);
 }
 
+.text-color-blue-dark {
+  color: var(--color-blue-dark);
+}
+
 .text-highlighter {
   color: var(--color-white);
   background-color: var(--color-red);
+}
+
+.text-italic {
+  font-style: italic;
 }
 
 .user-select-none {

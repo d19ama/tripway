@@ -113,7 +113,7 @@ export const MOCKED_ROUTE: RouteSection[] = [
 export const MOCKED_ROUTES: Route[] = [
   {
     id: 'first',
-    status: 'completed',
+    state: 'completed',
     name: 'First route',
     opened: false,
     active: false,
@@ -128,7 +128,7 @@ export const MOCKED_ROUTES: Route[] = [
   },
   {
     id: 'second',
-    status: 'edit',
+    state: 'edit',
     name: 'Second route',
     opened: false,
     active: false,

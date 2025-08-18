@@ -14,6 +14,7 @@ import { RouteNames } from '@/app/router/route-names';
 
 const {
   routes,
+  selectedRoutes,
   closeRoute,
   closeAllRoutes,
 } = useRoutes();
@@ -21,12 +22,6 @@ const {
 const route = useRoute();
 
 const router = useRouter();
-
-const selected = computed<Route[]>(() => {
-  return routes.value.filter((item: Route) => {
-    return item.opened;
-  });
-});
 
 const isClearAllButtonVisible = computed<boolean>(() => {
   const opened: Route[] | undefined = routes.value.filter((item) => {
@@ -53,32 +48,10 @@ function selectTab(id: Route['id']): void {
 
 function closeTab(id: Route['id']): void {
   closeRoute(id);
-
-  if (selected.value.length === 0) {
-    router.replace({
-      name: RouteNames.RoutesList,
-    });
-    return;
-  }
-
-  const nextRoute: Route | undefined = selected.value[selected.value.length - 1];
-
-  if (nextRoute) {
-    router.replace({
-      name: RouteNames.RoutePage,
-      params: {
-        id: nextRoute.id,
-      },
-    });
-  }
 }
 
 function closeAllRoutesTabs(): void {
   closeAllRoutes();
-
-  router.replace({
-    name: RouteNames.RoutesList,
-  });
 }
 
 function changeView(): void {
@@ -100,7 +73,7 @@ function changeView(): void {
         </span>
       </RouterLink>
       <div
-        v-for="item in selected"
+        v-for="item in selectedRoutes"
         :key="String(item.id)"
         class="navigation__tab navigation__tab--route"
         :class="tabClass(item.id)"
