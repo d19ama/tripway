@@ -9,8 +9,8 @@ export interface AppSelectProps {
   options?: AppSelectOption[];
 }
 
-export interface AppSelectOption {
-  id: string;
+export interface AppSelectOption<ID extends string | number | symbol = string> {
+  id: ID;
   text: string;
   selected: boolean;
   disabled: boolean;

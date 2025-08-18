@@ -65,7 +65,7 @@ function price(value: string | undefined): string {
         </div>
         <div class="route-section__location">
           <span class="icon icon-location" />
-          {{ props.data.location.to.country }}, {{ props.data.location.to.city }}
+          {{ props.data.location.country }}, {{ props.data.location.city }}
         </div>
         <div class="route-section__price">
           <div class="row">

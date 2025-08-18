@@ -17,14 +17,9 @@ export interface RouteSectionPrice {
   price?: string;
 }
 
-export interface RouteSectionLocationEntity {
+export interface RouteSectionLocation {
   city: string;
   country: string;
-}
-
-export interface RouteSectionLocation {
-  from: RouteSectionLocationEntity;
-  to: RouteSectionLocationEntity;
 }
 
 export interface RouteSectionTransport extends RouteSectionPrice {
@@ -41,5 +36,5 @@ export interface RouteSection {
   id: string;
   location: RouteSectionLocation;
   transport: RouteSectionTransport;
-  habitation?: RouteSectionHabitation;
+  habitation: RouteSectionHabitation;
 }

@@ -143,8 +143,6 @@ watch(props.options, (value) => {
 
   width: 100%;
   position: relative;
-  background-color: var(--color-white);
-  border: 1px solid var(--color-gray-dark);
   user-select: none;
 
   &--opened {
@@ -163,6 +161,8 @@ watch(props.options, (value) => {
     overflow: hidden;
     padding: 1rem 2rem 1rem 1rem;
     position: relative;
+    border-radius: .5rem;
+    background-color: var(--color-gray-lite);
     cursor: pointer;
   }
 
@@ -180,13 +180,14 @@ watch(props.options, (value) => {
 
   &__placeholder {
     display: block;
+    opacity: .5;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     font-weight: 400;
     line-height: 1.4;
     font-size: .875rem;
-    color: rgba(var(--color-gray-lite), .5);
+    color: var(--color-gray-lite);
     pointer-events: none;
   }
 
@@ -262,11 +263,11 @@ watch(props.options, (value) => {
     width: calc(100% + 2px);
     overflow: auto;
     position: absolute;
-    top: 100%;
+    top: calc(100% + .5rem);
     left: -1px;
     z-index: 10;
-    border: 1px solid var(--color-gray-dark);
-    background-color: var(--color-white);
+    border-radius: .5rem;
+    background-color: var(--color-gray-lite);
     filter: drop-shadow(0px 2px 12px rgba(8, 61, 140, 0.14));
     transition: opacity var(--transition);
 
@@ -284,12 +285,12 @@ watch(props.options, (value) => {
     font-weight: 400;
     line-height: 1.4;
     font-size: .875rem;
-    color: rgba(var(--color-gray-dark), .5);
+    color: var(--color-gray-dark);
     transition: background-color var(--transition);
     cursor: pointer;
 
     &:hover {
-      background-color: var(--color-gray-lite);
+      background-color: var(--color-gray-dark);
     }
 
     &--selected {

@@ -22,14 +22,19 @@ const props = withDefaults(defineProps<AppInputProps>(), {
 
 const emit = defineEmits<AppInputEmits>();
 
-defineSlots<AppInputSlots>();
+const slots = defineSlots<AppInputSlots>();
 
 const value = defineModel<string>('value', {
-  required: true,
+  required: false,
+  default: '',
 });
 
 const error = ref<boolean>(false);
 const focus = ref<boolean>(false);
+
+const hasLabel = computed<boolean>(() => {
+  return !!slots.label! || props.label;
+});
 
 const maxLength = computed<string>(() => {
   return props.type === 'tel'
@@ -107,38 +112,52 @@ function validate(value: string): void {
 </script>
 
 <template>
-  <label
+  <div
     class="app-input"
     :class="elementClass"
   >
-    <input
-      v-model="value"
-      :type="props.type"
-      autocomplete="off"
-      :maxlength="maxLength"
-      class="app-input__input"
-      :disabled="props.disabled"
-      @blur="onBlur"
-      @focus="onFocus"
-      @input="onInput"
-      @change="onChange"
-      @keyup.enter="onChange"
+    <div
+      v-if="hasLabel"
+      class="app-input__label"
     >
-    <span
-      v-if="isPlaceholderVisible"
-      class="app-input__placeholder"
-    >
-      {{ props.placeholder }}
-    </span>
-    <span
-      v-if="isErrorVisible"
-      class="app-input__error"
-    >
-      <slot name="error">
-        {{ props.errorText }}
+      <slot name="label">
+        {{ props.label }}
       </slot>
-    </span>
-  </label>
+      <span
+        v-if="props.required"
+        class="app-input__label-asterisk"
+      >*</span>
+    </div>
+    <div class="app-input__wrapper">
+      <input
+        v-model="value"
+        :type="props.type"
+        autocomplete="off"
+        :maxlength="maxLength"
+        class="app-input__input"
+        :disabled="props.disabled"
+        @blur="onBlur"
+        @focus="onFocus"
+        @input="onInput"
+        @change="onChange"
+        @keyup.enter="onChange"
+      >
+      <span
+        v-if="isPlaceholderVisible"
+        class="app-input__placeholder"
+      >
+        {{ props.placeholder }}
+      </span>
+      <span
+        v-if="isErrorVisible"
+        class="app-input__error"
+      >
+        <slot name="error">
+          {{ props.errorText }}
+        </slot>
+      </span>
+    </div>
+  </div>
 </template>
 
 <style lang="scss">
@@ -146,12 +165,34 @@ $padding: 1rem;
 
 .app-input {
   display: flex;
-  align-items: center;
-  flex-flow: row nowrap;
-  padding: $padding;
+  align-items: flex-start;
+  flex-flow: column nowrap;
+  gap: .5rem;
   position: relative;
-  background-color: var(--color-white);
-  border: 1px solid var(--color-gray-dark);
+
+  &__wrapper {
+    width: 100%;
+    padding: $padding;
+    position: relative;
+    border-radius: .5rem;
+    background-color: var(--color-gray-lite);
+  }
+
+  &__label {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: .125rem;
+    width: 100%;
+    font-size: .875rem;
+    color: var(--color-gray-dark);
+    user-select: none;
+  }
+
+  &__label-asterisk {
+    color: var(--color-red);
+  }
 
   &__input {
     width: 100%;
@@ -178,7 +219,7 @@ $padding: 1rem;
     font-weight: 400;
     line-height: 1.5;
     font-size: .875rem;
-    color: rgba(var(--color-gray-lite), .5);
+    color: var(--color-gray-dark);
   }
 
   &__placeholder {

@@ -7,7 +7,8 @@ import {
 import { useRoute } from 'vue-router';
 import { MOCKED_ROUTES } from '../mocks';
 import type { Route } from '../';
-import { DEFAULT_ROUTE } from '@/modules/routes/constants';
+import { DEFAULT_ROUTE } from '../constants';
+import type { RouteSection } from '../types';
 
 interface UseRoutesReturn {
   // variables
@@ -17,12 +18,15 @@ interface UseRoutesReturn {
   // requests
   readRoutes: () => void;
 
-  // actions
+  // route actions
   addRoute: (name: string) => void;
   removeRoute: (id: Route['id']) => void;
   openRoute: (id: Route['id']) => void;
   closeRoute: (id: Route['id']) => void;
   closeAllRoutes: () => void;
+
+  // route section actions
+  addRouteSection: (id: Route['id'], routeSection: RouteSection) => void;
 }
 
 const _routes = ref<Route[]>([]);
@@ -93,6 +97,16 @@ export function useRoutes(): UseRoutesReturn {
     });
   }
 
+  function addRouteSection(id: Route['id'], routeSection: RouteSection): void {
+    const currentRoute: Route | undefined = _routes.value.find((item) => {
+      return item.id === id;
+    });
+
+    if (currentRoute) {
+      currentRoute.route.push(routeSection);
+    }
+  }
+
   return {
     // variables
     routes,
@@ -101,11 +115,14 @@ export function useRoutes(): UseRoutesReturn {
     // requests
     readRoutes,
 
-    // actions
+    // route actions
     addRoute,
     removeRoute,
     openRoute,
     closeRoute,
     closeAllRoutes,
+
+    // route section actions
+    addRouteSection,
   };
 }

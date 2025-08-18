@@ -236,7 +236,6 @@ watch(
     padding-bottom: var(--modal-content-padding);
     padding-top: var(--modal-content-padding);
     position: relative;
-    overflow: hidden;
     background-color: var(--color-white);
     pointer-events: auto;
 

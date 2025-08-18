@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import {
+  AddRouteSectionModal,
   RouteSection,
   useRoutes,
 } from '@/modules/routes';
@@ -8,7 +10,11 @@ const {
   activeRoute,
 } = useRoutes();
 
-function addNewSection(): void {}
+const isAddRouteSectionModalVisible = ref<boolean>(false);
+
+function addNewSection(): void {
+  isAddRouteSectionModalVisible.value = true;
+}
 </script>
 
 <template>
@@ -26,6 +32,11 @@ function addNewSection(): void {}
       @click="addNewSection"
     />
   </div>
+
+  <AddRouteSectionModal
+    v-model:visible="isAddRouteSectionModalVisible"
+    :route-id="activeRoute?.id"
+  />
 </template>
 
 <style lang="scss">
