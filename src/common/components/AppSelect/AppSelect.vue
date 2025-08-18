@@ -21,7 +21,7 @@ const props = withDefaults(defineProps<AppSelectProps>(), {
   options: () => [],
 });
 
-defineSlots<AppSelectSlots>();
+const slots = defineSlots<AppSelectSlots>();
 
 const selected = defineModel<string>('selected', {
   required: true,
@@ -30,6 +30,10 @@ const selected = defineModel<string>('selected', {
 const opened = ref<boolean>(false);
 const selectRef = ref<HTMLElement | null>(null);
 const localOptions = ref<AppSelectOption[]>(props.options);
+
+const hasLabel = computed<boolean>(() => {
+  return !!slots.label! || props.label;
+});
 
 const selectClass = computed<HTMLElementClass>(() => {
   return {
@@ -95,6 +99,18 @@ watch(props.options, (value) => {
     :class="selectClass"
   >
     <div
+      v-if="hasLabel"
+      class="app-select__label"
+    >
+      <slot name="label">
+        {{ props.label }}
+      </slot>
+      <span
+        v-if="props.required"
+        class="app-select__label-asterisk"
+      >*</span>
+    </div>
+    <div
       class="app-select__container"
       @click.self="toggleDropdown"
     >
@@ -141,10 +157,13 @@ watch(props.options, (value) => {
   $padding: 1rem;
   $parent: &;
 
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: .5rem;
   width: 100%;
   position: relative;
-  background-color: var(--color-white);
-  border: 1px solid var(--color-gray-dark);
   user-select: none;
 
   &--opened {
@@ -160,10 +179,29 @@ watch(props.options, (value) => {
   }
 
   &__container {
+    width: 100%;
     overflow: hidden;
     padding: 1rem 2rem 1rem 1rem;
     position: relative;
+    border-radius: .5rem;
+    background-color: var(--color-gray-lite);
     cursor: pointer;
+  }
+
+  &__label {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: .125rem;
+    width: 100%;
+    font-size: .875rem;
+    color: var(--color-gray-dark);
+    user-select: none;
+  }
+
+  &__label-asterisk {
+    color: var(--color-red);
   }
 
   &__selected {
@@ -180,13 +218,14 @@ watch(props.options, (value) => {
 
   &__placeholder {
     display: block;
+    opacity: .5;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     font-weight: 400;
     line-height: 1.4;
     font-size: .875rem;
-    color: rgba(var(--color-gray-lite), .5);
+    color: var(--color-gray-lite);
     pointer-events: none;
   }
 
@@ -262,12 +301,11 @@ watch(props.options, (value) => {
     width: calc(100% + 2px);
     overflow: auto;
     position: absolute;
-    top: 100%;
+    top: calc(100% + .5rem);
     left: -1px;
     z-index: 10;
-    border: 1px solid var(--color-gray-dark);
-    background-color: var(--color-white);
-    filter: drop-shadow(0px 2px 12px rgba(8, 61, 140, 0.14));
+    border-radius: .5rem;
+    background-color: var(--color-gray-lite);
     transition: opacity var(--transition);
 
     &--opened {
@@ -284,13 +322,9 @@ watch(props.options, (value) => {
     font-weight: 400;
     line-height: 1.4;
     font-size: .875rem;
-    color: rgba(var(--color-gray-dark), .5);
+    color: var(--color-gray-dark);
     transition: background-color var(--transition);
     cursor: pointer;
-
-    &:hover {
-      background-color: var(--color-gray-lite);
-    }
 
     &--selected {
       position: relative;

@@ -41,7 +41,7 @@ const rules = computed<ValidationArgs>(() => {
 
 const validation = useVuelidate<string>(rules, name);
 
-function onApply(): void {
+function onCreate(): void {
   visible.value = false;
   addRoute(name.value);
 }
@@ -68,9 +68,9 @@ function onApply(): void {
           rounded
           size="m"
           :disabled="validation.$invalid"
-          @click="onApply"
+          @click="onCreate"
         >
-          Завершить
+          Создать
         </AppButton>
 
         <AppButton
@@ -84,9 +84,3 @@ function onApply(): void {
     </template>
   </AppModal>
 </template>
-
-<style lang="scss">
-.container {
-  // styles
-}
-</style>

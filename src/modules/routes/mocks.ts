@@ -12,15 +12,10 @@ export const MOCKED_ROUTE: RouteSection[] = [
       type: 'airplane',
     },
     location: {
-      from: {
-        city: 'Санкт-Петербург',
-        country: 'Россия',
-      },
-      to: {
-        city: 'Хельсинки',
-        country: 'Финляндия',
-      },
+      city: 'Хельсинки',
+      country: 'Финляндия',
     },
+    habitation: {},
   },
   {
     id: '2',
@@ -30,15 +25,10 @@ export const MOCKED_ROUTE: RouteSection[] = [
       type: 'airplane',
     },
     location: {
-      from: {
-        city: 'Хельсинки',
-        country: 'Финляндия',
-      },
-      to: {
-        city: 'Римини',
-        country: 'Италия',
-      },
+      city: 'Римини',
+      country: 'Италия',
     },
+    habitation: {},
   },
   {
     id: '3',
@@ -48,15 +38,10 @@ export const MOCKED_ROUTE: RouteSection[] = [
       type: 'train',
     },
     location: {
-      from: {
-        city: 'Римини',
-        country: 'Италия',
-      },
-      to: {
-        city: 'Венеция',
-        country: 'Италия',
-      },
+      city: 'Венеция',
+      country: 'Италия',
     },
+    habitation: {},
   },
   {
     id: '4',
@@ -66,15 +51,10 @@ export const MOCKED_ROUTE: RouteSection[] = [
       type: 'airplane',
     },
     location: {
-      from: {
-        city: 'Венеция',
-        country: 'Италия',
-      },
-      to: {
-        city: 'Амстердам',
-        country: 'Нидерланды',
-      },
+      city: 'Амстердам',
+      country: 'Нидерланды',
     },
+    habitation: {},
   },
   {
     id: '5',
@@ -84,15 +64,10 @@ export const MOCKED_ROUTE: RouteSection[] = [
       type: 'bus',
     },
     location: {
-      from: {
-        city: 'Амстердам',
-        country: 'Нидерланды',
-      },
-      to: {
-        city: 'Брюгге',
-        country: 'Бельгия',
-      },
+      city: 'Брюгге',
+      country: 'Бельгия',
     },
+    habitation: {},
   },
   {
     id: '6',
@@ -102,15 +77,10 @@ export const MOCKED_ROUTE: RouteSection[] = [
       type: 'bus',
     },
     location: {
-      from: {
-        city: 'Брюгге',
-        country: 'Бельгия',
-      },
-      to: {
-        city: 'Брюссель',
-        country: 'Бельгия',
-      },
+      city: 'Брюссель',
+      country: 'Бельгия',
     },
+    habitation: {},
   },
   {
     id: '7',
@@ -120,15 +90,10 @@ export const MOCKED_ROUTE: RouteSection[] = [
       type: 'airplane',
     },
     location: {
-      from: {
-        city: 'Брюссель',
-        country: 'Бельгия',
-      },
-      to: {
-        city: 'Рига',
-        country: 'Латвия',
-      },
+      city: 'Рига',
+      country: 'Латвия',
     },
+    habitation: {},
   },
   {
     id: '8',
@@ -138,15 +103,10 @@ export const MOCKED_ROUTE: RouteSection[] = [
       type: 'airplane',
     },
     location: {
-      from: {
-        city: 'Рига',
-        country: 'Латвия',
-      },
-      to: {
-        city: 'Санкт-Петербург',
-        country: 'Россия',
-      },
+      city: 'Санкт-Петербург',
+      country: 'Россия',
     },
+    habitation: {},
   },
 ];
 
