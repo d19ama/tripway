@@ -7,7 +7,7 @@ import type {
 export const DEFAULT_ROUTE: Route = {
   id: '',
   name: '',
-  status: 'new',
+  state: 'new',
   opened: false,
   active: false,
   costs: 0,

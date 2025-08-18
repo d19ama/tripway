@@ -1,39 +1,89 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-import { useRoutes } from '@/modules/routes';
+import {
+  computed,
+  ref,
+} from 'vue';
+import {
+  CloseConfirmationModal,
+  RemoveConfirmationModal,
+} from '../';
+import { useRoutes } from '../../';
+import type { RouteState } from '@/modules/routes/types';
 
 const {
+  activeRoute,
+  editRoute,
   closeRoute,
 } = useRoutes();
 
 const route = useRoute();
 
-function saveRoute(): void {}
+const isCloseConfirmationModalVisible = ref<boolean>(false);
+const isRemoveConfirmationModalVisible = ref<boolean>(false);
 
-function removeRoute(): void {}
+const state = computed<RouteState>(() => {
+  return activeRoute.value?.state || 'completed';
+});
+
+function edit(): void {
+  editRoute(String(route.params.id));
+}
+
+function save(): void {}
+
+function close(): void {
+  if (state.value === 'edit' || state.value === 'new') {
+    isCloseConfirmationModalVisible.value = true;
+    return;
+  }
+
+  closeRoute(String(route.params.id));
+}
+
+function remove(): void {
+  isRemoveConfirmationModalVisible.value = true;
+}
 </script>
 
 <template>
   <section class="actions">
     <button
+      v-if="state === 'completed'"
       class="actions__button"
-      @click="saveRoute"
+      @click="edit"
+    >
+      Редактировать
+    </button>
+    <button
+      v-if="state === 'edit'"
+      class="actions__button"
+      @click="save"
     >
       Сохранить
     </button>
     <button
       class="actions__button"
-      @click="closeRoute(String(route.params.id))"
+      @click="close"
     >
       Закрыть
     </button>
     <button
+      v-if="state === 'completed'"
       class="actions__button"
-      @click="removeRoute"
+      @click="remove"
     >
       Удалить
     </button>
   </section>
+
+  <CloseConfirmationModal
+    v-model:visible="isCloseConfirmationModalVisible"
+  />
+
+  <RemoveConfirmationModal
+    v-model:visible="isRemoveConfirmationModalVisible"
+  />
 </template>
 
 <style lang="scss">

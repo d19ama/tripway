@@ -1,4 +1,4 @@
-export type RouteStatus = 'new' | 'completed' | 'edit';
+export type RouteState = 'new' | 'completed' | 'edit';
 
 export interface Route {
   id: string;
@@ -7,7 +7,7 @@ export interface Route {
   costs?: number;
   opened: boolean;
   active: boolean;
-  status: RouteStatus;
+  state: RouteState;
   route: RouteSection[];
 }
 

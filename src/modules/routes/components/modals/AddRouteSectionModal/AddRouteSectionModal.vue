@@ -28,6 +28,11 @@ import {
   DEFAULT_ROUTE_SECTION,
   ROUTE_SECTION_TRANSPORT_TYPE_MAP,
 } from '@/modules/routes/constants';
+import {
+  maxLength,
+  minLength,
+  required,
+} from '@/common/validators';
 
 interface Props {
   routeId?: Route['id'];
@@ -83,8 +88,26 @@ const options = ref<AppSelectOption<RouteSectionTransportType>[]>([
 
 const rules = computed<ValidationArgs>(() => {
   return {
-    transport: {},
-    location: {},
+    transport: {
+      departure: {
+        required,
+      },
+      arrival: {
+        required,
+      },
+    },
+    location: {
+      city: {
+        required,
+        maxLength: maxLength(100),
+        minLength: minLength(2),
+      },
+      country: {
+        required,
+        maxLength: maxLength(100),
+        minLength: minLength(3),
+      },
+    },
   };
 });
 
@@ -116,6 +139,7 @@ function onAdd(): void {
           v-model:value="form.location.country"
           label="Страна назначения"
           placeholder="Введите страну назначения"
+          :validation="validation.location.country"
           required
         />
       </div>
@@ -124,6 +148,7 @@ function onAdd(): void {
           v-model:value="form.location.city"
           label="Город назначения"
           placeholder="Введите город назначения"
+          :validation="validation.location.city"
           required
         />
       </div>
@@ -140,6 +165,7 @@ function onAdd(): void {
           v-model:date="form.transport.departure"
           label="Дата отправления"
           placeholder="Выберите дату отправления"
+          :validation="validation.transport.departure"
           required
         />
       </div>
@@ -148,6 +174,7 @@ function onAdd(): void {
           v-model:date="form.transport.arrival"
           label="Дата прибытия"
           placeholder="Выберите дату прибытия"
+          :validation="validation.transport.arrival"
           required
         />
       </div>
@@ -185,9 +212,9 @@ function onAdd(): void {
     <template #footer="{ close }">
       <AppModalActions>
         <AppButton
-          theme="blue-dark"
           rounded
-          size="m"
+          size="l"
+          theme="blue-dark"
           :disabled="validation.$invalid"
           @click="onAdd"
         >
@@ -196,7 +223,8 @@ function onAdd(): void {
 
         <AppButton
           rounded
-          size="m"
+          size="l"
+          theme="gray-lite"
           @click="close"
         >
           Отмена
@@ -205,7 +233,3 @@ function onAdd(): void {
     </template>
   </AppModal>
 </template>
-
-<style lang="scss">
-.add-route-section-modal {}
-</style>

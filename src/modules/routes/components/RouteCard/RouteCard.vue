@@ -2,6 +2,7 @@
 import {
   AppButton,
   AppTitle,
+  AppTooltip,
 } from '@/common/components';
 import type { Route } from '@/modules/routes';
 import {
@@ -14,21 +15,15 @@ interface Props {
 }
 
 interface Emits {
+  'edit:route': [id: Route['id']];
   'open:route': [id: Route['id']];
   'close:route': [id: Route['id']];
+  'remove:route': [id: Route['id']];
 }
 
 const props = defineProps<Props>();
 
 const emit = defineEmits<Emits>();
-
-function openRoute(): void {
-  emit('open:route', props.route.id);
-}
-
-function closeRoute(): void {
-  emit('close:route', props.route.id);
-}
 </script>
 
 <template>
@@ -62,27 +57,67 @@ function closeRoute(): void {
       </div>
       <div class="col-default-4">
         <div class="route-card__buttons">
-          <AppButton
-            v-if="!props.route.opened"
-            rounded
-            theme="green"
-            @click="openRoute"
-          >
-            Открыть
-          </AppButton>
-          <AppButton
-            v-if="props.route.opened"
-            rounded
-            theme="yellow"
-            @click="closeRoute"
-          >
-            Закрыть
-          </AppButton>
-          <AppButton
-            rounded
-          >
-            Удалить
-          </AppButton>
+          <AppTooltip v-if="!props.route.opened">
+            <template #activator>
+              <AppButton
+                v-if="!props.route.opened"
+                rounded
+                size="l"
+                auto-width
+                theme="border-blue"
+                @click="emit('open:route', props.route.id)"
+              >
+                <span class="icon icon-folder-open" />
+              </AppButton>
+            </template>
+            Открыть маршрут
+          </AppTooltip>
+          <AppTooltip v-if="!props.route.opened">
+            <template #activator>
+              <AppButton
+                v-if="!props.route.opened"
+                rounded
+                size="l"
+                auto-width
+                theme="border-green"
+                @click="emit('edit:route', props.route.id)"
+              >
+                <span class="icon icon-pencil" />
+              </AppButton>
+            </template>
+
+            Редактировать маршрут
+          </AppTooltip>
+          <AppTooltip v-if="props.route.opened">
+            <template #activator>
+              <AppButton
+                v-if="props.route.opened"
+                rounded
+                size="l"
+                auto-width
+                theme="border-yellow"
+                @click="emit('close:route', props.route.id)"
+              >
+                <span class="icon icon-cross" />
+              </AppButton>
+            </template>
+            Закрыть маршрут
+          </AppTooltip>
+          <AppTooltip>
+            <template #activator>
+              <AppButton
+                rounded
+                size="l"
+                auto-width
+                theme="border-red"
+                @click="emit('remove:route', props.route.id)"
+              >
+                <span class="icon icon-bin" />
+              </AppButton>
+            </template>
+
+            Удалить маршрут
+          </AppTooltip>
         </div>
       </div>
     </div>
@@ -91,10 +126,25 @@ function closeRoute(): void {
 
 <style lang="scss">
 .route-card {
-  padding: 1.5rem;
-  border-radius: .25rem;
+  margin-left: 1.5rem;
+  padding: 1.5rem 1.5rem 1.5rem 1rem;
+  position: relative;
+  border-radius: 0 .5rem .5rem 0;
   background-color: var(--color-white);
   cursor: default;
+
+  &:before {
+    content: '';
+    display: block;
+    width: 1.5rem;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 100%;
+    border-right: .125rem dashed var(--color-gray-dark);
+    border-radius: .5rem 0 0 .5rem;
+    background-color: var(--color-white);
+  }
 
   &__info {
     display: flex;
@@ -103,7 +153,8 @@ function closeRoute(): void {
   }
 
   &__caption {
-    color: $blue-dark;
+    font-size: 1.5rem;
+    color: var(--color-blue-dark);
   }
 
   &__value {
@@ -120,8 +171,9 @@ function closeRoute(): void {
 
   &__buttons {
     display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
+    flex-flow: row wrap;
+    align-items: stretch;
+    justify-content: flex-end;
     height: 100%;
     gap: 1rem;
   }

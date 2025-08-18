@@ -30,9 +30,12 @@ export const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: ':id',
+        path: 'list/:id',
         name: RouteNames.RoutePage,
-        component: () => import('@/pages/routes/[id].vue'),
+        components: {
+          default: () => import('@/pages/routes/[id].vue'),
+          actions: () => import('@/modules/routes/components/Actions/Actions.vue'),
+        },
         meta: {
           title: 'Route page',
         },

@@ -110,7 +110,8 @@ function onClick(event: Event): void {
   text-decoration: none;
   border: 0;
   outline: 0;
-  transition: background-color var(--transition), color var(--transition);
+  background-color: transparent;
+  transition: filter var(--transition), color var(--transition);
   user-select: none;
   cursor: pointer;
 
@@ -181,33 +182,55 @@ function onClick(event: Event): void {
     background-color: var(--color-blue-dark);
 
     &:hover {
-      background-color: var(--color-blue-middle);
+      filter: brightness(1.25);
+    }
+  }
+
+  &--theme-gray-lite {
+    color: var(--color-gray-dark);
+    background-color: var(--color-gray-lite);
+
+    &:hover {
+      filter: brightness(1.025);
+    }
+  }
+
+  &--theme-border-blue {
+    color: var(--color-blue-dark);
+    border: 2px solid var(--color-blue-dark);
+
+    &:hover {
+      color: var(--color-blue-middle);
+      border-color: var(--color-blue-middle);
     }
   }
 
   &--theme-border-red {
-    color: var(--color-red);
+    color: var(--color-red-dark);
     border: 2px solid var(--color-red-dark);
 
     &:hover {
+      color: var(--color-red);
       border-color: var(--color-red);
     }
   }
 
   &--theme-border-yellow {
-    color: var(--color-white);
+    color: var(--color-yellow-dark);
     border: 2px solid var(--color-yellow-dark);
 
     &:hover {
+      color: var(--color-yellow);
       border-color: var(--color-yellow);
     }
   }
 
   &--theme-border-green {
-    color: var(--color-green);
+    color: var(--color-green-dark);
     border: 2px solid var(--color-green-dark);
 
     &:hover {
+      color: var(--color-green);
       border-color: var(--color-green);
     }
   }

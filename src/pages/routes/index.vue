@@ -2,7 +2,6 @@
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import {
-  Actions,
   Navigation,
   useRoutes,
 } from '@/modules/routes';
@@ -28,7 +27,9 @@ onMounted(() => {
   <AppPage>
     <template #header>
       <Navigation />
-      <Actions />
+      <RouterView
+        name="actions"
+      />
     </template>
     <template #content>
       <RouterView />

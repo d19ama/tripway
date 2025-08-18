@@ -102,7 +102,7 @@ function price(value: string | undefined): string {
   justify-content: flex-start;
   flex-grow: 1;
   min-width: 20%;
-  max-width: 25%;
+  max-width: calc(100%/3);
   height: 150px;
   position: relative;
   cursor: pointer;
