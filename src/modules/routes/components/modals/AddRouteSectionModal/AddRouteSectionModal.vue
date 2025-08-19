@@ -24,7 +24,6 @@ import {
   type AppSelectOption,
   AppTitle,
 } from '@/common/components';
-
 import {
   DEFAULT_ROUTE_SECTION,
   ROUTE_SECTION_TRANSPORT_TYPE_MAP,
@@ -54,7 +53,7 @@ const form = ref<RouteSection>({
   ...DEFAULT_ROUTE_SECTION,
 });
 
-const options = ref<AppSelectOption<RouteSectionTransportType>[]>([
+const transportTypeOptions = ref<AppSelectOption<RouteSectionTransportType>[]>([
   {
     id: 'airplane',
     text: ROUTE_SECTION_TRANSPORT_TYPE_MAP.airplane,
@@ -62,8 +61,20 @@ const options = ref<AppSelectOption<RouteSectionTransportType>[]>([
     disabled: false,
   },
   {
+    id: 'train',
+    text: ROUTE_SECTION_TRANSPORT_TYPE_MAP.train,
+    selected: false,
+    disabled: false,
+  },
+  {
     id: 'bus',
     text: ROUTE_SECTION_TRANSPORT_TYPE_MAP.bus,
+    selected: false,
+    disabled: false,
+  },
+  {
+    id: 'car',
+    text: ROUTE_SECTION_TRANSPORT_TYPE_MAP.car,
     selected: false,
     disabled: false,
   },
@@ -76,12 +87,6 @@ const options = ref<AppSelectOption<RouteSectionTransportType>[]>([
   {
     id: 'other',
     text: ROUTE_SECTION_TRANSPORT_TYPE_MAP.other,
-    selected: false,
-    disabled: false,
-  },
-  {
-    id: 'train',
-    text: ROUTE_SECTION_TRANSPORT_TYPE_MAP.train,
     selected: false,
     disabled: false,
   },
@@ -184,7 +189,7 @@ function onAdd(): void {
       <div class="col-default-6">
         <AppSelect
           v-model:selected="form.transport.type"
-          :options="options"
+          :options="transportTypeOptions"
           label="Вид транспорта"
           placeholder="Выберите вид транспорта"
         />

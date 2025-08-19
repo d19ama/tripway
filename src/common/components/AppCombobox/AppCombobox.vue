@@ -6,34 +6,52 @@ import {
   watch,
 } from 'vue';
 import type {
-  AppSelectOption,
-  AppSelectProps,
-  AppSelectSlots,
+  AppComboboxOption,
+  AppComboboxProps,
+  AppComboboxSlots,
 } from './types';
 import type { HTMLElementClass } from '@/common/types';
+import { AppSpinner } from '@/common/components';
 
-const props = withDefaults(defineProps<AppSelectProps>(), {
+const props = withDefaults(defineProps<AppComboboxProps>(), {
   hint: '',
   label: '',
   errorText: '',
+  loading: false,
   placeholder: '',
   multiple: false,
   disabled: false,
   required: false,
-  options: () => [],
 });
 
-const slots = defineSlots<AppSelectSlots>();
+const slots = defineSlots<AppComboboxSlots>();
 
 const selected = defineModel<string>('selected', {
   required: false,
   default: '',
 });
 
+const options = defineModel<AppComboboxOption[]>('options', {
+  required: false,
+  default: () => [],
+});
+
+const search = ref<string>('');
+const focus = ref<boolean>(false);
 const error = ref<boolean>(false);
 const opened = ref<boolean>(false);
 const selectRef = ref<HTMLElement | null>(null);
-const localOptions = ref<AppSelectOption[]>(props.options);
+
+const localOptions = computed<AppComboboxOption[]>({
+  get() {
+    return options.value.filter((item) => {
+      return item.text.toLowerCase().includes(search.value.toLowerCase());
+    });
+  },
+  set(value) {
+    options.value = value;
+  },
+});
 
 const hasLabel = computed<boolean>(() => {
   return !!slots.label! || props.label;
@@ -43,21 +61,20 @@ const hasHint = computed<boolean>(() => {
   return !!slots.hint! || props.hint;
 });
 
+const isDropdownVisible = computed<boolean>(() => {
+  return focus.value
+    && search.value.length > 1;
+});
+
 const isPlaceholderVisible = computed<boolean>(() => {
   return props.placeholder.length > 0
-    && !selected.value;
+    && (!search.value && !selected.value);
 });
 
 const selectClass = computed<HTMLElementClass>(() => {
   return {
-    'app-select--opened': opened.value,
-    'app-select--disabled': props.disabled,
-  };
-});
-
-const dropdownClass = computed<HTMLElementClass>(() => {
-  return {
-    'app-select__dropdown--opened': opened.value,
+    'app-combobox--opened': opened.value,
+    'app-combobox--disabled': props.disabled,
   };
 });
 
@@ -81,6 +98,10 @@ const isErrorVisible = computed<boolean>(() => {
     && !!errorMessage.value;
 });
 
+const hasOptions = computed<boolean>(() => {
+  return !props.loading && localOptions.value.length > 0;
+});
+
 onMounted(() => {
   document.addEventListener('click', hideDropdown);
 });
@@ -95,10 +116,11 @@ function hideDropdown(event: MouseEvent): void {
 
   if (isOutside) {
     opened.value = false;
+    focus.value = false;
   }
 }
 
-function changeSelected(option: AppSelectOption): void {
+function changeSelected(option: AppComboboxOption): void {
   localOptions.value = localOptions.value.map((item) => {
     return {
       ...item,
@@ -106,11 +128,13 @@ function changeSelected(option: AppSelectOption): void {
     };
   });
   selected.value = option.text;
+  search.value = option.text;
   opened.value = false;
+  focus.value = false;
 }
 
-function toggleDropdown(): void {
-  opened.value = !opened.value;
+function onFocus(): void {
+  focus.value = true;
 }
 
 function validate(): void {
@@ -118,18 +142,18 @@ function validate(): void {
   error.value = !!props.validation?.$error;
 }
 
-function optionClass(item: AppSelectOption): HTMLElementClass {
+function optionClass(item: AppComboboxOption): HTMLElementClass {
   return {
-    'app-select__option--selected': item.selected,
-    'app-select__option--disabled': item.disabled,
+    'app-combobox__option--selected': item.selected,
+    'app-combobox__option--disabled': item.disabled,
   };
 }
 
-watch(props.options, (value) => {
+watch(options, (value) => {
   localOptions.value = value;
 });
 
-watch(opened, (value) => {
+watch(focus, (value) => {
   if (!value) {
     validate();
   }
@@ -139,48 +163,51 @@ watch(opened, (value) => {
 <template>
   <div
     ref="selectRef"
-    class="app-select"
+    class="app-combobox"
     :class="selectClass"
+    @click="onFocus"
   >
     <div
       v-if="hasLabel"
-      class="app-select__label"
+      class="app-combobox__label"
     >
       <slot name="label">
         {{ props.label }}
       </slot>
       <span
         v-if="props.required"
-        class="app-select__label-asterisk"
+        class="app-combobox__label-asterisk"
       >*</span>
     </div>
-    <div
-      class="app-select__container"
-      @click.self="toggleDropdown"
-    >
+    <div class="app-combobox__container">
       <span
         v-if="isPlaceholderVisible"
-        class="app-select__placeholder"
+        class="app-combobox__placeholder"
       >
         {{ props.placeholder }}
       </span>
-      <span
-        v-if="selected.length"
-        class="app-select__selected"
+      <input
+        v-model="search"
+        autocomplete="off"
+        class="app-combobox__input"
+        type="text"
+        :disabled="props.disabled"
+        :maxlength="props.maxLength"
       >
-        {{ selected }}
-      </span>
-      <span class="app-select__arrow" />
+      <span class="app-combobox__arrow" />
     </div>
     <div
-      class="app-select__dropdown"
-      :class="dropdownClass"
+      v-if="isDropdownVisible"
+      class="app-combobox__dropdown"
     >
-      <ul class="app-select__options">
+      <ul
+        v-if="hasOptions"
+        class="app-combobox__options"
+      >
         <li
           v-for="item in localOptions"
           :key="item.id"
-          class="app-select__option"
+          class="app-combobox__option"
           :class="optionClass(item)"
           @click="changeSelected(item)"
         >
@@ -192,10 +219,22 @@ watch(opened, (value) => {
           </slot>
         </li>
       </ul>
+      <AppSpinner
+        v-else-if="props.loading"
+        :active="props.loading"
+        class="app-combobox__loading"
+        auto-width
+      />
+      <div
+        v-else
+        class="app-combobox__empty"
+      >
+        Не удалось загрузить данные.<br>Проверьте подключение к интернету и попробуйте еще раз.
+      </div>
     </div>
     <span
       v-if="isErrorVisible"
-      class="app-select__error"
+      class="app-combobox__error"
     >
       <slot name="error">
         {{ errorMessage }}
@@ -203,7 +242,7 @@ watch(opened, (value) => {
     </span>
     <span
       v-if="hasHint && !isErrorVisible"
-      class="app-select__hint"
+      class="app-combobox__hint"
     >
       <slot name="hint">
         {{ props.hint }}
@@ -213,7 +252,7 @@ watch(opened, (value) => {
 </template>
 
 <style lang="scss">
-.app-select {
+.app-combobox {
   $padding: 1rem;
   $parent: &;
 
@@ -241,7 +280,6 @@ watch(opened, (value) => {
   &__container {
     width: 100%;
     overflow: hidden;
-    padding: 1rem 2rem 1rem 1rem;
     position: relative;
     border-radius: .5rem;
     background-color: var(--color-gray-lite);
@@ -271,26 +309,42 @@ watch(opened, (value) => {
     color: var(--color-red);
   }
 
-  &__selected,
+  &__input,
   &__placeholder {
+    padding: 1rem 2.5rem 1rem 1rem;
     font-weight: 400;
     line-height: 1.5;
     font-size: .875rem;
     color: var(--color-gray-dark);
   }
 
-  &__selected {
-    display: block;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    pointer-events: none;
+  &__input {
+    width: 100%;
+    border: none;
+    background-color: transparent;
+
+    &:hover,
+    &:focus {
+      outline: 0 none;
+    }
+
+    &:invalid {
+      box-shadow: none;
+    }
+
+    &::-ms-clear {
+      display: none;
+    }
   }
 
   &__placeholder {
     display: block;
     opacity: .5;
     overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
     white-space: nowrap;
     text-overflow: ellipsis;
     pointer-events: none;
@@ -360,11 +414,10 @@ watch(opened, (value) => {
     border: 8px solid transparent;
     border-top: 10px solid var(--color-gray-dark);
     border-bottom: 0;
-    pointer-events: none;
+    cursor: pointer;
   }
 
   &__dropdown {
-    display: none;
     width: calc(100% + 2px);
     overflow: auto;
     position: absolute;
@@ -384,12 +437,16 @@ watch(opened, (value) => {
     margin: 0;
   }
 
-  &__option {
+  &__option,
+  &__empty {
     padding: 1rem;
     font-weight: 400;
     line-height: 1.4;
     font-size: .875rem;
     color: var(--color-gray-dark);
+  }
+
+  &__option {
     transition: background-color var(--transition);
     cursor: pointer;
 
@@ -417,6 +474,17 @@ watch(opened, (value) => {
       opacity: .5;
       pointer-events: none;
     }
+  }
+
+  &__empty {
+    opacity: .5;
+  }
+
+  &__loading {
+    width: 2rem;
+    height: 2rem;
+    margin: 1rem auto;
+    color: var(--color-blue-dark);
   }
 
   &__hint {
