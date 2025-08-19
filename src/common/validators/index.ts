@@ -7,3 +7,5 @@ export { fractionalNumber } from './fractionalNumber';
 export { minLength } from './minLength';
 export { maxLength } from './maxLength';
 export { email } from './email';
+export { fileSize } from './fileSize';
+export { fileFormat } from './fileFormat';

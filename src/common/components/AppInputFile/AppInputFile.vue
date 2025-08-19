@@ -10,31 +10,24 @@ import type {
 } from './types';
 
 const props = withDefaults(defineProps<AppInputFileProps>(), {
+  hint: '',
+  label: '',
+  errorText: '',
   type: 'base64',
+  multiple: false,
+  required: false,
+  placeholder: '...',
   acceptType: 'image',
   acceptSize: 1048576,
-  buttonText: 'Upload photo',
+  buttonText: 'Загрузить',
 });
 
 const emit = defineEmits<AppInputFileEmits>();
 
-defineSlots<AppInputFileSlots>();
-
-const EXTENSIONS = {
-  image: [
-    'jpg',
-    'jpeg',
-    'png',
-    'bmp',
-  ],
-  json: [
-    'json',
-    'jsonp',
-  ],
-};
+const slots = defineSlots<AppInputFileSlots>();
 
 const ACCEPT_SETTINGS = {
-  image: '.jpg,.jpeg,.png,.bmp,image/bmp,image/png,image/x-png',
+  image: '.jpg, .jpeg, .png, .gif, .svg',
   json: 'application/json',
 };
 
@@ -42,15 +35,49 @@ const currentFile = ref<File>();
 const message = ref<string>('');
 const error = ref<boolean>(false);
 
+const hasLabel = computed<boolean>(() => {
+  return !!slots.label! || props.label;
+});
+
+const hasHint = computed<boolean>(() => {
+  return !!slots.hint! || props.hint;
+});
+
+const hasButton = computed<boolean>(() => {
+  return !!slots.button! || props.buttonText;
+});
+
 const fileName = computed<string>(() => {
   return currentFile.value && currentFile.value.name.length
     ? currentFile.value.name
-    : '...';
+    : props.placeholder;
+});
+
+const errorMessage = computed<string | undefined>(() => {
+  if (props.errorText) {
+    return props.errorText;
+  }
+
+  if (props.validation) {
+    return props.validation.$errors.map(({
+      $message,
+    }) => $message.toString()).at(0);
+  }
+
+  return undefined;
+});
+
+const isErrorVisible = computed<boolean>(() => {
+  return props.required
+    && error.value
+    && !!errorMessage.value;
 });
 
 function onChange(event: Event): void {
   const element = event.currentTarget as HTMLInputElement;
   const files: FileList | null = element.files;
+
+  validate();
 
   if (!files) {
     return;
@@ -60,7 +87,7 @@ function onChange(event: Event): void {
     uploadedFile,
   ] = files;
 
-  if (!uploadedFile || !validate(uploadedFile)) {
+  if (!uploadedFile || props.validation?.$invalid) {
     return;
   }
 
@@ -86,47 +113,35 @@ function encodeImageFileAsURL(file: File, callback: Function): void {
   reader.readAsDataURL(file);
 }
 
-function validate(file: File): void | boolean {
-  if (checkFormat(file.name)) {
-    error.value = false;
-  } else {
-    error.value = true;
-    message.value = 'Format is invalid';
-    return false;
-  }
-
-  if (checkSize(file.size)) {
-    error.value = false;
-  } else {
-    error.value = true;
-    message.value = 'Size is invalid';
-    return false;
-  }
-
-  return true;
-}
-
-function checkSize(fileSize: number): boolean {
-  return fileSize <= props.acceptSize;
-}
-
-function checkFormat(fileName: string): boolean {
-  const regexp: RegExp = /(?:\.([^.]+))?$/;
-  const name: string = fileName.toLowerCase();
-  const extension: RegExpExecArray | null = regexp.exec(name);
-  const types: string[] = EXTENSIONS[props.acceptType];
-
-  return extension !== null
-    ? types.includes(extension[1] as unknown as string)
-    : false;
+function validate(): void {
+  props.validation?.$touch();
+  error.value = !!props.validation?.$error;
 }
 </script>
 
 <template>
-  <div class="app-input-file">
-    <label class="app-input-file__inner">
-      <span class="app-input-file__button">
-        {{ props.buttonText }}
+  <label class="app-input-file">
+    <span
+      v-if="hasLabel"
+      class="app-input-file__label"
+    >
+      <slot name="label">
+        {{ props.label }}
+      </slot>
+      <span
+        v-if="props.required"
+        class="app-input-file__label-asterisk"
+      >*</span>
+    </span>
+
+    <span class="app-input-file__inner">
+      <span
+        v-if="hasButton"
+        class="app-input-file__button"
+      >
+        <slot name="button">
+          {{ props.buttonText }}
+        </slot>
       </span>
       <input
         type="file"
@@ -135,7 +150,7 @@ function checkFormat(fileName: string): boolean {
         class="app-input-file__input"
         @change="onChange"
       >
-      <span class="app-input-file__text">
+      <span class="app-input-file__placeholder">
         <slot
           name="file"
           :file="currentFile"
@@ -143,66 +158,107 @@ function checkFormat(fileName: string): boolean {
           {{ fileName }}
         </slot>
       </span>
-      <span
-        v-if="error"
-        class="app-input-file__error"
+    </span>
+
+    <span
+      v-if="error"
+      class="app-input-file__error"
+    >
+      <slot
+        name="error"
+        :error="message"
       >
-        <slot
-          name="error"
-          :error="message"
-        >
-          {{ message }}
-        </slot>
-      </span>
-    </label>
-  </div>
+        {{ message }}
+      </slot>
+    </span>
+
+    <span
+      v-if="hasHint && !isErrorVisible"
+      class="app-input-file__hint"
+    >
+      <slot name="hint">
+        {{ props.hint }}
+      </slot>
+    </span>
+  </label>
 </template>
 
 <style lang="scss">
-$padding: 1rem;
-
 .app-input-file {
+  $padding: 1rem;
+  display: flex;
+  flex-flow: column nowrap;
+  width: 100%;
+  gap: .25rem;
 
-  &__input {
-    display: none;
+  &__label,
+  &__error,
+  &__hint {
+    font-size: .75rem;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  &__label {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: .125rem;
+    width: 100%;
+    color: var(--color-gray-dark);
+    user-select: none;
+  }
+
+  &__label-asterisk {
+    color: var(--color-red);
   }
 
   &__inner {
     display: flex;
     align-items: center;
     flex-flow: row nowrap;
+    overflow: hidden;
     width: 100%;
     position: relative;
+    border-radius: .5rem;
     background-color: var(--color-gray-lite);
-    border: 1px solid var(--color-gray-dark);
-    user-select: none;
     cursor: pointer;
   }
 
-  &__button {
-    padding: $padding;
-    color: var(--color-white);
-    white-space: nowrap;
-    background-color: var(--color-gray-dark);
+  &__input {
+    display: none;
   }
 
-  &__text {
+  &__button,
+  &__placeholder {
+    padding: $padding;
+    font-weight: 400;
+    line-height: 1.5;
+    font-size: .875rem;
+    white-space: nowrap;
+  }
+
+  &__button {
+    color: var(--color-gray-dark);
+    background-color: var(--color-gray-middle);
+  }
+
+  &__placeholder {
+    opacity: .5;
     max-width: 100%;
     overflow: hidden;
-    padding: $padding;
-    white-space: nowrap;
     text-overflow: ellipsis;
-    color: rgba(var(--color-black), .5);
+    color: var(--color-gray-dark);
     pointer-events: none;
   }
 
+  &__hint {
+    opacity: .5;
+    color: var(--color-gray-dark);
+  }
+
   &__error {
-    display: block;
-    position: absolute;
-    top: calc(100% + .25rem);
-    left: 0;
-    z-index: 1;
-    font-size: .75rem;
     color: var(--color-red);
   }
 }
