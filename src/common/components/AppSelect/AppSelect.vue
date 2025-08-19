@@ -221,7 +221,7 @@ watch(opened, (value) => {
   flex-flow: column nowrap;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: .5rem;
+  gap: .25rem;
   width: 100%;
   position: relative;
   user-select: none;
