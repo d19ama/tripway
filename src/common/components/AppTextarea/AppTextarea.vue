@@ -11,16 +11,18 @@ import type {
 import type { HTMLElementClass } from '@/common/types';
 
 const props = withDefaults(defineProps<AppTextareaProps>(), {
+  hint: '',
+  label: '',
   resize: false,
   required: false,
   disabled: false,
-  errorText: 'Error!',
-  placeholder: 'Placeholder',
+  errorText: '',
+  placeholder: '',
 });
 
 const emit = defineEmits<AppTextareaEmits>();
 
-defineSlots<AppTextareaSlots>();
+const slots = defineSlots<AppTextareaSlots>();
 
 const value = defineModel<string>('value', {
   required: true,
@@ -29,9 +31,16 @@ const value = defineModel<string>('value', {
 const error = ref<boolean>(false);
 const focus = ref<boolean>(false);
 
+const hasLabel = computed<boolean>(() => {
+  return !!slots.label! || props.label;
+});
+
+const hasHint = computed<boolean>(() => {
+  return !!slots.hint! || props.hint;
+});
+
 const elementClass = computed<HTMLElementClass>(() => {
   return {
-    'app-textarea--error': error.value,
     'app-textarea--resizable': props.resize,
     'app-textarea--disabled': props.disabled,
   };
@@ -41,57 +50,109 @@ const counter = computed<number>(() => {
   return value.value.length;
 });
 
+const errorMessage = computed<string | undefined>(() => {
+  if (props.errorText) {
+    return props.errorText;
+  }
+
+  if (props.validation) {
+    return props.validation.$errors.map(({
+      $message,
+    }) => $message.toString()).at(0);
+  }
+
+  return undefined;
+});
+
+const isErrorVisible = computed<boolean>(() => {
+  return props.required
+    && error.value
+    && !!errorMessage.value;
+});
+
 function onInput(): void {
-  error.value = validate();
   emit('input', value.value);
 }
 
 function onChange(): void {
-  error.value = validate();
   emit('change', value.value);
 }
 
-function validate(): boolean {
-  return props.required && !value.value;
+function onFocus(): void {
+  focus.value = true;
+  emit('focus');
+}
+
+function onBlur(): void {
+  validate();
+  focus.value = false;
+  emit('blur');
+}
+
+function validate(): void {
+  props.validation?.$touch();
+  error.value = !!props.validation?.$error;
 }
 </script>
 
 <template>
-  <label
+  <div
     class="app-textarea"
     :class="elementClass"
   >
-    <textarea
-      v-model="value"
-      cols="30"
-      rows="10"
-      maxLength="999"
-      class="app-textarea__textarea"
-      :disabled="props.disabled"
-      @blur="focus = false"
-      @focus="focus = true"
-      @input="onInput"
-      @change="onChange"
-    />
-    <span
-      v-show="props.placeholder && !focus && !value"
-      class="app-textarea__placeholder"
+    <div
+      v-if="hasLabel"
+      class="app-textarea__label"
     >
-      {{ props.placeholder }}
+      <slot name="label">
+        {{ props.label }}
+      </slot>
+      <span
+        v-if="props.required"
+        class="app-textarea__label-asterisk"
+      >*</span>
+    </div>
+    <span class="app-textarea__wrapper">
+      <textarea
+        v-model="value"
+        cols="30"
+        rows="10"
+        maxLength="999"
+        class="app-textarea__textarea"
+        :disabled="props.disabled"
+        @blur="onBlur"
+        @focus="onFocus"
+        @input="onInput"
+        @change="onChange"
+      />
+      <span
+        v-show="props.placeholder && !focus && !value"
+        class="app-textarea__placeholder"
+      >
+        {{ props.placeholder }}
+      </span>
     </span>
     <span
-      v-show="props.required && error"
+      v-show="isErrorVisible"
       class="app-textarea__error"
     >
       <slot name="error">
-        {{ props.errorText }}
+        {{ errorMessage }}
       </slot>
     </span>
     <span
       v-if="counter > 0"
       class="app-textarea__counter"
     >{{ counter }}</span>
-  </label>
+    <span
+      v-if="hasHint && !isErrorVisible"
+      class="app-textarea__hint"
+    >
+      <slot name="hint">
+        {{ props.hint }}
+      </slot>
+    </span>
+  </div>
 </template>
 
 <style lang="scss">
@@ -99,14 +160,42 @@ function validate(): boolean {
   $parent: &;
 
   display: flex;
-  align-items: center;
-  flex-flow: row nowrap;
-  height: 8rem;
-  padding: 1rem 1.5rem 1rem 1rem;
+  align-items: flex-start;
+  flex-flow: column nowrap;
+  gap: .25rem;
   position: relative;
-  border-radius: 0;
-  background-color: var(--color-white);
-  border: 1px solid var(--color-gray-dark);
+
+  &__wrapper {
+    width: 100%;
+    height: 8rem;
+    position: relative;
+    padding: 1rem 1.5rem 1rem 1rem;
+    border-radius: .5rem;
+    background-color: var(--color-gray-lite);
+  }
+
+  &__label,
+  &__error,
+  &__hint {
+    font-size: .75rem;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  &__label {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: .125rem;
+    width: 100%;
+    color: var(--color-gray-dark);
+    user-select: none;
+  }
+
+  &__label-asterisk {
+    color: var(--color-red);
+  }
 
   &__textarea {
     display: block;
@@ -145,22 +234,21 @@ function validate(): boolean {
     pointer-events: none;
   }
 
+  &__hint {
+    opacity: .5;
+    color: var(--color-gray-dark);
+  }
+
   &__error {
-    padding: .2rem 0 0;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 1;
     color: var(--color-red);
-    font-size: .65rem;
   }
 
   &__counter {
     width: 1rem;
     font-size: 0.5rem;
     position: absolute;
-    right: 3px;
-    bottom: 3px;
+    right: 4px;
+    bottom: 6px;
     text-align: center;
   }
 
@@ -169,10 +257,6 @@ function validate(): boolean {
     #{$parent}__textarea {
       resize: both;
     }
-  }
-
-  &--error {
-    border-color: var(--color-red);
   }
 
   &--disabled {
