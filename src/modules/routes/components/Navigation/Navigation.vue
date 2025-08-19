@@ -124,7 +124,7 @@ function changeView(): void {
   justify-content: space-between;
   height: $height;
   background-color: var(--color-white);
-  box-shadow: inset 0 1px 0 0 rgba($gray-dark, .2), 0 0 10px 0 rgba($gray-dark, .5);
+  box-shadow: inset 0 1px 0 0 rgba($gray-dark, .2), 6px 6px 20px rgba($black, 0.2);
   user-select: none;
 
   &__tabs {

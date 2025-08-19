@@ -32,6 +32,7 @@ function removeRoute(): void {
     <AppButton
       size="l"
       rounded
+      shadow
       theme="yellow"
       @click="addRoute"
     >
@@ -41,10 +42,10 @@ function removeRoute(): void {
       v-for="item in routes"
       :key="item.id"
       :route="item"
-      @open:route="openRoute"
       @edit:route="editRoute"
       @close:route="closeRoute"
       @remove:route="removeRoute"
+      @click="openRoute"
     />
   </div>
 
@@ -64,7 +65,7 @@ function removeRoute(): void {
   align-items: stretch;
   justify-content: flex-start;
   gap: 1rem;
-  width: 720px;
+  width: 640px;
   margin: auto;
 }
 </style>

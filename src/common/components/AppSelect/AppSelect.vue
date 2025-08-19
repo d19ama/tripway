@@ -13,6 +13,8 @@ import type {
 import type { HTMLElementClass } from '@/common/types';
 
 const props = withDefaults(defineProps<AppSelectProps>(), {
+  hint: '',
+  label: '',
   errorText: '',
   placeholder: '',
   multiple: false,
@@ -24,15 +26,26 @@ const props = withDefaults(defineProps<AppSelectProps>(), {
 const slots = defineSlots<AppSelectSlots>();
 
 const selected = defineModel<string>('selected', {
-  required: true,
+  required: false,
+  default: '',
 });
 
+const error = ref<boolean>(false);
 const opened = ref<boolean>(false);
 const selectRef = ref<HTMLElement | null>(null);
 const localOptions = ref<AppSelectOption[]>(props.options);
 
 const hasLabel = computed<boolean>(() => {
   return !!slots.label! || props.label;
+});
+
+const hasHint = computed<boolean>(() => {
+  return !!slots.hint! || props.hint;
+});
+
+const isPlaceholderVisible = computed<boolean>(() => {
+  return props.placeholder.length > 0
+    && !selected.value;
 });
 
 const selectClass = computed<HTMLElementClass>(() => {
@@ -46,6 +59,26 @@ const dropdownClass = computed<HTMLElementClass>(() => {
   return {
     'app-select__dropdown--opened': opened.value,
   };
+});
+
+const errorMessage = computed<string | undefined>(() => {
+  if (props.errorText) {
+    return props.errorText;
+  }
+
+  if (props.validation) {
+    return props.validation.$errors.map(({
+      $message,
+    }) => $message.toString()).at(0);
+  }
+
+  return undefined;
+});
+
+const isErrorVisible = computed<boolean>(() => {
+  return props.required
+    && error.value
+    && !!errorMessage.value;
 });
 
 onMounted(() => {
@@ -80,6 +113,11 @@ function toggleDropdown(): void {
   opened.value = !opened.value;
 }
 
+function validate(): void {
+  props.validation?.$touch();
+  error.value = !!props.validation?.$error;
+}
+
 function optionClass(item: AppSelectOption): HTMLElementClass {
   return {
     'app-select__option--selected': item.selected,
@@ -89,6 +127,12 @@ function optionClass(item: AppSelectOption): HTMLElementClass {
 
 watch(props.options, (value) => {
   localOptions.value = value;
+});
+
+watch(opened, (value) => {
+  if (!value) {
+    validate();
+  }
 });
 </script>
 
@@ -115,10 +159,10 @@ watch(props.options, (value) => {
       @click.self="toggleDropdown"
     >
       <span
-        v-if="placeholder && !selected.length"
+        v-if="isPlaceholderVisible"
         class="app-select__placeholder"
       >
-        {{ placeholder }}
+        {{ props.placeholder }}
       </span>
       <span
         v-if="selected.length"
@@ -149,6 +193,22 @@ watch(props.options, (value) => {
         </li>
       </ul>
     </div>
+    <span
+      v-if="isErrorVisible"
+      class="app-select__error"
+    >
+      <slot name="error">
+        {{ errorMessage }}
+      </slot>
+    </span>
+    <span
+      v-if="hasHint && !isErrorVisible"
+      class="app-select__hint"
+    >
+      <slot name="hint">
+        {{ props.hint }}
+      </slot>
+    </span>
   </div>
 </template>
 
@@ -188,6 +248,14 @@ watch(props.options, (value) => {
     cursor: pointer;
   }
 
+  &__label,
+  &__error,
+  &__hint {
+    font-size: .75rem;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
   &__label {
     display: flex;
     flex-flow: row nowrap;
@@ -195,7 +263,6 @@ watch(props.options, (value) => {
     justify-content: flex-start;
     gap: .125rem;
     width: 100%;
-    font-size: .875rem;
     color: var(--color-gray-dark);
     user-select: none;
   }
@@ -204,15 +271,19 @@ watch(props.options, (value) => {
     color: var(--color-red);
   }
 
+  &__selected,
+  &__placeholder {
+    font-weight: 400;
+    line-height: 1.5;
+    font-size: .875rem;
+    color: var(--color-gray-dark);
+  }
+
   &__selected {
     display: block;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    font-weight: 400;
-    line-height: 1.4;
-    color: var(--color-gray-dark);
-    font-size: .875rem;
     pointer-events: none;
   }
 
@@ -222,10 +293,6 @@ watch(props.options, (value) => {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    font-weight: 400;
-    line-height: 1.4;
-    font-size: .875rem;
-    color: var(--color-gray-lite);
     pointer-events: none;
   }
 
@@ -350,6 +417,15 @@ watch(props.options, (value) => {
       opacity: .5;
       pointer-events: none;
     }
+  }
+
+  &__hint {
+    opacity: .5;
+    color: var(--color-gray-dark);
+  }
+
+  &__error {
+    color: var(--color-red);
   }
 }
 </style>

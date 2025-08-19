@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import {
+  computed,
+  ref,
+} from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import type {
   AppDatePickerModel,
@@ -9,7 +12,9 @@ import type {
 import '@vuepic/vue-datepicker/dist/main.css';
 
 const props = withDefaults(defineProps<AppDatePickerProps>(), {
+  hint: '',
   range: false,
+  errorText: '',
   placeholder: '',
   autoApply: true,
   disabled: false,
@@ -25,14 +30,49 @@ const date = defineModel<AppDatePickerModel>('date', {
   required: false,
 });
 
+const error = ref<boolean>(false);
+
 const hasLabel = computed<boolean>(() => {
   return !!slots.label! || props.label;
+});
+
+const hasHint = computed<boolean>(() => {
+  return !!slots.hint! || props.hint;
 });
 
 const isPlaceholderVisible = computed<boolean>(() => {
   return props.placeholder.length > 0
     && !date.value;
 });
+
+const errorMessage = computed<string | undefined>(() => {
+  if (props.errorText) {
+    return props.errorText;
+  }
+
+  if (props.validation) {
+    return props.validation.$errors.map(({
+      $message,
+    }) => $message.toString()).at(0);
+  }
+
+  return undefined;
+});
+
+const isErrorVisible = computed<boolean>(() => {
+  return props.required
+    && error.value
+    && !!errorMessage.value;
+});
+
+function onBlur(): void {
+  validate();
+}
+
+function validate(): void {
+  props.validation?.$touch();
+  error.value = !!props.validation?.$error;
+}
 </script>
 
 <template>
@@ -58,6 +98,7 @@ const isPlaceholderVisible = computed<boolean>(() => {
         :model-type="props.modelType"
         :year-picker="props.yearPicker"
         :month-picker="props.monthPicker"
+        @blur="onBlur"
       />
       <span
         v-if="isPlaceholderVisible"
@@ -66,6 +107,22 @@ const isPlaceholderVisible = computed<boolean>(() => {
         {{ props.placeholder }}
       </span>
     </div>
+    <span
+      v-if="isErrorVisible"
+      class="app-date-picker__error"
+    >
+      <slot name="error">
+        {{ errorMessage }}
+      </slot>
+    </span>
+    <span
+      v-if="hasHint && !isErrorVisible"
+      class="app-date-picker__hint"
+    >
+      <slot name="hint">
+        {{ props.hint }}
+      </slot>
+    </span>
   </div>
 </template>
 
@@ -87,6 +144,14 @@ $padding: 1rem;
     background-color: var(--color-gray-lite);
   }
 
+  &__label,
+  &__error,
+  &__hint {
+    font-size: .75rem;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
   &__label {
     display: flex;
     flex-flow: row nowrap;
@@ -94,7 +159,6 @@ $padding: 1rem;
     justify-content: flex-start;
     gap: .125rem;
     width: 100%;
-    font-size: .875rem;
     color: var(--color-gray-dark);
     user-select: none;
   }
@@ -119,6 +183,15 @@ $padding: 1rem;
     color: var(--color-gray-dark);
     text-overflow: ellipsis;
     pointer-events: none;
+  }
+
+  &__error {
+    color: var(--color-red);
+  }
+
+  &__hint {
+    opacity: .5;
+    color: var(--color-gray-dark);
   }
 }
 

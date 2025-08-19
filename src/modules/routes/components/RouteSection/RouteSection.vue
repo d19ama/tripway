@@ -23,7 +23,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const transport = computed<string>(() => {
+const transport = computed<string | undefined>(() => {
   const resolver: Record<RouteSectionTransportType, string> = {
     airplane: iconAirplane,
     train: iconTrain,
@@ -33,7 +33,7 @@ const transport = computed<string>(() => {
     other: '',
   };
 
-  return resolver[props.data.transport.type];
+  return resolver[props.data.transport.type!];
 });
 
 function price(value: string | undefined): string {
@@ -189,7 +189,7 @@ function price(value: string | undefined): string {
     z-index: 2;
     border-radius: 3px;
     background-color: var(--color-white);
-    box-shadow: 6px 6px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 6px 6px 20px rgba($black, 0.2);
     transition: all 0.3s;
 
     @include breakpoint(mobile) {
@@ -199,7 +199,7 @@ function price(value: string | undefined): string {
     &:hover {
 
       #{$parent}__inner {
-        box-shadow: 6px 6px 20px rgba(0, 0, 0, 0.4);
+        box-shadow: 6px 6px 20px rgba($black, 0.4);
       }
     }
   }
