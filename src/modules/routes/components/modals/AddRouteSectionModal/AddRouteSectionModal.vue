@@ -16,6 +16,7 @@ import { useRoutes } from '../../../composables';
 import {
   AppButton,
   AppDatePicker,
+  AppDivider,
   AppInput,
   AppModal,
   AppModalActions,
@@ -130,14 +131,14 @@ function onAdd(): void {
   >
     <div class="row">
       <div class="col-default-12">
-        <AppTitle tag="h5">
+        <AppTitle tag="h6">
           Локация
         </AppTitle>
       </div>
       <div class="col-default-6">
         <AppInput
           v-model:value="form.location.country"
-          label="Страна назначения"
+          label="Страна"
           placeholder="Введите страну назначения"
           :validation="validation.location.country"
           required
@@ -146,7 +147,7 @@ function onAdd(): void {
       <div class="col-default-6">
         <AppInput
           v-model:value="form.location.city"
-          label="Город назначения"
+          label="Город"
           placeholder="Введите город назначения"
           :validation="validation.location.city"
           required
@@ -154,9 +155,11 @@ function onAdd(): void {
       </div>
     </div>
 
+    <AppDivider class="margin-top--xsm margin-bottom--xsm" />
+
     <div class="row">
       <div class="col-default-12">
-        <AppTitle tag="h5">
+        <AppTitle tag="h6">
           Транспорт
         </AppTitle>
       </div>
@@ -186,11 +189,20 @@ function onAdd(): void {
           placeholder="Выберите вид транспорта"
         />
       </div>
+      <div class="col-default-6">
+        <AppInput
+          v-model:value="form.transport.price"
+          label="Цена проживания"
+          placeholder="Введите цену"
+        />
+      </div>
     </div>
+
+    <AppDivider class="margin-top--xsm margin-bottom--xsm" />
 
     <div class="row">
       <div class="col-default-12">
-        <AppTitle tag="h5">
+        <AppTitle tag="h6">
           Проживание
         </AppTitle>
       </div>
@@ -209,6 +221,8 @@ function onAdd(): void {
         />
       </div>
     </div>
+
+    <AppDivider class="margin-top--xsm margin-bottom--xsm" />
 
     <template #footer="{ close }">
       <AppModalActions>
