@@ -11,6 +11,8 @@ import type {
 import type { HTMLElementClass } from '@/common/types';
 
 const props = withDefaults(defineProps<AppInputProps>(), {
+  hint: '',
+  label: '',
   type: 'text',
   theme: 'text',
   errorText: '',
