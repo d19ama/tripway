@@ -183,6 +183,7 @@ function onAdd(): void {
           v-model:selected="form.transport.type"
           :options="options"
           label="Вид транспорта"
+          placeholder="Выберите вид транспорта"
         />
       </div>
     </div>

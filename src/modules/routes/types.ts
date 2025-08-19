@@ -25,7 +25,7 @@ export interface RouteSectionLocation {
 export interface RouteSectionTransport extends RouteSectionPrice {
   departure: string;
   arrival: string;
-  type: RouteSectionTransportType;
+  type?: RouteSectionTransportType;
 }
 
 export interface RouteSectionHabitation extends RouteSectionPrice {

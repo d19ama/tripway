@@ -23,7 +23,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const transport = computed<string>(() => {
+const transport = computed<string | undefined>(() => {
   const resolver: Record<RouteSectionTransportType, string> = {
     airplane: iconAirplane,
     train: iconTrain,
@@ -33,7 +33,7 @@ const transport = computed<string>(() => {
     other: '',
   };
 
-  return resolver[props.data.transport.type];
+  return resolver[props.data.transport.type!];
 });
 
 function price(value: string | undefined): string {

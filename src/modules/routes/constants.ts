@@ -24,7 +24,6 @@ export const DEFAULT_ROUTE_SECTION: RouteSection = {
   transport: {
     departure: '',
     arrival: '',
-    type: 'other',
   },
   habitation: {},
 };
