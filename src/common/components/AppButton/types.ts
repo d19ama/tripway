@@ -24,6 +24,7 @@ export interface AppButtonProps {
   href?: string;
   text?: string;
   to?: RouteNames;
+  shadow?: boolean;
   rounded?: boolean;
   tag?: AppButtonTag;
   download?: boolean;

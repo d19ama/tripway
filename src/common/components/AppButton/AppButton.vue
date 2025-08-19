@@ -13,6 +13,7 @@ const props = withDefaults(defineProps<AppButtonProps>(), {
   size: 'm',
   theme: 'red',
   tag: 'button',
+  shadow: false,
   to: undefined,
   type: 'button',
   rounded: false,
@@ -33,6 +34,7 @@ const elementClass = computed<HTMLElementClass>(() => {
     `app-button--size-${props.size}`,
     `app-button--theme-${props.theme}`,
     {
+      'app-button--shadow': props.shadow,
       'app-button--rounded': props.rounded,
       'app-button--disabled': props.disabled,
       'app-button--auto-width': props.autoWidth,
@@ -111,7 +113,7 @@ function onClick(event: Event): void {
   border: 0;
   outline: 0;
   background-color: transparent;
-  transition: filter var(--transition), color var(--transition);
+  transition: background-color var(--transition), color var(--transition);
   user-select: none;
   cursor: pointer;
 
@@ -126,6 +128,10 @@ function onClick(event: Event): void {
 
   &--auto-width {
     width: auto;
+  }
+
+  &--shadow {
+    box-shadow: 6px 6px 20px rgba($black, 0.2);
   }
 
   &--size-s {
@@ -245,10 +251,11 @@ function onClick(event: Event): void {
   }
 
   &--theme-transparent {
-    color: var(--color-black);
+    color: var(--color-gray-dark);
     background-color: transparent;
 
     &:hover {
+      color: var(--color-red);
       background-color: transparent;
     }
   }

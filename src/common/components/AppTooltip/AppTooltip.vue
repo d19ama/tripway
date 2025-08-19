@@ -25,7 +25,7 @@ defineSlots<AppTooltipSlots>();
 
 const OFFSET: [number, number] = [
   0,
-  8,
+  4,
 ];
 
 const instance = ref<TippyComponent>();
