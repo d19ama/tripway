@@ -4,7 +4,6 @@ import {
 } from '@nestjs/swagger';
 import {
   IsBoolean,
-  IsDate,
   IsNumber,
   IsOptional,
   IsString,
@@ -30,17 +29,17 @@ export class RouteDto {
   })
   name: string;
 
-  @IsDate()
+  @IsString()
   @ApiProperty({
     description: 'Дата начала маршрута',
   })
-  startDate: Date;
+  startDate: string;
 
-  @IsDate()
+  @IsString()
   @ApiProperty({
     description: 'Дата окончания маршрута',
   })
-  endDate: Date;
+  endDate: string;
 
   @IsNumber()
   @IsOptional()
@@ -49,13 +48,12 @@ export class RouteDto {
     example: 0,
     required: false,
   })
-  costs: number;
+  costs?: number;
 
   @IsBoolean()
   @ApiProperty({
     description: 'Маршрут открыт',
     example: false,
-    default: false,
   })
   opened: boolean;
 
@@ -63,7 +61,6 @@ export class RouteDto {
   @ApiProperty({
     description: 'Маршрут активен',
     example: false,
-    default: false,
   })
   active: boolean;
 
@@ -75,9 +72,4 @@ export class RouteDto {
     example: 'new',
   })
   state: RouteStateEnum;
-
-  // @Column({
-  //   array: true,
-  // })
-  // route: RouteSection[];
 }

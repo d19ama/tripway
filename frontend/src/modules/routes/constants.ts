@@ -11,7 +11,8 @@ export const DEFAULT_ROUTE: Route = {
   opened: false,
   active: false,
   costs: 0,
-  date: [],
+  startDate: '',
+  endDate: '',
   route: [],
 };
 

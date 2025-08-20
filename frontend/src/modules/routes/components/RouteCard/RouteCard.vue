@@ -1,14 +1,16 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+import type { Route } from '../../';
 import {
   AppButton,
   AppTitle,
   AppTooltip,
 } from '@/common/components';
-import type { Route } from '@/modules/routes';
 import {
   currency,
   date,
 } from '@/common/format';
+import { DASH_SYMBOL } from '@/common/constants';
 
 interface Props {
   route: Route;
@@ -24,6 +26,12 @@ interface Emits {
 const props = defineProps<Props>();
 
 const emit = defineEmits<Emits>();
+
+const costs = computed<string>(() => {
+  return props.route.costs
+    ? currency(props.route.costs)
+    : DASH_SYMBOL;
+});
 </script>
 
 <template>
@@ -45,15 +53,15 @@ const emit = defineEmits<Emits>();
       <div class="route-card__info-block margin-top--xs">
         <span class="route-card__caption icon icon-calendar margin-right--xs" />
         <span class="route-card__value route-card__value--date">
-          {{ date(props.route.date[0], 'Long') }}
+          {{ date(props.route.startDate, 'Long') }}
           &#8212;
-          {{ date(props.route.date[1], 'Long') }}
+          {{ date(props.route.endDate, 'Long') }}
         </span>
       </div>
       <div class="route-card__info-block margin-top--xs">
         <span class="route-card__caption icon icon-credit-card margin-right--xs" />
         <span class="route-card__value">
-          {{ currency(props.route.costs) }}
+          {{ costs }}
         </span>
       </div>
     </div>

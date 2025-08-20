@@ -31,22 +31,24 @@ export class RouteEntity extends RouteDto {
   @CreateDateColumn({
     name: 'Дата создания маршрута',
   })
-  createdAt: Date;
+  createdAt: string;
 
   @UpdateDateColumn({
     name: 'Дата обновления маршрута',
   })
-  updatedAt: Date;
+  updatedAt: string;
 
-  @CreateDateColumn({
+  @Column({
     name: 'Дата начала маршрута',
+    type: 'text',
   })
-  startDate: Date;
+  startDate: string;
 
-  @CreateDateColumn({
+  @Column({
     name: 'Дата окончания маршрута',
+    type: 'text',
   })
-  endDate: Date;
+  endDate: string;
 
   @Column({
     name: 'Общая стоимость',
@@ -77,9 +79,4 @@ export class RouteEntity extends RouteDto {
     default: 'new',
   })
   state: RouteStateEnum;
-
-  // @Column({
-  //   array: true,
-  // })
-  // route: RouteSection[];
 }

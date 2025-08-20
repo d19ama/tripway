@@ -118,10 +118,8 @@ export const MOCKED_ROUTES: Route[] = [
     opened: false,
     active: false,
     costs: 200000,
-    date: [
-      '2025-06-12',
-      '2025-07-12',
-    ],
+    startDate: '2025-06-12',
+    endDate: '2025-07-12',
     route: [
       ...MOCKED_ROUTE,
     ],
@@ -133,10 +131,8 @@ export const MOCKED_ROUTES: Route[] = [
     opened: false,
     active: false,
     costs: 250000,
-    date: [
-      '2025-08-03',
-      '2025-09-05',
-    ],
+    startDate: '2025-08-03',
+    endDate: '2025-09-05',
     route: [],
   },
 ];

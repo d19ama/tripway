@@ -18,6 +18,7 @@ import { dayjs } from '@/app/plugins/dayjs';
 interface UseRoutesReturn {
   // variables
   isError: Ref<boolean>;
+  isLoading: Ref<boolean>;
   routes: WritableComputedRef<Route[]>;
   activeRoute: ComputedRef<Route | undefined>;
   selectedRoutes: ComputedRef<Route[]>;
@@ -44,6 +45,7 @@ export function useRoutes(): UseRoutesReturn {
   const router = useRouter();
 
   const isError = ref<boolean>(false);
+  const isLoading = ref<boolean>(false);
 
   const routes = computed<Route[]>({
     get() {
@@ -69,9 +71,13 @@ export function useRoutes(): UseRoutesReturn {
   });
 
   async function readRoutes(): Promise<void> {
-    const response = await fetch('http://localhost:3000/api/v1/routes', {
+    isLoading.value = true;
+
+    const response: Response = await fetch('http://localhost:3000/api/v1/routes', {
       method: 'GET',
     });
+
+    isLoading.value = false;
 
     if (!response.ok) {
       isError.value = true;
@@ -80,26 +86,25 @@ export function useRoutes(): UseRoutesReturn {
     if (response.ok) {
       _routes.value = await response.json();
     }
-
-    // _routes.value = [
-    //   ...MOCKED_ROUTES,
-    // ];
   }
 
   async function createRoute(name: Route['name']): Promise<void> {
-    const response: Response = await fetch('http://localhost:3000/api/v1/routes/_create', {
+    isLoading.value = true;
+
+    const response: Response = await fetch('http://localhost:3000/api/v1/routes', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
       },
       body: JSON.stringify({
         ...DEFAULT_ROUTE,
-        id: '123',
         startDate: dayjs(),
         endDate: dayjs(),
         name,
       }),
     });
+
+    isLoading.value = false;
 
     if (!response.ok) {
       isError.value = true;
@@ -202,6 +207,7 @@ export function useRoutes(): UseRoutesReturn {
     // variables
     routes,
     isError,
+    isLoading,
     activeRoute,
     selectedRoutes,
 

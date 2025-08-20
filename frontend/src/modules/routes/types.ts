@@ -3,7 +3,8 @@ export type RouteState = 'new' | 'completed' | 'edit';
 export interface Route {
   id: string;
   name: string;
-  date: string[];
+  endDate: string;
+  startDate: string;
   costs?: number;
   opened: boolean;
   active: boolean;
