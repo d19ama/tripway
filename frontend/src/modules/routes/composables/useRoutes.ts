@@ -10,8 +10,10 @@ import {
   useRouter,
 } from 'vue-router';
 import type { Route } from '../';
+import { DEFAULT_ROUTE } from '../constants';
 import type { RouteSection } from '../types';
 import { RouteNames } from '@/app/router/route-names';
+import { dayjs } from '@/app/plugins/dayjs';
 
 interface UseRoutesReturn {
   // variables
@@ -87,15 +89,15 @@ export function useRoutes(): UseRoutesReturn {
   async function createRoute(name: Route['name']): Promise<void> {
     const response: Response = await fetch('http://localhost:3000/api/v1/routes/_create', {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+      },
       body: JSON.stringify({
-        id: '1234567890',
+        ...DEFAULT_ROUTE,
+        id: '123',
+        startDate: dayjs(),
+        endDate: dayjs(),
         name,
-        startDate: '2025-08-20T12:44:11.539Z',
-        endDate: '2025-08-20T12:44:11.539Z',
-        costs: 0,
-        opened: false,
-        active: false,
-        state: 'new',
       }),
     });
 

@@ -1,3 +1,4 @@
+import * as process from 'node:process';
 import { NestFactory } from '@nestjs/core';
 import {
   INestApplication,
@@ -65,7 +66,7 @@ async function bootstrap(): Promise<void> {
 
   app.use(cookieParser());
 
-  await app.listen(configService.get('PORT', 3000));
+  await app.listen(configService.get('PORT', process.env.PORT));
 }
 
 bootstrap();

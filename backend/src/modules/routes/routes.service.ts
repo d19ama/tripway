@@ -5,8 +5,9 @@ import { Repository } from 'typeorm';
 // DTO
 import { RouteEntity } from './entities';
 import { ReadRouteRequestDto } from './dto/read-route';
-import { DeleteRouteRequestDto } from './dto/delete-route/request.dto';
+import { DeleteRouteRequestDto } from './dto/delete-route';
 import { CreateRouteRequestDto } from './dto/create-route';
+import { UpdateRouteRequestDto } from './dto/update-route';
 
 @Injectable()
 export class RoutesService {
@@ -19,14 +20,26 @@ export class RoutesService {
     return await this.routesRepository.find();
   }
 
-  async readRoute(id: ReadRouteRequestDto['id']): Promise<RouteEntity | null> {
+  async createRoute(body: CreateRouteRequestDto): Promise<CreateRouteRequestDto> {
+    const newRoute: CreateRouteRequestDto = this.routesRepository.create(body);
+
+    return await this.routesRepository.save(newRoute);
+  }
+
+  async readRoute(id: ReadRouteRequestDto['id']): Promise<ReadRouteRequestDto | null> {
     return await this.routesRepository.findOneBy({
       id,
     });
   }
 
-  async createRoute(body: CreateRouteRequestDto): Promise<RouteEntity> {
-    return this.routesRepository.create(body);
+  async updateRoute(id: UpdateRouteRequestDto['id'], body: Partial<UpdateRouteRequestDto>): Promise<RouteEntity> {
+    await this.routesRepository.update(id, body);
+
+    return this.routesRepository.findOne({
+      where: {
+        id,
+      },
+    });
   }
 
   async deleteRoute(id: DeleteRouteRequestDto['id']): Promise<void> {

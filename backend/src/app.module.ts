@@ -6,7 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { EmptyResponseInterceptor } from './interceptors';
 
-import { RouteEntity } from './modules/routes/entities/route.entity';
+import { RouteEntity } from './modules/routes/entities';
 import { RoutesModule } from './modules/routes/routes.module';
 
 @Module({
@@ -19,16 +19,16 @@ import { RoutesModule } from './modules/routes/routes.module';
       ],
     }),
     TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: process.env.USER_NAME,
-      password: process.env.USER_PASSWORD,
+      type: process.env.DATABASE_TYPE as any,
+      host: process.env.DATABASE_HOST,
+      port: Number.parseInt(process.env.DATABASE_PORT),
       database: process.env.DATABASE_NAME,
+      username: process.env.DATABASE_USER_NAME,
+      password: process.env.DATABASE_USER_PASSWORD,
+      synchronize: process.env.ENV !== 'production',
       entities: [
         RouteEntity,
       ],
-      synchronize: process.env.ENV !== 'production',
     }),
     TypeOrmModule.forFeature([
       RouteEntity,
