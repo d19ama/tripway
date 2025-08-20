@@ -28,6 +28,7 @@
     "class-validator": "^0.14.0",
     "connect-redis": "^7.1.0",
     "cookie-parser": "^1.4.6",
+    "pg": "^8.16.3",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {

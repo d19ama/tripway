@@ -25,7 +25,7 @@ import {
 import { DASH_SYMBOL } from '@/common/constants';
 
 const {
-  addRoute,
+  createRoute,
 } = useRoutes();
 
 const visible = defineModel<boolean>('visible', {
@@ -55,7 +55,7 @@ const validation = useVuelidate<Pick<Route, 'name'>>(rules, form);
 
 function onCreate(): void {
   visible.value = false;
-  addRoute(form.value.name);
+  createRoute(form.value.name);
 }
 </script>
 

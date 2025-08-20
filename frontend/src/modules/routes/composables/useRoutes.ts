@@ -1,5 +1,6 @@
 import {
   type ComputedRef,
+  type Ref,
   type WritableComputedRef,
   computed,
   ref,
@@ -8,23 +9,22 @@ import {
   useRoute,
   useRouter,
 } from 'vue-router';
-import { MOCKED_ROUTES } from '../mocks';
 import type { Route } from '../';
-import { DEFAULT_ROUTE } from '../constants';
 import type { RouteSection } from '../types';
 import { RouteNames } from '@/app/router/route-names';
 
 interface UseRoutesReturn {
   // variables
+  isError: Ref<boolean>;
   routes: WritableComputedRef<Route[]>;
   activeRoute: ComputedRef<Route | undefined>;
   selectedRoutes: ComputedRef<Route[]>;
 
   // requests
-  readRoutes: () => void;
+  readRoutes: () => Promise<void>;
+  createRoute: (name: Route['name']) => Promise<void>;
 
   // route actions
-  addRoute: (name: string) => void;
   editRoute: (id: Route['id']) => void;
   removeRoute: (id: Route['id']) => void;
   openRoute: (id: Route['id']) => void;
@@ -40,6 +40,8 @@ const _routes = ref<Route[]>([]);
 export function useRoutes(): UseRoutesReturn {
   const route = useRoute();
   const router = useRouter();
+
+  const isError = ref<boolean>(false);
 
   const routes = computed<Route[]>({
     get() {
@@ -64,10 +66,42 @@ export function useRoutes(): UseRoutesReturn {
     });
   });
 
-  function readRoutes(): void {
-    _routes.value = [
-      ...MOCKED_ROUTES,
-    ];
+  async function readRoutes(): Promise<void> {
+    const response = await fetch('http://localhost:3000/api/v1/routes', {
+      method: 'GET',
+    });
+
+    if (!response.ok) {
+      isError.value = true;
+    }
+
+    if (response.ok) {
+      _routes.value = await response.json();
+    }
+
+    // _routes.value = [
+    //   ...MOCKED_ROUTES,
+    // ];
+  }
+
+  async function createRoute(name: Route['name']): Promise<void> {
+    const response: Response = await fetch('http://localhost:3000/api/v1/routes/_create', {
+      method: 'POST',
+      body: JSON.stringify({
+        id: '1234567890',
+        name,
+        startDate: '2025-08-20T12:44:11.539Z',
+        endDate: '2025-08-20T12:44:11.539Z',
+        costs: 0,
+        opened: false,
+        active: false,
+        state: 'new',
+      }),
+    });
+
+    if (!response.ok) {
+      isError.value = true;
+    }
   }
 
   function toggleRouteOpened(id: Route['id'], opened: boolean) {
@@ -124,13 +158,6 @@ export function useRoutes(): UseRoutesReturn {
     });
   }
 
-  function addRoute(name: string): void {
-    _routes.value.unshift({
-      ...DEFAULT_ROUTE,
-      name,
-    });
-  }
-
   async function removeRoute(id: Route['id']): Promise<void> {
     _routes.value = _routes.value.filter((item) => {
       return item.id !== id;
@@ -172,14 +199,15 @@ export function useRoutes(): UseRoutesReturn {
   return {
     // variables
     routes,
+    isError,
     activeRoute,
     selectedRoutes,
 
     // requests
     readRoutes,
+    createRoute,
 
     // route actions
-    addRoute,
     editRoute,
     removeRoute,
     openRoute,
