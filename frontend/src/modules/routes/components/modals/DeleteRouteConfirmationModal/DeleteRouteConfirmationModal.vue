@@ -1,0 +1,84 @@
+<script setup lang="ts">
+import {
+  AppButton,
+  AppModal,
+  AppModalActions,
+} from '@/common/components';
+import {
+  type Route,
+  useRoutes,
+} from '@/modules/routes';
+import { usePageLoadingIndicator } from '@/common/composables';
+import { UnknownHttpErrorModal } from '@/modules/http';
+
+interface Props {
+  routeId: Route['id'];
+}
+
+interface Emits {
+  'delete:route:success': [];
+}
+
+const props = defineProps<Props>();
+
+const emit = defineEmits<Emits>();
+
+const {
+  isError,
+  deleteRoute,
+} = useRoutes();
+
+const {
+  showUntil,
+} = usePageLoadingIndicator();
+
+const visible = defineModel<boolean>('visible', {
+  required: false,
+  default: false,
+});
+
+async function closeModal(): Promise<void> {
+  visible.value = false;
+  await showUntil(deleteRoute(props.routeId));
+
+  if (!isError.value) {
+    emit('delete:route:success');
+  }
+}
+</script>
+
+<template>
+  <AppModal
+    v-model:visible="visible"
+    size="s"
+    title="Удалить маршрут"
+  >
+    Вы уверены что хотите удалить маршрут?
+
+    <template #footer="{ close }">
+      <AppModalActions>
+        <AppButton
+          rounded
+          size="l"
+          theme="blue-dark"
+          @click="closeModal"
+        >
+          Удалить
+        </AppButton>
+
+        <AppButton
+          rounded
+          size="l"
+          theme="gray-lite"
+          @click="close"
+        >
+          Отмена
+        </AppButton>
+      </AppModalActions>
+    </template>
+  </AppModal>
+
+  <UnknownHttpErrorModal
+    v-model:visible="isError"
+  />
+</template>
