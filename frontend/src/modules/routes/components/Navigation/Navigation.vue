@@ -122,7 +122,12 @@ function changeView(): void {
   flex-flow: row nowrap;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
   height: $height;
+  position: fixed;
+  top: 3rem;
+  left: 0;
+  z-index: 90;
   background-color: var(--color-white);
   box-shadow: inset 0 1px 0 0 rgba($gray-dark, .2), 6px 6px 20px rgba($black, 0.2);
   user-select: none;

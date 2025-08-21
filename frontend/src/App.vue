@@ -19,5 +19,9 @@ const route = useRoute();
   flex: 1 0 auto;
   width: 100%;
   overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  background-image: url('@/app/assets/images/bg.jpg');
+  background-attachment: fixed;
 }
 </style>
