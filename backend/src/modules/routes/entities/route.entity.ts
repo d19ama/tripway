@@ -5,20 +5,33 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { IsString } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import {
+  ApiProperty,
+  ApiPropertyOptional,
+} from '@nestjs/swagger';
 import {
   ROUTE_STATE_ENUM,
-  RouteDto,
   RouteStateEnum,
 } from '../../../common/schemas';
 
 @Entity({
   name: 'routeEntity',
 })
-export class RouteEntity extends RouteDto {
+export class RouteEntity {
   @PrimaryGeneratedColumn('uuid', {
     name: 'ID',
+  })
+  @ApiProperty({
+    description: 'Уникальный идентификатор маршрута',
+    example: '1234567890',
+    type: String,
+    required: true,
   })
   id: string;
 
@@ -27,12 +40,18 @@ export class RouteEntity extends RouteDto {
     type: 'text',
     unique: true,
   })
+  @IsString()
+  @ApiProperty({
+    description: 'Название маршрута',
+    example: 'Евро-тур 2025',
+    type: String,
+    required: true,
+  })
   name: string;
 
   @CreateDateColumn({
     name: 'Дата создания маршрута',
   })
-  @IsString()
   @ApiProperty({
     description: 'Дата создания маршрута',
     example: '2025-08-21T07:48:50.363Z',
@@ -44,7 +63,6 @@ export class RouteEntity extends RouteDto {
   @UpdateDateColumn({
     name: 'Дата обновления маршрута',
   })
-  @IsString()
   @ApiProperty({
     description: 'Дата обновления маршрута',
     example: '2025-08-21T07:48:50.363Z',
@@ -57,11 +75,25 @@ export class RouteEntity extends RouteDto {
     name: 'Дата начала маршрута',
     type: 'text',
   })
+  @IsString()
+  @ApiProperty({
+    description: 'Дата начала маршрута',
+    example: '2025-08-21T07:48:50.363Z',
+    type: String,
+    required: true,
+  })
   startDate: string;
 
   @Column({
     name: 'Дата окончания маршрута',
     type: 'text',
+  })
+  @IsString()
+  @ApiProperty({
+    description: 'Дата окончания маршрута',
+    example: '2025-08-21T07:48:50.363Z',
+    type: String,
+    required: true,
   })
   endDate: string;
 
@@ -70,6 +102,14 @@ export class RouteEntity extends RouteDto {
     type: 'integer',
     default: 0,
   })
+  @IsNumber()
+  @IsOptional()
+  @ApiPropertyOptional({
+    description: 'Общая стоимость поездки',
+    example: 0,
+    type: Number,
+    required: false,
+  })
   costs: number;
 
   @Column({
@@ -77,12 +117,26 @@ export class RouteEntity extends RouteDto {
     type: 'boolean',
     default: false,
   })
+  @IsBoolean()
+  @ApiProperty({
+    description: 'Маршрут открыт',
+    example: false,
+    type: Boolean,
+    required: true,
+  })
   opened: boolean;
 
   @Column({
     name: 'Маршрут активен',
     type: 'boolean',
     default: false,
+  })
+  @IsBoolean()
+  @ApiProperty({
+    description: 'Маршрут активен',
+    example: false,
+    type: Boolean,
+    required: true,
   })
   active: boolean;
 
@@ -92,6 +146,15 @@ export class RouteEntity extends RouteDto {
     enum: ROUTE_STATE_ENUM,
     enumName: 'RouteState',
     default: 'new',
+  })
+  @IsString()
+  @ApiProperty({
+    description: 'Состояние маршрута',
+    enum: ROUTE_STATE_ENUM,
+    enumName: 'RouteState',
+    example: 'new',
+    type: String,
+    required: true,
   })
   state: RouteStateEnum;
 }

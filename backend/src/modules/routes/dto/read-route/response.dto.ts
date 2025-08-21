@@ -1,3 +1,3 @@
-import { RouteDto } from '../../../../common/schemas';
+import { RouteEntity } from '../../entities';
 
-export class ReadRouteResponseDto extends RouteDto {}
+export class ReadRouteResponseDto extends RouteEntity {}
