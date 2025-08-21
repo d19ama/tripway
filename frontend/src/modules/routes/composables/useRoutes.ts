@@ -10,7 +10,6 @@ import type { Route } from '../';
 import { DEFAULT_ROUTE } from '../constants';
 import type { RouteSection } from '../types';
 import { RouteNames } from '@/app/router/route-names';
-import { dayjs } from '@/app/plugins/dayjs';
 
 interface UseRoutesReturn {
   // variables
@@ -24,7 +23,7 @@ interface UseRoutesReturn {
   readRoutes: () => Promise<void>;
   readRoute: (id: Route['id']) => Promise<void>;
   deleteRoute: (id: Route['id']) => Promise<void>;
-  createRoute: (name: Route['name']) => Promise<void>;
+  createRoute: (name: Route['name']) => Promise<Route['id'] | undefined>;
 
   // route actions
   editRoute: (id: Route['id']) => void;
@@ -75,6 +74,7 @@ export function useRoutes(): UseRoutesReturn {
 
     if (!response.ok) {
       isError.value = true;
+      return;
     }
 
     if (response.ok) {
@@ -82,7 +82,7 @@ export function useRoutes(): UseRoutesReturn {
     }
   }
 
-  async function createRoute(name: Route['name']): Promise<void> {
+  async function createRoute(name: Route['name']): Promise<Route['id'] | undefined> {
     isLoading.value = true;
 
     const response: Response = await fetch('http://localhost:3000/api/v1/routes', {
@@ -92,8 +92,6 @@ export function useRoutes(): UseRoutesReturn {
       },
       body: JSON.stringify({
         ...DEFAULT_ROUTE,
-        startDate: dayjs(),
-        endDate: dayjs(),
         name,
       }),
     });
@@ -102,6 +100,12 @@ export function useRoutes(): UseRoutesReturn {
 
     if (!response.ok) {
       isError.value = true;
+      return;
+    }
+
+    if (response.ok) {
+      const data: Route = await response.json();
+      return data.id;
     }
   }
 
@@ -116,6 +120,7 @@ export function useRoutes(): UseRoutesReturn {
 
     if (!response.ok) {
       isError.value = true;
+      return;
     }
 
     if (response.ok) {

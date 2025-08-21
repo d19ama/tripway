@@ -38,16 +38,6 @@ export interface components {
        */
       name: string;
       /**
-       * @description Дата создания маршрута
-       * @example 2025-08-21T07:48:50.363Z
-       */
-      createdAt: string;
-      /**
-       * @description Дата обновления маршрута
-       * @example 2025-08-21T07:48:50.363Z
-       */
-      updatedAt: string;
-      /**
        * @description Дата начала маршрута
        * @example 2025-08-21T07:48:50.363Z
        */
@@ -77,6 +67,16 @@ export interface components {
        * @example new
        */
       state: components['schemas']['RouteState'];
+      /**
+       * @description Дата создания маршрута
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      createdAt: string;
+      /**
+       * @description Дата обновления маршрута
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      updatedAt: string;
     };
     CreateRouteRequestDto: {
       /**
@@ -89,16 +89,6 @@ export interface components {
        * @example Евро-тур 2025
        */
       name: string;
-      /**
-       * @description Дата создания маршрута
-       * @example 2025-08-21T07:48:50.363Z
-       */
-      createdAt: string;
-      /**
-       * @description Дата обновления маршрута
-       * @example 2025-08-21T07:48:50.363Z
-       */
-      updatedAt: string;
       /**
        * @description Дата начала маршрута
        * @example 2025-08-21T07:48:50.363Z
@@ -149,16 +139,6 @@ export interface components {
        */
       name?: string;
       /**
-       * @description Дата создания маршрута
-       * @example 2025-08-21T07:48:50.363Z
-       */
-      createdAt?: string;
-      /**
-       * @description Дата обновления маршрута
-       * @example 2025-08-21T07:48:50.363Z
-       */
-      updatedAt?: string;
-      /**
        * @description Дата начала маршрута
        * @example 2025-08-21T07:48:50.363Z
        */
@@ -188,6 +168,16 @@ export interface components {
        * @example new
        */
       state?: components['schemas']['RouteState'];
+      /**
+       * @description Дата создания маршрута
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      createdAt?: string;
+      /**
+       * @description Дата обновления маршрута
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      updatedAt?: string;
     };
   };
   responses: never;

@@ -1,3 +1,3 @@
 import { RouteDto } from '../../../../common/schemas';
 
-export class CreateRouteRequestDto extends RouteDto {}
+export class ReadRouteResponseDto extends RouteDto {}

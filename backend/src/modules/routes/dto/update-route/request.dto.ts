@@ -1,4 +1,4 @@
 import { PartialType } from '@nestjs/swagger';
-import { RouteEntity } from '../../entities';
+import { RouteDto } from '../../../../common/schemas';
 
-export class UpdateRouteRequestDto extends PartialType(RouteEntity) {}
+export class UpdateRouteRequestDto extends PartialType(RouteDto) {}
