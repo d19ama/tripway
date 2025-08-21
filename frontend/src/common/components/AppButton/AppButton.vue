@@ -135,21 +135,21 @@ function onClick(event: Event): void {
   }
 
   &--size-s {
-    padding: .25rem .5rem;
+    padding: .25rem;
     font-size: .75rem;
     font-weight: 500;
     line-height: 1.5;
   }
 
   &--size-m {
-    padding: .5rem 1rem;
+    padding: .5rem;
     font-size: 1rem;
     font-weight: 800;
     line-height: 1.5;
   }
 
   &--size-l {
-    padding: .75rem 1.5rem;
+    padding: .75rem;
     font-size: 1.25rem;
     font-weight: 800;
     line-height: 1.5;
