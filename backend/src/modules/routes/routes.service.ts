@@ -32,7 +32,7 @@ export class RoutesService {
     });
   }
 
-  async updateRoute(id: UpdateRouteRequestDto['id'], body: Partial<UpdateRouteRequestDto>): Promise<RouteEntity> {
+  async updateRoute(id: UpdateRouteRequestDto['id'], body: UpdateRouteRequestDto): Promise<RouteEntity> {
     await this.routesRepository.update(id, body);
 
     return this.routesRepository.findOne({

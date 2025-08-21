@@ -10,7 +10,8 @@
     "test": "vitest",
     "type-check": "vue-tsc --build --force",
     "type-check:watch": "vue-tsc --build --force --watch",
-    "lint": "eslint . --fix"
+    "lint": "eslint . --fix",
+    "generate-api": "openapi-typescript ../backend/docs/swagger/schema.json -o ./src/generated/api/v1.ts --exclude-deprecated"
   },
   "dependencies": {
     "@sniptt/guards": "^0.2.0",

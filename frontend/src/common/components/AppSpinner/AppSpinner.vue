@@ -7,10 +7,6 @@ const props = withDefaults(defineProps<AppSpinnerProps>(), {
   size: 'm',
 });
 
-const active = defineModel<boolean>('active', {
-  required: false,
-});
-
 const elementClass = computed<HTMLElementClass>(() => {
   return [
     `app-spinner--size-${props.size}`,
