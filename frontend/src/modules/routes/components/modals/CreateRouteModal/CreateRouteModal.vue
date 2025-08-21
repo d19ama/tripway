@@ -24,8 +24,16 @@ import {
 } from '@/common/validators';
 import { DASH_SYMBOL } from '@/common/constants';
 import { usePageLoadingIndicator } from '@/common/composables';
+import { UnknownHttpErrorModal } from '@/modules/http';
+
+interface Emits {
+  'create:route:success': [];
+}
+
+const emit = defineEmits<Emits>();
 
 const {
+  isError,
   createRoute,
 } = useRoutes();
 
@@ -61,6 +69,10 @@ const validation = useVuelidate<Pick<Route, 'name'>>(rules, form);
 async function onCreate(): Promise<void> {
   visible.value = false;
   await showUntil(createRoute(form.value.name));
+
+  if (!isError.value) {
+    emit('create:route:success');
+  }
 }
 </script>
 
@@ -104,4 +116,8 @@ async function onCreate(): Promise<void> {
       </AppModalActions>
     </template>
   </AppModal>
+
+  <UnknownHttpErrorModal
+    v-model:visible="isError"
+  />
 </template>

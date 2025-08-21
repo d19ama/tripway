@@ -8,25 +8,42 @@ import {
   type Route,
   useRoutes,
 } from '@/modules/routes';
+import { usePageLoadingIndicator } from '@/common/composables';
+import { UnknownHttpErrorModal } from '@/modules/http';
 
 interface Props {
   routeId: Route['id'];
 }
 
+interface Emits {
+  'delete:route:success': [];
+}
+
 const props = defineProps<Props>();
 
+const emit = defineEmits<Emits>();
+
 const {
+  isError,
   deleteRoute,
 } = useRoutes();
+
+const {
+  showUntil,
+} = usePageLoadingIndicator();
 
 const visible = defineModel<boolean>('visible', {
   required: false,
   default: false,
 });
 
-function closeModal(): void {
-  deleteRoute(props.routeId);
+async function closeModal(): Promise<void> {
   visible.value = false;
+  await showUntil(deleteRoute(props.routeId));
+
+  if (!isError.value) {
+    emit('delete:route:success');
+  }
 }
 </script>
 
@@ -60,4 +77,8 @@ function closeModal(): void {
       </AppModalActions>
     </template>
   </AppModal>
+
+  <UnknownHttpErrorModal
+    v-model:visible="isError"
+  />
 </template>

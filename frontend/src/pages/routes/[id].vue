@@ -3,15 +3,21 @@ import {
   onMounted,
   ref,
 } from 'vue';
-import { useRoute } from 'vue-router';
+import {
+  useRoute,
+  useRouter,
+} from 'vue-router';
 import {
   CreateRouteSectionModal,
   RouteSection,
   useRoutes,
 } from '@/modules/routes';
 import { usePageLoadingIndicator } from '@/common/composables';
+import { UnknownHttpErrorModal } from '@/modules/http';
+import { RouteNames } from '@/app/router/route-names';
 
 const {
+  isError,
   activeRoute,
   readRoute,
 } = useRoutes();
@@ -21,11 +27,18 @@ const {
 } = usePageLoadingIndicator();
 
 const route = useRoute();
+const router = useRouter();
 
 const isCreateRouteSectionModalVisible = ref<boolean>(false);
 
 function openCreateRouteSectionModal(): void {
   isCreateRouteSectionModalVisible.value = true;
+}
+
+function returnToList(): void {
+  router.replace({
+    name: RouteNames.RoutesList,
+  });
 }
 
 onMounted(async () => {
@@ -52,6 +65,11 @@ onMounted(async () => {
   <CreateRouteSectionModal
     v-model:visible="isCreateRouteSectionModalVisible"
     :route-id="activeRoute?.id"
+  />
+
+  <UnknownHttpErrorModal
+    :visible="isError"
+    @update:visible="returnToList"
   />
 </template>
 

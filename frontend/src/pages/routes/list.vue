@@ -12,9 +12,11 @@ import {
 } from '@/modules/routes';
 import { AppButton } from '@/common/components';
 import { usePageLoadingIndicator } from '@/common/composables';
+import { UnknownHttpErrorModal } from '@/modules/http';
 
 const {
   routes,
+  isError,
   editRoute,
   openRoute,
   closeRoute,
@@ -67,11 +69,17 @@ onMounted(async () => {
 
   <CreateRouteModal
     v-model:visible="isCreateRouteModalVisible"
+    @create:route:success="showUntil(readRoutes())"
   />
 
   <DeleteRouteConfirmationModal
     v-model:visible="isDeleteConfirmationModalVisible"
     :route-id="selectedRouteId"
+    @delete:route:success="showUntil(readRoutes())"
+  />
+
+  <UnknownHttpErrorModal
+    v-model:visible="isError"
   />
 </template>
 

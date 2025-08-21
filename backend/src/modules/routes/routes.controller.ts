@@ -35,7 +35,9 @@ export class RoutesController {
     summary: 'Создание нового маршрута',
     operationId: 'createRoute',
   })
-  async createRoute(@Body() body: CreateRouteRequestDto): Promise<CreateRouteRequestDto> {
+  async createRoute(
+    @Body() body: CreateRouteRequestDto,
+  ): Promise<CreateRouteRequestDto> {
     return this.routesService.createRoute(body);
   }
 
@@ -44,7 +46,9 @@ export class RoutesController {
     summary: 'Получение маршрута по id',
     operationId: 'readRoute',
   })
-  async readRoute(@Param() id: ReadRouteRequestDto['id']): Promise<ReadRouteRequestDto> {
+  async readRoute(
+    @Param('id') id: ReadRouteRequestDto['id'],
+  ): Promise<ReadRouteRequestDto> {
     return await this.routesService.readRoute(id);
   }
 
@@ -54,7 +58,7 @@ export class RoutesController {
     operationId: 'updateRoute',
   })
   async updateRoute(
-    @Param() id: UpdateRouteRequestDto['id'],
+    @Param('id') id: UpdateRouteRequestDto['id'],
     @Body() body: UpdateRouteRequestDto,
   ): Promise<RouteEntity> {
     return this.routesService.updateRoute(id, body);
@@ -65,7 +69,9 @@ export class RoutesController {
     summary: 'Удаление маршрута по id',
     operationId: 'deleteRoute',
   })
-  async deleteRoute(@Param() id: DeleteRouteRequestDto['id']): Promise<void> {
+  async deleteRoute(
+    @Param('id') id: DeleteRouteRequestDto['id'],
+  ): Promise<void> {
     return await this.routesService.deleteRoute(id);
   }
 }
