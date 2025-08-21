@@ -10,6 +10,7 @@ import type { Route } from '../';
 import { DEFAULT_ROUTE } from '../constants';
 import type { RouteSection } from '../types';
 import { RouteNames } from '@/app/router/route-names';
+import { useHttpService } from '@/modules/http';
 
 interface UseRoutesReturn {
   // variables
@@ -40,6 +41,7 @@ const _routes = ref<Route[]>([]);
 
 export function useRoutes(): UseRoutesReturn {
   const router = useRouter();
+  const httpService = useHttpService();
 
   const isError = ref<boolean>(false);
   const isLoading = ref<boolean>(false);
@@ -66,78 +68,65 @@ export function useRoutes(): UseRoutesReturn {
   async function readRoutes(): Promise<void> {
     isLoading.value = true;
 
-    const response: Response = await fetch('http://localhost:3000/api/v1/routes', {
-      method: 'GET',
-    });
+    const response = await httpService.getData<Route[]>('/routes');
 
     isLoading.value = false;
 
-    if (!response.ok) {
+    if (!response) {
       isError.value = true;
       return;
     }
 
-    if (response.ok) {
-      _routes.value = await response.json();
+    if (response) {
+      _routes.value = response;
     }
   }
 
   async function createRoute(name: Route['name']): Promise<Route['id'] | undefined> {
     isLoading.value = true;
 
-    const response: Response = await fetch('http://localhost:3000/api/v1/routes', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-      },
-      body: JSON.stringify({
-        ...DEFAULT_ROUTE,
-        name,
-      }),
+    const response = await httpService.postData<Route>('/routes', {
+      ...DEFAULT_ROUTE,
+      name,
     });
 
     isLoading.value = false;
 
-    if (!response.ok) {
+    if (!response) {
       isError.value = true;
       return;
     }
 
-    if (response.ok) {
-      const data: Route = await response.json();
-      return data.id;
+    if (response) {
+      return response.id;
     }
   }
 
   async function readRoute(id: Route['id']): Promise<void> {
     isLoading.value = true;
 
-    const response: Response = await fetch(`http://localhost:3000/api/v1/routes/${id}`, {
-      method: 'GET',
-    });
+    const response = await httpService.getData<Route>(`/routes/${id}`);
 
     isLoading.value = false;
 
-    if (!response.ok) {
+    if (!response) {
       isError.value = true;
       return;
     }
 
-    if (response.ok) {
-      activeRoute.value = await response.json();
+    if (response) {
+      activeRoute.value = response;
     }
   }
 
   async function deleteRoute(id: Route['id']): Promise<void> {
     isLoading.value = true;
 
-    const response: Response = await fetch(`http://localhost:3000/api/v1/routes/${id}`, {
-      method: 'DELETE',
-    });
+    const response = await httpService.deleteData(`/routes/${id}`);
 
     isLoading.value = false;
 
-    if (!response.ok) {
+    if (!response) {
       isError.value = true;
     }
   }
