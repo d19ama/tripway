@@ -1,4 +1,5 @@
 import type { RouteRecordRaw } from 'vue-router';
+import { Routes } from '../layouts';
 import { RouteNames } from '@/app/router/route-names';
 
 export const routes: RouteRecordRaw[] = [
@@ -16,6 +17,7 @@ export const routes: RouteRecordRaw[] = [
     component: () => import('@/pages/routes/index.vue'),
     meta: {
       title: 'Routes',
+      layout: Routes,
     },
     redirect: {
       name: RouteNames.RoutesList,

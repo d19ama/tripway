@@ -23,10 +23,15 @@ import {
   required,
 } from '@/common/validators';
 import { DASH_SYMBOL } from '@/common/constants';
+import { usePageLoadingIndicator } from '@/common/composables';
 
 const {
   createRoute,
 } = useRoutes();
+
+const {
+  showUntil,
+} = usePageLoadingIndicator();
 
 const visible = defineModel<boolean>('visible', {
   required: false,
@@ -53,9 +58,9 @@ const rules = computed<ValidationArgs>(() => {
 
 const validation = useVuelidate<Pick<Route, 'name'>>(rules, form);
 
-function onCreate(): void {
+async function onCreate(): Promise<void> {
   visible.value = false;
-  createRoute(form.value.name);
+  await showUntil(createRoute(form.value.name));
 }
 </script>
 

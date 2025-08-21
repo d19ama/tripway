@@ -5,10 +5,13 @@ import {
   ref,
 } from 'vue';
 import {
-  CloseConfirmationModal,
-  RemoveConfirmationModal,
+  CloseRouteConfirmationModal,
+  DeleteRouteConfirmationModal,
 } from '../';
-import { useRoutes } from '../../';
+import {
+  type Route,
+  useRoutes,
+} from '../../';
 import type { RouteState } from '@/modules/routes/types';
 
 const {
@@ -19,8 +22,9 @@ const {
 
 const route = useRoute();
 
+const selectedRouteId = ref<Route['id']>(String(route.params.id));
 const isCloseConfirmationModalVisible = ref<boolean>(false);
-const isRemoveConfirmationModalVisible = ref<boolean>(false);
+const isDeleteConfirmationModalVisible = ref<boolean>(false);
 
 const state = computed<RouteState>(() => {
   return activeRoute.value?.state || 'completed';
@@ -42,7 +46,7 @@ function close(): void {
 }
 
 function remove(): void {
-  isRemoveConfirmationModalVisible.value = true;
+  isDeleteConfirmationModalVisible.value = true;
 }
 </script>
 
@@ -77,12 +81,13 @@ function remove(): void {
     </button>
   </section>
 
-  <CloseConfirmationModal
+  <CloseRouteConfirmationModal
     v-model:visible="isCloseConfirmationModalVisible"
   />
 
-  <RemoveConfirmationModal
-    v-model:visible="isRemoveConfirmationModalVisible"
+  <DeleteRouteConfirmationModal
+    v-model:visible="isDeleteConfirmationModalVisible"
+    :route-id="selectedRouteId"
   />
 </template>
 

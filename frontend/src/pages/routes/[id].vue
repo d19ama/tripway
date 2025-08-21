@@ -1,20 +1,36 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import {
-  AddRouteSectionModal,
+  onMounted,
+  ref,
+} from 'vue';
+import { useRoute } from 'vue-router';
+import {
+  CreateRouteSectionModal,
   RouteSection,
   useRoutes,
 } from '@/modules/routes';
+import { usePageLoadingIndicator } from '@/common/composables';
 
 const {
   activeRoute,
+  readRoute,
 } = useRoutes();
 
-const isAddRouteSectionModalVisible = ref<boolean>(false);
+const {
+  showUntil,
+} = usePageLoadingIndicator();
 
-function addNewSection(): void {
-  isAddRouteSectionModalVisible.value = true;
+const route = useRoute();
+
+const isCreateRouteSectionModalVisible = ref<boolean>(false);
+
+function openCreateRouteSectionModal(): void {
+  isCreateRouteSectionModalVisible.value = true;
 }
+
+onMounted(async () => {
+  await showUntil(readRoute(String(route.params.id)));
+});
 </script>
 
 <template>
@@ -29,12 +45,12 @@ function addNewSection(): void {
     </template>
     <div
       class="route-page__border route-page__border--end icon icon-plus"
-      @click="addNewSection"
+      @click="openCreateRouteSectionModal"
     />
   </div>
 
-  <AddRouteSectionModal
-    v-model:visible="isAddRouteSectionModalVisible"
+  <CreateRouteSectionModal
+    v-model:visible="isCreateRouteSectionModalVisible"
     :route-id="activeRoute?.id"
   />
 </template>

@@ -1,30 +1,46 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import {
-  AddRouteModal,
-  RemoveConfirmationModal,
+  onMounted,
+  ref,
+} from 'vue';
+import {
+  CreateRouteModal,
+  DeleteRouteConfirmationModal,
+  type Route,
   RouteCard,
   useRoutes,
 } from '@/modules/routes';
 import { AppButton } from '@/common/components';
+import { usePageLoadingIndicator } from '@/common/composables';
 
 const {
   routes,
   editRoute,
   openRoute,
   closeRoute,
+  readRoutes,
 } = useRoutes();
 
-const isAddRouteModalVisible = ref<boolean>(false);
-const isRemoveConfirmationModalVisible = ref<boolean>(false);
+const {
+  showUntil,
+} = usePageLoadingIndicator();
 
-function addRoute(): void {
-  isAddRouteModalVisible.value = true;
+const selectedRouteId = ref<Route['id']>('');
+const isCreateRouteModalVisible = ref<boolean>(false);
+const isDeleteConfirmationModalVisible = ref<boolean>(false);
+
+function openCreateRouteModal(): void {
+  isCreateRouteModalVisible.value = true;
 }
 
-function removeRoute(): void {
-  isRemoveConfirmationModalVisible.value = true;
+function openDeleteRouteModal(id: Route['id']): void {
+  selectedRouteId.value = id;
+  isDeleteConfirmationModalVisible.value = true;
 }
+
+onMounted(async () => {
+  await showUntil(readRoutes());
+});
 </script>
 
 <template>
@@ -34,7 +50,7 @@ function removeRoute(): void {
       rounded
       shadow
       theme="yellow"
-      @click="addRoute"
+      @click="openCreateRouteModal"
     >
       <span class="icon icon-plus" />Создать маршрут
     </AppButton>
@@ -44,17 +60,18 @@ function removeRoute(): void {
       :route="item"
       @edit:route="editRoute"
       @close:route="closeRoute"
-      @remove:route="removeRoute"
+      @delete:route="openDeleteRouteModal"
       @click="openRoute"
     />
   </div>
 
-  <AddRouteModal
-    v-model:visible="isAddRouteModalVisible"
+  <CreateRouteModal
+    v-model:visible="isCreateRouteModalVisible"
   />
 
-  <RemoveConfirmationModal
-    v-model:visible="isRemoveConfirmationModalVisible"
+  <DeleteRouteConfirmationModal
+    v-model:visible="isDeleteConfirmationModalVisible"
+    :route-id="selectedRouteId"
   />
 </template>
 

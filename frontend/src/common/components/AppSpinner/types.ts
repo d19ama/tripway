@@ -1,4 +1,3 @@
 export interface AppSpinnerProps {
-  overlay?: boolean;
-  autoWidth?: boolean;
+  size?: 's' | 'm' | 'l';
 }

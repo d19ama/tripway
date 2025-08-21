@@ -1,17 +1,23 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
 import {
   AppButton,
   AppModal,
   AppModalActions,
 } from '@/common/components';
-import { useRoutes } from '@/modules/routes';
+import {
+  type Route,
+  useRoutes,
+} from '@/modules/routes';
+
+interface Props {
+  routeId: Route['id'];
+}
+
+const props = defineProps<Props>();
 
 const {
-  removeRoute,
+  deleteRoute,
 } = useRoutes();
-
-const route = useRoute();
 
 const visible = defineModel<boolean>('visible', {
   required: false,
@@ -19,7 +25,7 @@ const visible = defineModel<boolean>('visible', {
 });
 
 function closeModal(): void {
-  removeRoute(String(route.params.id));
+  deleteRoute(props.routeId);
   visible.value = false;
 }
 </script>

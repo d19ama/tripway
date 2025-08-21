@@ -20,7 +20,7 @@ interface Emits {
   'click': [id: Route['id']];
   'edit:route': [id: Route['id']];
   'close:route': [id: Route['id']];
-  'remove:route': [id: Route['id']];
+  'delete:route': [id: Route['id']];
 }
 
 const props = defineProps<Props>();
@@ -30,6 +30,26 @@ const emit = defineEmits<Emits>();
 const costs = computed<string>(() => {
   return props.route.costs
     ? currency(props.route.costs)
+    : DASH_SYMBOL;
+});
+
+const dateRange = computed<string>(() => {
+  const result: string[] = [];
+
+  if (props.route.startDate.length > 0) {
+    result.push(date(props.route.startDate, 'Long'));
+  }
+
+  if (props.route.startDate.length > 0 && props.route.endDate.length > 0) {
+    result.push(DASH_SYMBOL);
+  }
+
+  if (props.route.endDate.length > 0) {
+    result.push(date(props.route.endDate, 'Long'));
+  }
+
+  return result.length > 0
+    ? result.join(' ')
     : DASH_SYMBOL;
 });
 </script>
@@ -53,9 +73,7 @@ const costs = computed<string>(() => {
       <div class="route-card__info-block margin-top--xs">
         <span class="route-card__caption icon icon-calendar margin-right--xs" />
         <span class="route-card__value route-card__value--date">
-          {{ date(props.route.startDate, 'Long') }}
-          &#8212;
-          {{ date(props.route.endDate, 'Long') }}
+          {{ dateRange }}
         </span>
       </div>
       <div class="route-card__info-block margin-top--xs">
@@ -97,7 +115,7 @@ const costs = computed<string>(() => {
           <AppButton
             size="m"
             theme="transparent"
-            @click="emit('remove:route', props.route.id)"
+            @click="emit('delete:route', props.route.id)"
           >
             <span class="icon icon-bin" />
           </AppButton>

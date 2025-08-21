@@ -5,10 +5,7 @@ import {
   computed,
   ref,
 } from 'vue';
-import {
-  useRoute,
-  useRouter,
-} from 'vue-router';
+import { useRouter } from 'vue-router';
 import type { Route } from '../';
 import { DEFAULT_ROUTE } from '../constants';
 import type { RouteSection } from '../types';
@@ -19,12 +16,14 @@ interface UseRoutesReturn {
   // variables
   isError: Ref<boolean>;
   isLoading: Ref<boolean>;
+  activeRoute: Ref<Route | undefined>;
   routes: WritableComputedRef<Route[]>;
-  activeRoute: ComputedRef<Route | undefined>;
   selectedRoutes: ComputedRef<Route[]>;
 
   // requests
   readRoutes: () => Promise<void>;
+  readRoute: (id: Route['id']) => Promise<void>;
+  deleteRoute: (id: Route['id']) => Promise<void>;
   createRoute: (name: Route['name']) => Promise<void>;
 
   // route actions
@@ -41,11 +40,12 @@ interface UseRoutesReturn {
 const _routes = ref<Route[]>([]);
 
 export function useRoutes(): UseRoutesReturn {
-  const route = useRoute();
   const router = useRouter();
 
   const isError = ref<boolean>(false);
   const isLoading = ref<boolean>(false);
+
+  const activeRoute = ref<Route | undefined>();
 
   const routes = computed<Route[]>({
     get() {
@@ -56,12 +56,6 @@ export function useRoutes(): UseRoutesReturn {
         ...value,
       };
     },
-  });
-
-  const activeRoute = computed<Route | undefined>(() => {
-    return routes.value.find((item) => {
-      return item.id === String(route.params.id);
-    });
   });
 
   const selectedRoutes = computed<Route[]>(() => {
@@ -102,6 +96,38 @@ export function useRoutes(): UseRoutesReturn {
         endDate: dayjs(),
         name,
       }),
+    });
+
+    isLoading.value = false;
+
+    if (!response.ok) {
+      isError.value = true;
+    }
+  }
+
+  async function readRoute(id: Route['id']): Promise<void> {
+    isLoading.value = true;
+
+    const response: Response = await fetch(`http://localhost:3000/api/v1/routes/${id}`, {
+      method: 'GET',
+    });
+
+    isLoading.value = false;
+
+    if (!response.ok) {
+      isError.value = true;
+    }
+
+    if (response.ok) {
+      activeRoute.value = await response.json();
+    }
+  }
+
+  async function deleteRoute(id: Route['id']): Promise<void> {
+    isLoading.value = true;
+
+    const response: Response = await fetch(`http://localhost:3000/api/v1/routes/${id}`, {
+      method: 'DELETE',
     });
 
     isLoading.value = false;
@@ -212,8 +238,10 @@ export function useRoutes(): UseRoutesReturn {
     selectedRoutes,
 
     // requests
+    readRoute,
     readRoutes,
     createRoute,
+    deleteRoute,
 
     // route actions
     editRoute,
