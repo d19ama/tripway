@@ -130,12 +130,109 @@ export interface components {
        */
       state: components['schemas']['RouteState'];
     };
-    ReadRouteRequestDto: {
+    CreateRouteResponseDto: {
       /**
-       * @description Идентификатор маршрута
+       * @description Уникальный идентификатор маршрута
        * @example 1234567890
        */
       id: string;
+      /**
+       * @description Название маршрута
+       * @example Евро-тур 2025
+       */
+      name: string;
+      /**
+       * @description Дата создания маршрута
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      createdAt: string;
+      /**
+       * @description Дата обновления маршрута
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      updatedAt: string;
+      /**
+       * @description Дата начала маршрута
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      startDate: string;
+      /**
+       * @description Дата окончания маршрута
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      endDate: string;
+      /**
+       * @description Общая стоимость поездки
+       * @example 0
+       */
+      costs?: number;
+      /**
+       * @description Маршрут открыт
+       * @example false
+       */
+      opened: boolean;
+      /**
+       * @description Маршрут активен
+       * @example false
+       */
+      active: boolean;
+      /**
+       * @description Состояние маршрута
+       * @example new
+       */
+      state: components['schemas']['RouteState'];
+    };
+    ReadRouteResponseDto: {
+      /**
+       * @description Уникальный идентификатор маршрута
+       * @example 1234567890
+       */
+      id: string;
+      /**
+       * @description Название маршрута
+       * @example Евро-тур 2025
+       */
+      name: string;
+      /**
+       * @description Дата создания маршрута
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      createdAt: string;
+      /**
+       * @description Дата обновления маршрута
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      updatedAt: string;
+      /**
+       * @description Дата начала маршрута
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      startDate: string;
+      /**
+       * @description Дата окончания маршрута
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      endDate: string;
+      /**
+       * @description Общая стоимость поездки
+       * @example 0
+       */
+      costs?: number;
+      /**
+       * @description Маршрут открыт
+       * @example false
+       */
+      opened: boolean;
+      /**
+       * @description Маршрут активен
+       * @example false
+       */
+      active: boolean;
+      /**
+       * @description Состояние маршрута
+       * @example new
+       */
+      state: components['schemas']['RouteState'];
     };
     UpdateRouteRequestDto: {
       /**
@@ -189,6 +286,58 @@ export interface components {
        */
       state?: components['schemas']['RouteState'];
     };
+    UpdateRouteResponseDto: {
+      /**
+       * @description Уникальный идентификатор маршрута
+       * @example 1234567890
+       */
+      id: string;
+      /**
+       * @description Название маршрута
+       * @example Евро-тур 2025
+       */
+      name: string;
+      /**
+       * @description Дата создания маршрута
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      createdAt: string;
+      /**
+       * @description Дата обновления маршрута
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      updatedAt: string;
+      /**
+       * @description Дата начала маршрута
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      startDate: string;
+      /**
+       * @description Дата окончания маршрута
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      endDate: string;
+      /**
+       * @description Общая стоимость поездки
+       * @example 0
+       */
+      costs?: number;
+      /**
+       * @description Маршрут открыт
+       * @example false
+       */
+      opened: boolean;
+      /**
+       * @description Маршрут активен
+       * @example false
+       */
+      active: boolean;
+      /**
+       * @description Состояние маршрута
+       * @example new
+       */
+      state: components['schemas']['RouteState'];
+    };
   };
   responses: never;
   parameters: never;
@@ -223,7 +372,7 @@ export interface operations {
     responses: {
       201: {
         content: {
-          'application/json': components['schemas']['CreateRouteRequestDto'];
+          'application/json': components['schemas']['CreateRouteResponseDto'];
         };
       };
     };
@@ -233,7 +382,7 @@ export interface operations {
     responses: {
       200: {
         content: {
-          'application/json': components['schemas']['ReadRouteRequestDto'];
+          'application/json': components['schemas']['ReadRouteResponseDto'];
         };
       };
     };
@@ -256,7 +405,7 @@ export interface operations {
     responses: {
       200: {
         content: {
-          'application/json': components['schemas']['RouteEntity'];
+          'application/json': components['schemas']['UpdateRouteResponseDto'];
         };
       };
     };

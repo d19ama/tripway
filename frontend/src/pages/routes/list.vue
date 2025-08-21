@@ -3,6 +3,7 @@ import {
   onMounted,
   ref,
 } from 'vue';
+import { useRouter } from 'vue-router';
 import {
   CreateRouteModal,
   DeleteRouteConfirmationModal,
@@ -13,6 +14,7 @@ import {
 import { AppButton } from '@/common/components';
 import { usePageLoadingIndicator } from '@/common/composables';
 import { UnknownHttpErrorModal } from '@/modules/http';
+import { RouteNames } from '@/app/router/route-names';
 
 const {
   routes,
@@ -27,6 +29,8 @@ const {
   showUntil,
 } = usePageLoadingIndicator();
 
+const router = useRouter();
+
 const selectedRouteId = ref<Route['id']>('');
 const isCreateRouteModalVisible = ref<boolean>(false);
 const isDeleteConfirmationModalVisible = ref<boolean>(false);
@@ -38,6 +42,15 @@ function openCreateRouteModal(): void {
 function openDeleteRouteModal(id: Route['id']): void {
   selectedRouteId.value = id;
   isDeleteConfirmationModalVisible.value = true;
+}
+
+async function onRouteCreated(id: Route['id']): Promise<void> {
+  await router.push({
+    name: RouteNames.RoutePage,
+    params: {
+      id,
+    },
+  });
 }
 
 onMounted(async () => {
@@ -69,7 +82,7 @@ onMounted(async () => {
 
   <CreateRouteModal
     v-model:visible="isCreateRouteModalVisible"
-    @create:route:success="showUntil(readRoutes())"
+    @create:route:success="onRouteCreated"
   />
 
   <DeleteRouteConfirmationModal

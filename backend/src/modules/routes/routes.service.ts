@@ -2,12 +2,23 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-// DTO
+// ENTITIES
 import { RouteEntity } from './entities';
-import { ReadRouteRequestDto } from './dto/read-route';
+
+// DTO
+import {
+  ReadRouteRequestDto,
+  ReadRouteResponseDto,
+} from './dto/read-route';
 import { DeleteRouteRequestDto } from './dto/delete-route';
-import { CreateRouteRequestDto } from './dto/create-route';
-import { UpdateRouteRequestDto } from './dto/update-route';
+import {
+  CreateRouteRequestDto,
+  CreateRouteResponseDto,
+} from './dto/create-route';
+import {
+  UpdateRouteRequestDto,
+  UpdateRouteResponseDto,
+} from './dto/update-route';
 
 @Injectable()
 export class RoutesService {
@@ -20,19 +31,19 @@ export class RoutesService {
     return await this.routesRepository.find();
   }
 
-  async createRoute(body: CreateRouteRequestDto): Promise<CreateRouteRequestDto> {
+  async createRoute(body: CreateRouteRequestDto): Promise<CreateRouteResponseDto> {
     const newRoute: CreateRouteRequestDto = this.routesRepository.create(body);
 
     return await this.routesRepository.save(newRoute);
   }
 
-  async readRoute(id: ReadRouteRequestDto['id']): Promise<ReadRouteRequestDto | null> {
+  async readRoute(id: ReadRouteRequestDto['id']): Promise<ReadRouteResponseDto | null> {
     return await this.routesRepository.findOneBy({
       id,
     });
   }
 
-  async updateRoute(id: UpdateRouteRequestDto['id'], body: UpdateRouteRequestDto): Promise<RouteEntity> {
+  async updateRoute(id: UpdateRouteRequestDto['id'], body: UpdateRouteRequestDto): Promise<UpdateRouteResponseDto> {
     await this.routesRepository.update(id, body);
 
     return this.routesRepository.findOne({

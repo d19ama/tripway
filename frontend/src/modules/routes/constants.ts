@@ -13,6 +13,8 @@ export const DEFAULT_ROUTE: Route = {
   costs: 0,
   startDate: '',
   endDate: '',
+  createdAt: '',
+  updatedAt: '',
   route: [],
 };
 

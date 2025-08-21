@@ -27,7 +27,6 @@ export class RouteEntity {
   @PrimaryGeneratedColumn('uuid', {
     name: 'ID',
   })
-  @IsString()
   @ApiProperty({
     description: 'Уникальный идентификатор маршрута',
     example: '1234567890',
@@ -53,7 +52,6 @@ export class RouteEntity {
   @CreateDateColumn({
     name: 'Дата создания маршрута',
   })
-  @IsString()
   @ApiProperty({
     description: 'Дата создания маршрута',
     example: '2025-08-21T07:48:50.363Z',
@@ -65,7 +63,6 @@ export class RouteEntity {
   @UpdateDateColumn({
     name: 'Дата обновления маршрута',
   })
-  @IsString()
   @ApiProperty({
     description: 'Дата обновления маршрута',
     example: '2025-08-21T07:48:50.363Z',

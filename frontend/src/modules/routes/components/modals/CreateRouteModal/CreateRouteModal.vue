@@ -27,7 +27,7 @@ import { usePageLoadingIndicator } from '@/common/composables';
 import { UnknownHttpErrorModal } from '@/modules/http';
 
 interface Emits {
-  'create:route:success': [];
+  'create:route:success': [id: Route['id']];
 }
 
 const emit = defineEmits<Emits>();
@@ -68,10 +68,11 @@ const validation = useVuelidate<Pick<Route, 'name'>>(rules, form);
 
 async function onCreate(): Promise<void> {
   visible.value = false;
-  await showUntil(createRoute(form.value.name));
 
-  if (!isError.value) {
-    emit('create:route:success');
+  const id: Route['id'] | undefined = await showUntil(createRoute(form.value.name));
+
+  if (!isError.value && id) {
+    emit('create:route:success', id);
   }
 }
 </script>

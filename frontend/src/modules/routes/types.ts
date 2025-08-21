@@ -5,6 +5,8 @@ export interface Route {
   name: string;
   endDate: string;
   startDate: string;
+  createdAt: string;
+  updatedAt: string;
   costs?: number;
   opened: boolean;
   active: boolean;

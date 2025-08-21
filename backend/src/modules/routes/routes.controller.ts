@@ -9,11 +9,24 @@ import {
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { RoutesService } from './routes.service';
+
+// ENTITIES
 import { RouteEntity } from './entities';
-import { ReadRouteRequestDto } from './dto/read-route';
+
+// DTO
+import {
+  ReadRouteRequestDto,
+  ReadRouteResponseDto,
+} from './dto/read-route';
 import { DeleteRouteRequestDto } from './dto/delete-route';
-import { CreateRouteRequestDto } from './dto/create-route';
-import { UpdateRouteRequestDto } from './dto/update-route';
+import {
+  CreateRouteRequestDto,
+  CreateRouteResponseDto,
+} from './dto/create-route';
+import {
+  UpdateRouteRequestDto,
+  UpdateRouteResponseDto,
+} from './dto/update-route';
 
 @Controller('routes')
 export class RoutesController {
@@ -30,14 +43,14 @@ export class RoutesController {
     return this.routesService.readAllRoutes();
   }
 
-  @Post('')
+  @Post()
   @ApiOperation({
     summary: 'Создание нового маршрута',
     operationId: 'createRoute',
   })
   async createRoute(
     @Body() body: CreateRouteRequestDto,
-  ): Promise<CreateRouteRequestDto> {
+  ): Promise<CreateRouteResponseDto> {
     return this.routesService.createRoute(body);
   }
 
@@ -48,7 +61,7 @@ export class RoutesController {
   })
   async readRoute(
     @Param('id') id: ReadRouteRequestDto['id'],
-  ): Promise<ReadRouteRequestDto> {
+  ): Promise<ReadRouteResponseDto> {
     return await this.routesService.readRoute(id);
   }
 
@@ -60,7 +73,7 @@ export class RoutesController {
   async updateRoute(
     @Param('id') id: UpdateRouteRequestDto['id'],
     @Body() body: UpdateRouteRequestDto,
-  ): Promise<RouteEntity> {
+  ): Promise<UpdateRouteResponseDto> {
     return this.routesService.updateRoute(id, body);
   }
 
