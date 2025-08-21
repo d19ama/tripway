@@ -88,39 +88,39 @@ const dateRange = computed<string>(() => {
         <template #activator>
           <AppButton
             v-if="!props.route.opened"
-            size="m"
+            size="l"
             theme="transparent"
             @click="emit('edit:route', props.route.id)"
           >
             <span class="icon icon-pencil" />
           </AppButton>
         </template>
-        Редактировать&nbsp;маршрут
+        Редактировать
       </AppTooltip>
       <AppTooltip v-if="props.route.opened">
         <template #activator>
           <AppButton
             v-if="props.route.opened"
-            size="m"
+            size="l"
             theme="transparent"
             @click="emit('close:route', props.route.id)"
           >
             <span class="icon icon-cross" />
           </AppButton>
         </template>
-        Закрыть&nbsp;маршрут
+        Закрыть
       </AppTooltip>
       <AppTooltip>
         <template #activator>
           <AppButton
-            size="m"
+            size="l"
             theme="transparent"
             @click="emit('delete:route', props.route.id)"
           >
             <span class="icon icon-bin" />
           </AppButton>
         </template>
-        Удалить&nbsp;маршрут
+        Удалить
       </AppTooltip>
     </div>
   </section>
