@@ -16,14 +16,18 @@ import { AppButton } from '@/common/components';
 import { usePageLoadingIndicator } from '@/common/composables';
 import { UnknownHttpErrorModal } from '@/modules/http';
 import { RouteNames } from '@/app/router/route-names';
+import { useNavigation } from '@/modules/navigation';
 
 const {
   routes,
   isError,
-  openRoute,
-  closeRoute,
   readRoutes,
 } = useRoutes();
+
+const {
+  openRoute,
+  closeRoute,
+} = useNavigation();
 
 const {
   showUntil,

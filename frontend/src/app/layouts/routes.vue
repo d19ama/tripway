@@ -4,7 +4,7 @@ import {
   AppFooter,
   AppHeader,
 } from './components';
-import { Navigation } from '@/modules/routes';
+import { Navigation } from '@/modules/navigation';
 </script>
 
 <template>

@@ -5,11 +5,11 @@ import {
   AppModal,
   AppModalActions,
 } from '@/common/components';
-import { useRoutes } from '@/modules/routes';
+import { useNavigation } from '@/modules/navigation';
 
 const {
   closeRoute,
-} = useRoutes();
+} = useNavigation();
 
 const route = useRoute();
 
