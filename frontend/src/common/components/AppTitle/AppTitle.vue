@@ -55,7 +55,7 @@ const elementClass = computed<HTMLElementClass>(() => {
   }
 
   &--comment {
-    padding-left: 5rem;
+    padding-left: 2.5rem;
     position: relative;
 
     &:before {
@@ -64,13 +64,14 @@ const elementClass = computed<HTMLElementClass>(() => {
       top: 0;
       left: 0;
       z-index: 1;
-      color: var(--color-gray-middle);
+      font-size: inherit;
+      color: var(--color-red);
     }
   }
 
   &--bordered {
-    padding-bottom: 1rem;
-    border-bottom: 3px solid var(--color-gray-lite);
+    padding-bottom: .5rem;
+    border-bottom: 4px solid var(--color-red);
   }
 
   &--uppercase {

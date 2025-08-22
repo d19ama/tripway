@@ -1,5 +1,4 @@
 import {
-  type ComputedRef,
   type Ref,
   type WritableComputedRef,
   computed,
@@ -15,7 +14,6 @@ interface UseRoutesReturn {
   isLoading: Ref<boolean>;
   activeRoute: Ref<RouteEntity | undefined>;
   routes: WritableComputedRef<RouteEntity[]>;
-  selectedRoutes: ComputedRef<RouteEntity[]>;
 
   // requests
   readRoutes: () => Promise<void>;
@@ -42,12 +40,6 @@ export function useRoutes(): UseRoutesReturn {
     set(value) {
       _routes.value = value;
     },
-  });
-
-  const selectedRoutes = computed<RouteEntity[]>(() => {
-    return _routes.value.filter((item: RouteEntity) => {
-      return item.opened;
-    });
   });
 
   async function readRoutes(): Promise<void> {
@@ -101,6 +93,12 @@ export function useRoutes(): UseRoutesReturn {
 
     if (response) {
       activeRoute.value = response;
+      _routes.value = [
+        {
+          ...response,
+          opened: true,
+        },
+      ];
     }
   }
 
@@ -136,7 +134,6 @@ export function useRoutes(): UseRoutesReturn {
     isError,
     isLoading,
     activeRoute,
-    selectedRoutes,
 
     // requests
     readRoute,

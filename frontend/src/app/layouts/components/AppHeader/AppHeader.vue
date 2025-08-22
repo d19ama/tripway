@@ -21,7 +21,7 @@ import {
   width: 100%;
   flex: 0 0 auto;
   gap: 0 3rem;
-  height: 3rem;
+  height: 3.5rem;
   padding: 0 1rem;
   position: fixed;
   top: 0;

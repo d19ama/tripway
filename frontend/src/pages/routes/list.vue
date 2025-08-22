@@ -12,7 +12,10 @@ import {
   UpdateRouteModal,
   useRoutes,
 } from '@/modules/routes';
-import { AppButton } from '@/common/components';
+import {
+  AppButton,
+  AppPage,
+} from '@/common/components';
 import { usePageLoadingIndicator } from '@/common/composables';
 import { UnknownHttpErrorModal } from '@/modules/http';
 import { RouteNames } from '@/app/router/route-names';
@@ -78,26 +81,30 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="routes-list-page">
-    <AppButton
-      size="l"
-      rounded
-      shadow
-      theme="yellow"
-      @click="openCreateRouteModal"
-    >
-      <span class="icon icon-plus" />Создать маршрут
-    </AppButton>
-    <RouteCard
-      v-for="item in routes"
-      :key="item.id"
-      :route="item"
-      @close:route="closeRoute"
-      @update:route="openUpdateRouteModal"
-      @delete:route="openDeleteRouteModal"
-      @click="openRoute"
-    />
-  </div>
+  <AppPage>
+    <template #content>
+      <div class="routes-list-page">
+        <AppButton
+          size="l"
+          rounded
+          shadow
+          theme="yellow"
+          @click="openCreateRouteModal"
+        >
+          <span class="icon icon-plus" />Создать маршрут
+        </AppButton>
+        <RouteCard
+          v-for="item in routes"
+          :key="item.id"
+          :route="item"
+          @close:route="closeRoute"
+          @update:route="openUpdateRouteModal"
+          @delete:route="openDeleteRouteModal"
+          @click="openRoute"
+        />
+      </div>
+    </template>
+  </AppPage>
 
   <CreateRouteModal
     v-model:visible="isCreateRouteModalVisible"
@@ -128,8 +135,6 @@ onMounted(async () => {
   flex-flow: column nowrap;
   align-items: stretch;
   justify-content: flex-start;
-  gap: 1rem;
-  width: 640px;
-  margin: auto;
+  gap: 1rem 0;
 }
 </style>

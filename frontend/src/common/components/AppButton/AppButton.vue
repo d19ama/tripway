@@ -113,7 +113,7 @@ function onClick(event: Event): void {
   border: 0;
   outline: 0;
   background-color: transparent;
-  transition: background-color var(--transition), color var(--transition);
+  transition: background-color var(--transition), color var(--transition), filter var(--transition);
   user-select: none;
   cursor: pointer;
 
@@ -238,15 +238,6 @@ function onClick(event: Event): void {
     &:hover {
       color: var(--color-green);
       border-color: var(--color-green);
-    }
-  }
-
-  &--theme-icon-red {
-    color: var(--color-white);
-    background-color: var(--color-red);
-
-    &:hover {
-      color: rgba($white, .5);
     }
   }
 

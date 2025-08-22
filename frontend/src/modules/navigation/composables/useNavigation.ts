@@ -1,4 +1,8 @@
 import { useRouter } from 'vue-router';
+import {
+  type ComputedRef,
+  computed,
+} from 'vue';
 import { RouteNames } from '@/app/router/route-names';
 import {
   type RouteEntity,
@@ -6,6 +10,10 @@ import {
 } from '@/modules/routes';
 
 interface UseNavigationReturn {
+  // variables
+  selectedRoutes: ComputedRef<RouteEntity[]>;
+
+  // methods
   openRoute: (id: RouteEntity['id']) => void;
   closeRoute: (id: RouteEntity['id']) => void;
   closeAllRoutes: () => void;
@@ -16,8 +24,13 @@ export function useNavigation(): UseNavigationReturn {
 
   const {
     routes,
-    selectedRoutes,
   } = useRoutes();
+
+  const selectedRoutes = computed<RouteEntity[]>(() => {
+    return routes.value.filter((item: RouteEntity) => {
+      return item.opened;
+    });
+  });
 
   function toggleRouteOpened(id: RouteEntity['id'], opened: boolean) {
     routes.value = routes.value.map((item) => {
@@ -74,6 +87,10 @@ export function useNavigation(): UseNavigationReturn {
   }
 
   return {
+    // variables
+    selectedRoutes,
+
+    // methods
     openRoute,
     closeRoute,
     closeAllRoutes,

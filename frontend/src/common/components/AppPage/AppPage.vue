@@ -8,18 +8,30 @@ import {
   AppNoData,
   AppTitle,
 } from '@/common/components';
+import type { HTMLElementClass } from '@/common/types';
 
-const props = defineProps<AppPageProps>();
+const props = withDefaults(defineProps<AppPageProps>(), {
+  fullWidth: false,
+});
 
 const slots = defineSlots<AppPageSlots>();
 
 const hasHeader = computed<boolean>(() => {
   return !!slots.header! || props.title;
 });
+
+const elementClass = computed<HTMLElementClass>(() => {
+  return {
+    'app-page--full-width': props.fullWidth,
+  };
+});
 </script>
 
 <template>
-  <section class="app-page">
+  <section
+    class="app-page"
+    :class="elementClass"
+  >
     <AppNoData>
       <div
         v-if="hasHeader"
@@ -27,8 +39,9 @@ const hasHeader = computed<boolean>(() => {
       >
         <slot name="header">
           <AppTitle
-            tag="h1"
+            tag="h2"
             comment
+            bordered
             :text="props.title"
           />
         </slot>
@@ -53,10 +66,20 @@ const hasHeader = computed<boolean>(() => {
 .app-page {
   display: flex;
   flex-flow: column nowrap;
-  gap: 2rem;
+  width: 44rem;
+  margin: auto;
+  padding: 1rem 2rem;
+
+  &__header {
+    margin-bottom: 1rem;
+  }
 
   &__content {
-    padding: 0 2rem;
+    margin-top: 1rem;
+  }
+
+  &--full-width {
+    width: 100%;
   }
 }
 </style>

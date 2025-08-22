@@ -89,6 +89,10 @@ async function onEdit(): Promise<void> {
 watch(() => props.routeName, (value) => {
   form.value.name = value;
 });
+
+watch(visible, () => {
+  form.value.name = props.routeName;
+});
 </script>
 
 <template>
