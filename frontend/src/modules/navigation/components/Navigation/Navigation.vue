@@ -11,13 +11,17 @@ import {
   useRoutes,
 } from '@/modules/routes';
 import { RouteNames } from '@/app/router/route-names';
+import { useNavigation } from '@/modules/navigation';
 
 const {
   routes,
   selectedRoutes,
+} = useRoutes();
+
+const {
   closeRoute,
   closeAllRoutes,
-} = useRoutes();
+} = useNavigation();
 
 const route = useRoute();
 

@@ -5,10 +5,8 @@ import {
   computed,
   ref,
 } from 'vue';
-import { useRouter } from 'vue-router';
 import type { RouteEntity } from '../';
 import { DEFAULT_ROUTE } from '../constants';
-import { RouteNames } from '@/app/router/route-names';
 import { useHttpService } from '@/modules/http';
 
 interface UseRoutesReturn {
@@ -25,18 +23,11 @@ interface UseRoutesReturn {
   deleteRoute: (id: RouteEntity['id']) => Promise<void>;
   updateRoute: (id: RouteEntity['id'], route: Partial<RouteEntity>) => Promise<void>;
   createRoute: (name: RouteEntity['name']) => Promise<RouteEntity['id'] | undefined>;
-
-  // route actions
-  removeRoute: (id: RouteEntity['id']) => void;
-  openRoute: (id: RouteEntity['id']) => void;
-  closeRoute: (id: RouteEntity['id']) => void;
-  closeAllRoutes: () => void;
 }
 
 const _routes = ref<RouteEntity[]>([]);
 
 export function useRoutes(): UseRoutesReturn {
-  const router = useRouter();
   const httpService = useHttpService();
 
   const isError = ref<boolean>(false);
@@ -139,70 +130,6 @@ export function useRoutes(): UseRoutesReturn {
     }
   }
 
-  function toggleRouteOpened(id: RouteEntity['id'], opened: boolean) {
-    _routes.value = _routes.value.map((item) => {
-      if (item.id === id) {
-        return {
-          ...item,
-          opened,
-        };
-      }
-
-      return item;
-    });
-  }
-
-  async function openRoute(id: RouteEntity['id']): Promise<void> {
-    toggleRouteOpened(id, true);
-
-    await router.push({
-      name: RouteNames.RoutePage,
-      params: {
-        id,
-      },
-    });
-  }
-
-  async function closeRoute(id: RouteEntity['id']): Promise<void> {
-    toggleRouteOpened(id, false);
-
-    const nextRoute: RouteEntity | undefined = selectedRoutes.value[selectedRoutes.value.length - 1];
-
-    if (nextRoute) {
-      await router.replace({
-        name: RouteNames.RoutePage,
-        params: {
-          id: nextRoute.id,
-        },
-      });
-      return;
-    }
-
-    await router.replace({
-      name: RouteNames.RoutesList,
-    });
-  }
-
-  async function closeAllRoutes(): Promise<void> {
-    _routes.value.forEach((item) => {
-      toggleRouteOpened(item.id, false);
-    });
-
-    await router.replace({
-      name: RouteNames.RoutesList,
-    });
-  }
-
-  async function removeRoute(id: RouteEntity['id']): Promise<void> {
-    _routes.value = _routes.value.filter((item) => {
-      return item.id !== id;
-    });
-
-    await router.replace({
-      name: RouteNames.RoutesList,
-    });
-  }
-
   return {
     // variables
     routes,
@@ -217,11 +144,5 @@ export function useRoutes(): UseRoutesReturn {
     updateRoute,
     createRoute,
     deleteRoute,
-
-    // route actions
-    removeRoute,
-    openRoute,
-    closeRoute,
-    closeAllRoutes,
   };
 }

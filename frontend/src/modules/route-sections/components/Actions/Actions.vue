@@ -7,18 +7,21 @@ import {
 import {
   CloseRouteConfirmationModal,
   DeleteRouteConfirmationModal,
-} from '../';
+} from '../../../routes/components';
 import {
   type RouteEntity,
   useRoutes,
-} from '../../';
+} from '../../../routes';
 import type { RouteState } from '@/modules/routes/types';
+import { useNavigation } from '@/modules/navigation';
 
 const {
   activeRoute,
-  editRoute,
-  closeRoute,
 } = useRoutes();
+
+const {
+  closeRoute,
+} = useNavigation();
 
 const route = useRoute();
 
@@ -29,10 +32,6 @@ const isDeleteConfirmationModalVisible = ref<boolean>(false);
 const state = computed<RouteState>(() => {
   return activeRoute.value?.state || 'completed';
 });
-
-function edit(): void {
-  editRoute(String(route.params.id));
-}
 
 function save(): void {}
 
@@ -52,13 +51,6 @@ function remove(): void {
 
 <template>
   <section class="actions">
-    <button
-      v-if="state === 'completed'"
-      class="actions__button"
-      @click="edit"
-    >
-      Редактировать
-    </button>
     <button
       v-if="state === 'edit'"
       class="actions__button"
