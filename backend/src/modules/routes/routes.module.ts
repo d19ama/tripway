@@ -16,5 +16,8 @@ import { RoutesService } from './routes.service';
   providers: [
     RoutesService,
   ],
+  exports: [
+    RoutesService,
+  ],
 })
 export class RoutesModule {}

@@ -18,9 +18,9 @@ interface Props {
 
 interface Emits {
   'click': [id: RouteEntity['id']];
-  'edit:route': [id: RouteEntity['id']];
   'close:route': [id: RouteEntity['id']];
   'delete:route': [id: RouteEntity['id']];
+  'update:route': [payload: Pick<RouteEntity, 'id' | 'name'>];
 }
 
 const props = defineProps<Props>();
@@ -52,6 +52,13 @@ const dateRange = computed<string>(() => {
     ? result.join(' ')
     : DASH_SYMBOL;
 });
+
+function onUpdateRoute(): void {
+  emit('update:route', {
+    id: props.route.id,
+    name: props.route.name,
+  });
+}
 </script>
 
 <template>
@@ -90,7 +97,7 @@ const dateRange = computed<string>(() => {
             v-if="!props.route.opened"
             size="m"
             theme="transparent"
-            @click="emit('edit:route', props.route.id)"
+            @click="onUpdateRoute"
           >
             <span class="icon icon-pencil" />
           </AppButton>
