@@ -273,7 +273,7 @@ watch(focus, (value) => {
   }
 
   &--disabled {
-    opacity: .5;
+    opacity: .4;
     pointer-events: none;
   }
 
@@ -471,7 +471,7 @@ watch(focus, (value) => {
     }
 
     &--disabled {
-      opacity: .5;
+      opacity: .4;
       pointer-events: none;
     }
   }

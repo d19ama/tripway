@@ -260,7 +260,7 @@ function validate(): void {
   }
 
   &--disabled {
-    opacity: .1;
+    opacity: .4;
     pointer-events: none;
   }
 }

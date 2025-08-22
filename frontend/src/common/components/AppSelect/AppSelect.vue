@@ -236,7 +236,7 @@ watch(opened, (value) => {
   }
 
   &--disabled {
-    opacity: .5;
+    opacity: .4;
     pointer-events: none;
   }
 
@@ -416,7 +416,7 @@ watch(opened, (value) => {
     }
 
     &--disabled {
-      opacity: .5;
+      opacity: .4;
       pointer-events: none;
     }
   }
