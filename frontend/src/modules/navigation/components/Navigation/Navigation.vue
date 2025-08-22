@@ -102,7 +102,7 @@ function changeView(): void {
     </div>
     <div class="navigation__view">
       <AppButton
-        theme="icon-red"
+        theme="blue-dark"
         size="l"
         class="navigation__button"
         @click="changeView"
@@ -110,7 +110,7 @@ function changeView(): void {
         <span class="icon icon-map" />
       </AppButton>
       <AppButton
-        theme="icon-red"
+        theme="blue-dark"
         size="l"
         class="navigation__button"
         @click="changeView"
@@ -141,7 +141,10 @@ function changeView(): void {
   user-select: none;
 
   &__tabs {
+    width: 100%;
     height: 100%;
+    overflow: hidden;
+    white-space: nowrap;
   }
 
   &__tab {
@@ -262,6 +265,10 @@ function changeView(): void {
   &__view {
     display: flex;
     height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
 
     &:before {
       content: '';
@@ -269,7 +276,7 @@ function changeView(): void {
       width: 0;
       height: 0;
       border-top: #{$height} solid transparent;
-      border-right: #{$height / 2} solid var(--color-red);
+      border-right: #{$height / 2} solid var(--color-blue-dark);
     }
   }
 

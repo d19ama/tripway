@@ -95,6 +95,7 @@ function price(value: string | undefined): string {
 <style lang="scss">
 .route-section {
   $parent: &;
+  $box-shadow: .5rem .5rem 1rem rgba($black, .2);
 
   display: flex;
   flex-flow: row nowrap;
@@ -103,47 +104,23 @@ function price(value: string | undefined): string {
   flex-grow: 1;
   min-width: 20%;
   max-width: calc(100%/3);
-  height: 150px;
+  height: 10rem;
   position: relative;
   cursor: pointer;
-
-  @include breakpoint(desktop) {
-    min-width: 25%;
-    max-width: calc(100%/3);
-  }
-
-  @include breakpoint(tablet) {
-    min-width: 25%;
-    max-width: 50%;
-  }
-
-  @include breakpoint(v-mobile) {
-    min-width: calc(100%/3);
-    max-width: 50%;
-  }
-
-  @include breakpoint(mobile) {
-    display: flex;
-    flex-flow: column wrap;
-    align-items: stretch;
-    justify-content: flex-start;
-    width: 100%;
-    margin: 0;
-  }
 
   &:before {
     content: '';
     display: block;
-    width: calc(100% + 80px);
+    width: calc(100% + 4rem);
     height: 33%;
     margin: auto;
     position: absolute;
     top: 0;
     bottom: 0;
-    left: -40px;
+    left: -2rem;
     z-index: 1;
     background-color: var(--color-gray-lite);
-    box-shadow: 6px 6px 20px rgba($black, 0.2);
+    box-shadow: $box-shadow;
   }
 
   &:after {
@@ -154,19 +131,12 @@ function price(value: string | undefined): string {
     box-sizing: border-box;
     margin: auto 0;
     z-index: 2;
-    border: 20px solid transparent;
-    border-right-width: 4px;
-    border-top-width: 75px;
-    border-bottom-width: 75px;
+    border: 1rem solid transparent;
+    border-right-width: .5rem;
+    border-top-width: 5rem;
+    border-bottom-width: 5rem;
     border-left-color: var(--color-gray-lite);
-    transition: border 0.3s;
-
-    @include breakpoint(mobile) {
-      margin: 0 auto;
-      border: 15px solid transparent;
-      border-bottom-width: 10px;
-      border-top-color: var(--color-white);
-    }
+    transition: border-color var(--transition);
   }
 
   &:last-of-type:before {
@@ -189,17 +159,13 @@ function price(value: string | undefined): string {
     z-index: 2;
     border-radius: 3px;
     background-color: var(--color-white);
-    box-shadow: 6px 6px 20px rgba($black, 0.2);
-    transition: all 0.3s;
-
-    @include breakpoint(mobile) {
-      width: 100%;
-    }
+    box-shadow: $box-shadow;
+    transition: all var(--transition);
 
     &:hover {
 
       #{$parent}__inner {
-        box-shadow: 6px 6px 20px rgba($black, 0.4);
+        box-shadow: $box-shadow;
       }
     }
   }
@@ -227,9 +193,9 @@ function price(value: string | undefined): string {
   }
 
   &__date {
-    padding: 10px 12px 8px;
+    padding: .5rem .75rem;
     position: relative;
-    font-size: 15px;
+    font-size: 1rem;
   }
 
   &__options {
@@ -239,23 +205,23 @@ function price(value: string | undefined): string {
     justify-content: flex-start;
     height: 100%;
     opacity: 0;
-    padding: 0 10px 0 0;
+    padding: 0 .75rem 0 0;
     position: absolute;
     top: 0;
     right: 0;
-    transition: opacity 0.3s;
+    transition: opacity var(--transition);
 
     .icon {
-      margin: 5px auto;
+      margin: .5rem auto;
     }
   }
 
   &__option {
     display: block;
-    width: 30px;
-    height: 30px;
-    opacity: 0.3;
-    transition: opacity 0.3s;
+    width: 2rem;
+    height: 2rem;
+    opacity: .3;
+    transition: opacity var(--transition);
 
     &:hover {
       opacity: 1;
@@ -275,27 +241,27 @@ function price(value: string | undefined): string {
   }
 
   &__location {
-    padding: 4px 12px;
-    font-size: 16px;
+    padding: .25rem .75rem;
+    font-size: 1rem;
     font-weight: 300;
     font-style: italic;
     background-color: var(--color-gray-lite);
-    transition: background-color 0.3s, color 0.3s;
+    transition: background-color var(--transition), color var(--transition);
   }
 
   &__price {
-    padding: 10px 12px 10px;
+    padding: .75rem .875rem;
     margin-top: auto;
   }
 
   &__name {
-    margin: 0 4px 0 0;
-    font-size: 13px;
+    margin: 0 .25rem 0 0;
+    font-size: .875rem;
     font-weight: 400;
   }
 
   &__value {
-    font-size: 13px;
+    font-size: .875rem;
   }
 
   &__transport {
