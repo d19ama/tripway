@@ -93,6 +93,12 @@ export function useRoutes(): UseRoutesReturn {
 
     if (response) {
       activeRoute.value = response;
+      _routes.value = [
+        {
+          ...response,
+          opened: true,
+        },
+      ];
     }
   }
 
