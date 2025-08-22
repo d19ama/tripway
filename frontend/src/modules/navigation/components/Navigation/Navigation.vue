@@ -4,21 +4,14 @@ import {
   useRoute,
   useRouter,
 } from 'vue-router';
+import { useNavigation } from '../../composables';
 import type { HTMLElementClass } from '@/common/types';
 import { AppButton } from '@/common/components';
-import {
-  type RouteEntity,
-  useRoutes,
-} from '@/modules/routes';
+import type { RouteEntity } from '@/modules/routes';
 import { RouteNames } from '@/app/router/route-names';
-import { useNavigation } from '@/modules/navigation';
 
 const {
-  routes,
   selectedRoutes,
-} = useRoutes();
-
-const {
   closeRoute,
   closeAllRoutes,
 } = useNavigation();
@@ -28,11 +21,7 @@ const route = useRoute();
 const router = useRouter();
 
 const isClearAllButtonVisible = computed<boolean>(() => {
-  const opened: RouteEntity[] | undefined = routes.value.filter((item) => {
-    return item.opened;
-  });
-
-  return opened && opened.length > 1;
+  return selectedRoutes.value.length > 1;
 });
 
 function tabClass(id: RouteEntity['id']): HTMLElementClass {
