@@ -15,6 +15,7 @@ import {
   RouteSection,
   useRouteSection,
 } from '@/modules/route-sections';
+import { AppPage } from '@/common/components';
 
 const {
   isError,
@@ -47,20 +48,24 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="route-page">
-    <div class="route-page__border route-page__border--start icon icon-home" />
-    <template v-if="routeSections.length > 0">
-      <RouteSection
-        v-for="item in routeSections"
-        :key="item.id"
-        :data="item"
-      />
+  <AppPage full-width>
+    <template #content>
+      <div class="route-page">
+        <div class="route-page__border route-page__border--start icon icon-home" />
+        <template v-if="routeSections.length > 0">
+          <RouteSection
+            v-for="item in routeSections"
+            :key="item.id"
+            :data="item"
+          />
+        </template>
+        <div
+          class="route-page__border route-page__border--end icon icon-plus"
+          @click="openCreateRouteSectionModal"
+        />
+      </div>
     </template>
-    <div
-      class="route-page__border route-page__border--end icon icon-plus"
-      @click="openCreateRouteSectionModal"
-    />
-  </div>
+  </AppPage>
 
   <CreateRouteSectionModal
     v-model:visible="isCreateRouteSectionModalVisible"

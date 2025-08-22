@@ -2,6 +2,7 @@ import type { VNode } from 'vue';
 
 export interface AppPageProps {
   title?: string;
+  fullWidth?: boolean;
 }
 
 export interface AppPageSlots {

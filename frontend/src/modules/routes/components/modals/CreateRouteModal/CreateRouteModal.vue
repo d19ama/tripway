@@ -2,6 +2,7 @@
 import {
   computed,
   ref,
+  watch,
 } from 'vue';
 import {
   type ValidationArgs,
@@ -75,6 +76,10 @@ async function onCreate(): Promise<void> {
     emit('create:route:success', id);
   }
 }
+
+watch(visible, () => {
+  form.value.name = '';
+});
 </script>
 
 <template>

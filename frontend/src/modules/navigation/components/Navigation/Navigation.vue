@@ -103,12 +103,16 @@ function changeView(): void {
     <div class="navigation__view">
       <AppButton
         theme="icon-red"
+        size="l"
+        class="navigation__button"
         @click="changeView"
       >
         <span class="icon icon-map" />
       </AppButton>
       <AppButton
         theme="icon-red"
+        size="l"
+        class="navigation__button"
         @click="changeView"
       >
         <span class="icon icon-list" />
@@ -129,7 +133,7 @@ function changeView(): void {
   width: 100%;
   height: $height;
   position: fixed;
-  top: 3rem;
+  top: 3.5rem;
   left: 0;
   z-index: 90;
   background-color: var(--color-white);
@@ -168,7 +172,7 @@ function changeView(): void {
         top: 0;
         left: 100%;
         z-index: 1;
-        border: 10px solid transparent;
+        border: .5rem solid transparent;
         border-top-width: #{$height / 2};
         border-bottom-width: #{$height / 2};
         border-left-color: var(--color-blue-dark);
@@ -202,7 +206,7 @@ function changeView(): void {
         top: 0;
         left: -1rem;
         transform-origin: center;
-        transform: skewX(22deg);
+        transform: skewX(21deg);
         background-color: var(--color-red-dark);
         transition: background-color var(--transition);
       }
@@ -267,6 +271,11 @@ function changeView(): void {
       border-top: #{$height} solid transparent;
       border-right: #{$height / 2} solid var(--color-red);
     }
+  }
+
+  &__button {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }
 </style>
