@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type {
-  RouteSection,
-  RouteSectionTransportType,
+  RouteSectionEntity,
+  TransportType,
 } from '../../types';
 import {
   currency,
@@ -18,13 +18,13 @@ import {
 } from '@/app/assets/images/icons';
 
 interface Props {
-  data: RouteSection;
+  data: RouteSectionEntity;
 }
 
 const props = defineProps<Props>();
 
 const transport = computed<string | undefined>(() => {
-  const resolver: Record<RouteSectionTransportType, string> = {
+  const resolver: Record<TransportType, string> = {
     airplane: iconAirplane,
     train: iconTrain,
     bus: iconBus,
@@ -33,7 +33,7 @@ const transport = computed<string | undefined>(() => {
     other: '',
   };
 
-  return resolver[props.data.transport.type!];
+  return resolver[props.data.transportType!];
 });
 
 function price(value: string | undefined): string {
@@ -49,23 +49,23 @@ function price(value: string | undefined): string {
       <div class="route-section__info">
         <div class="route-section__date">
           <span class="icon icon-calendar" />
-          {{ date(props.data.transport.departure) }}
+          {{ date(props.data.departure) }}
           &dash;
-          {{ date(props.data.transport.arrival) }}
+          {{ date(props.data.arrival) }}
           <div
             v-if="transport"
             class="route-section__transport"
           >
             <img
               :src="transport"
-              :alt="props.data.transport.type"
+              :alt="props.data.transportType"
               class="route-section__transport-img"
             >
           </div>
         </div>
         <div class="route-section__location">
           <span class="icon icon-location" />
-          {{ props.data.location.country }}, {{ props.data.location.city }}
+          {{ props.data.destinationCountry }}, {{ props.data.destinationCity }}
         </div>
         <div class="route-section__price">
           <div class="row">
@@ -74,7 +74,7 @@ function price(value: string | undefined): string {
                 Билеты:
               </div>
               <div class="route-section__value">
-                {{ price(props.data.transport?.price) }}
+                {{ price(props.data.movingCost) }}
               </div>
             </div>
             <div class="col-default-6">
@@ -82,7 +82,7 @@ function price(value: string | undefined): string {
                 Проживание:
               </div>
               <div class="route-section__value">
-                {{ price(props.data.habitation?.price) }}
+                {{ price(props.data.stayingCost) }}
               </div>
             </div>
           </div>

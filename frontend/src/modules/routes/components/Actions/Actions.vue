@@ -9,7 +9,7 @@ import {
   DeleteRouteConfirmationModal,
 } from '../';
 import {
-  type Route,
+  type RouteEntity,
   useRoutes,
 } from '../../';
 import type { RouteState } from '@/modules/routes/types';
@@ -22,7 +22,7 @@ const {
 
 const route = useRoute();
 
-const selectedRouteId = ref<Route['id']>(String(route.params.id));
+const selectedRouteId = ref<RouteEntity['id']>(String(route.params.id));
 const isCloseConfirmationModalVisible = ref<boolean>(false);
 const isDeleteConfirmationModalVisible = ref<boolean>(false);
 

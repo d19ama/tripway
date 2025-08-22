@@ -5,14 +5,14 @@ import {
   AppModalActions,
 } from '@/common/components';
 import {
-  type Route,
+  type RouteEntity,
   useRoutes,
 } from '@/modules/routes';
 import { usePageLoadingIndicator } from '@/common/composables';
 import { UnknownHttpErrorModal } from '@/modules/http';
 
 interface Props {
-  routeId: Route['id'];
+  routeId: RouteEntity['id'];
 }
 
 interface Emits {

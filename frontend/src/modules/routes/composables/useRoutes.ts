@@ -6,9 +6,8 @@ import {
   ref,
 } from 'vue';
 import { useRouter } from 'vue-router';
-import type { Route } from '../';
+import type { RouteEntity } from '../';
 import { DEFAULT_ROUTE } from '../constants';
-import type { RouteSection } from '../types';
 import { RouteNames } from '@/app/router/route-names';
 import { useHttpService } from '@/modules/http';
 
@@ -16,28 +15,25 @@ interface UseRoutesReturn {
   // variables
   isError: Ref<boolean>;
   isLoading: Ref<boolean>;
-  activeRoute: Ref<Route | undefined>;
-  routes: WritableComputedRef<Route[]>;
-  selectedRoutes: ComputedRef<Route[]>;
+  activeRoute: Ref<RouteEntity | undefined>;
+  routes: WritableComputedRef<RouteEntity[]>;
+  selectedRoutes: ComputedRef<RouteEntity[]>;
 
   // requests
   readRoutes: () => Promise<void>;
-  readRoute: (id: Route['id']) => Promise<void>;
-  deleteRoute: (id: Route['id']) => Promise<void>;
-  createRoute: (name: Route['name']) => Promise<Route['id'] | undefined>;
+  readRoute: (id: RouteEntity['id']) => Promise<void>;
+  deleteRoute: (id: RouteEntity['id']) => Promise<void>;
+  createRoute: (name: RouteEntity['name']) => Promise<RouteEntity['id'] | undefined>;
 
   // route actions
-  editRoute: (id: Route['id']) => void;
-  removeRoute: (id: Route['id']) => void;
-  openRoute: (id: Route['id']) => void;
-  closeRoute: (id: Route['id']) => void;
+  editRoute: (id: RouteEntity['id']) => void;
+  removeRoute: (id: RouteEntity['id']) => void;
+  openRoute: (id: RouteEntity['id']) => void;
+  closeRoute: (id: RouteEntity['id']) => void;
   closeAllRoutes: () => void;
-
-  // route section actions
-  addRouteSection: (id: Route['id'], routeSection: RouteSection) => void;
 }
 
-const _routes = ref<Route[]>([]);
+const _routes = ref<RouteEntity[]>([]);
 
 export function useRoutes(): UseRoutesReturn {
   const router = useRouter();
@@ -46,21 +42,19 @@ export function useRoutes(): UseRoutesReturn {
   const isError = ref<boolean>(false);
   const isLoading = ref<boolean>(false);
 
-  const activeRoute = ref<Route | undefined>();
+  const activeRoute = ref<RouteEntity | undefined>();
 
-  const routes = computed<Route[]>({
+  const routes = computed<RouteEntity[]>({
     get() {
       return _routes.value;
     },
     set(value) {
-      _routes.value = {
-        ...value,
-      };
+      _routes.value = value;
     },
   });
 
-  const selectedRoutes = computed<Route[]>(() => {
-    return _routes.value.filter((item: Route) => {
+  const selectedRoutes = computed<RouteEntity[]>(() => {
+    return _routes.value.filter((item: RouteEntity) => {
       return item.opened;
     });
   });
@@ -68,7 +62,7 @@ export function useRoutes(): UseRoutesReturn {
   async function readRoutes(): Promise<void> {
     isLoading.value = true;
 
-    const response = await httpService.getData<Route[]>('/routes');
+    const response = await httpService.getData<RouteEntity[]>('/routes');
 
     isLoading.value = false;
 
@@ -82,10 +76,10 @@ export function useRoutes(): UseRoutesReturn {
     }
   }
 
-  async function createRoute(name: Route['name']): Promise<Route['id'] | undefined> {
+  async function createRoute(name: RouteEntity['name']): Promise<RouteEntity['id'] | undefined> {
     isLoading.value = true;
 
-    const response = await httpService.postData<Route>('/routes', {
+    const response = await httpService.postData<RouteEntity>('/routes', {
       ...DEFAULT_ROUTE,
       name,
     });
@@ -102,10 +96,10 @@ export function useRoutes(): UseRoutesReturn {
     }
   }
 
-  async function readRoute(id: Route['id']): Promise<void> {
+  async function readRoute(id: RouteEntity['id']): Promise<void> {
     isLoading.value = true;
 
-    const response = await httpService.getData<Route>(`/routes/${id}`);
+    const response = await httpService.getData<RouteEntity>(`/routes/${id}`);
 
     isLoading.value = false;
 
@@ -119,7 +113,7 @@ export function useRoutes(): UseRoutesReturn {
     }
   }
 
-  async function deleteRoute(id: Route['id']): Promise<void> {
+  async function deleteRoute(id: RouteEntity['id']): Promise<void> {
     isLoading.value = true;
 
     const response = await httpService.deleteData(`/routes/${id}`);
@@ -131,7 +125,7 @@ export function useRoutes(): UseRoutesReturn {
     }
   }
 
-  function toggleRouteOpened(id: Route['id'], opened: boolean) {
+  function toggleRouteOpened(id: RouteEntity['id'], opened: boolean) {
     _routes.value = _routes.value.map((item) => {
       if (item.id === id) {
         return {
@@ -144,7 +138,7 @@ export function useRoutes(): UseRoutesReturn {
     });
   }
 
-  async function openRoute(id: Route['id']): Promise<void> {
+  async function openRoute(id: RouteEntity['id']): Promise<void> {
     toggleRouteOpened(id, true);
 
     await router.push({
@@ -155,10 +149,10 @@ export function useRoutes(): UseRoutesReturn {
     });
   }
 
-  async function closeRoute(id: Route['id']): Promise<void> {
+  async function closeRoute(id: RouteEntity['id']): Promise<void> {
     toggleRouteOpened(id, false);
 
-    const nextRoute: Route | undefined = selectedRoutes.value[selectedRoutes.value.length - 1];
+    const nextRoute: RouteEntity | undefined = selectedRoutes.value[selectedRoutes.value.length - 1];
 
     if (nextRoute) {
       await router.replace({
@@ -185,7 +179,7 @@ export function useRoutes(): UseRoutesReturn {
     });
   }
 
-  async function removeRoute(id: Route['id']): Promise<void> {
+  async function removeRoute(id: RouteEntity['id']): Promise<void> {
     _routes.value = _routes.value.filter((item) => {
       return item.id !== id;
     });
@@ -195,18 +189,8 @@ export function useRoutes(): UseRoutesReturn {
     });
   }
 
-  function addRouteSection(id: Route['id'], routeSection: RouteSection): void {
-    const currentRoute: Route | undefined = _routes.value.find((item) => {
-      return item.id === id;
-    });
-
-    if (currentRoute) {
-      currentRoute.route.push(routeSection);
-    }
-  }
-
-  async function editRoute(id: Route['id']): Promise<void> {
-    const currentRoute: Route | undefined = _routes.value.find((item) => {
+  async function editRoute(id: RouteEntity['id']): Promise<void> {
+    const currentRoute: RouteEntity | undefined = _routes.value.find((item) => {
       return item.id === id;
     });
 
@@ -243,8 +227,5 @@ export function useRoutes(): UseRoutesReturn {
     openRoute,
     closeRoute,
     closeAllRoutes,
-
-    // route section actions
-    addRouteSection,
   };
 }

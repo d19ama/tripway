@@ -11,13 +11,13 @@ export interface AppInputProps {
   placeholder?: string;
   theme?: 'text' | 'search';
   position?: 'left' | 'center' | 'right';
-  type?: 'text' | 'tel' | 'email' | 'password';
+  type?: 'text' | 'number' | 'tel' | 'email' | 'password';
   validation?: BaseValidation;
 }
 
 export interface AppInputEmits {
-  input: [value: string];
-  change: [value: string];
+  input: [value: string | number];
+  change: [value: string | number];
   focus: [];
   blur: [];
 }

@@ -7,20 +7,20 @@ import {
   useRoute,
   useRouter,
 } from 'vue-router';
-import {
-  CreateRouteSectionModal,
-  RouteSection,
-  useRoutes,
-} from '@/modules/routes';
 import { usePageLoadingIndicator } from '@/common/composables';
 import { UnknownHttpErrorModal } from '@/modules/http';
 import { RouteNames } from '@/app/router/route-names';
+import {
+  CreateRouteSectionModal,
+  RouteSection,
+} from '@/modules/route-sections';
+import { useRouteSection } from '@/modules/route-sections/composables';
 
 const {
   isError,
-  activeRoute,
-  readRoute,
-} = useRoutes();
+  routeSections,
+  readRouteSections,
+} = useRouteSection();
 
 const {
   showUntil,
@@ -42,16 +42,16 @@ function returnToList(): void {
 }
 
 onMounted(async () => {
-  await showUntil(readRoute(String(route.params.id)));
+  await showUntil(readRouteSections(String(route.params.id)));
 });
 </script>
 
 <template>
   <div class="route-page">
     <div class="route-page__border route-page__border--start icon icon-home" />
-    <template v-if="activeRoute">
+    <template v-if="routeSections.length > 0">
       <RouteSection
-        v-for="item in activeRoute.route"
+        v-for="item in routeSections"
         :key="item.id"
         :data="item"
       />
@@ -64,7 +64,8 @@ onMounted(async () => {
 
   <CreateRouteSectionModal
     v-model:visible="isCreateRouteSectionModalVisible"
-    :route-id="activeRoute?.id"
+    :route-id="String(route.params.id)"
+    @create:route-section:success="showUntil(readRouteSections(String(route.params.id)))"
   />
 
   <UnknownHttpErrorModal

@@ -1,10 +1,6 @@
-import type {
-  Route,
-  RouteSection,
-  RouteSectionTransportType,
-} from './types';
+import type { RouteEntity } from './types';
 
-export const DEFAULT_ROUTE: Route = {
+export const DEFAULT_ROUTE: RouteEntity = {
   id: '',
   name: '',
   state: 'new',
@@ -15,27 +11,5 @@ export const DEFAULT_ROUTE: Route = {
   endDate: '',
   createdAt: '',
   updatedAt: '',
-  route: [],
-};
-
-export const DEFAULT_ROUTE_SECTION: RouteSection = {
-  id: '',
-  location: {
-    city: '',
-    country: '',
-  },
-  transport: {
-    departure: '',
-    arrival: '',
-  },
-  habitation: {},
-};
-
-export const ROUTE_SECTION_TRANSPORT_TYPE_MAP: Record<RouteSectionTransportType, string> = {
-  airplane: 'Самолет',
-  bicycle: 'Велосипед',
-  bus: 'Автобус',
-  car: 'Автомобиль',
-  other: 'Другое',
-  train: 'Поезд',
+  routeSectionsIds: [],
 };

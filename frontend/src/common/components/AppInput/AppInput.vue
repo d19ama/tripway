@@ -26,9 +26,19 @@ const emit = defineEmits<AppInputEmits>();
 
 const slots = defineSlots<AppInputSlots>();
 
-const value = defineModel<string>('value', {
+const [
+  value,
+  modifiers,
+] = defineModel<string>('value', {
   required: false,
   default: '',
+  set(value) {
+    if (modifiers.trim) {
+      return value.trim();
+    }
+
+    return value;
+  },
 });
 
 const error = ref<boolean>(false);

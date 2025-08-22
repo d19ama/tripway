@@ -7,7 +7,7 @@ import {
 import type { HTMLElementClass } from '@/common/types';
 import { AppButton } from '@/common/components';
 import {
-  type Route,
+  type RouteEntity,
   useRoutes,
 } from '@/modules/routes';
 import { RouteNames } from '@/app/router/route-names';
@@ -24,20 +24,20 @@ const route = useRoute();
 const router = useRouter();
 
 const isClearAllButtonVisible = computed<boolean>(() => {
-  const opened: Route[] | undefined = routes.value.filter((item) => {
+  const opened: RouteEntity[] | undefined = routes.value.filter((item) => {
     return item.opened;
   });
 
   return opened && opened.length > 1;
 });
 
-function tabClass(id: Route['id']): HTMLElementClass {
+function tabClass(id: RouteEntity['id']): HTMLElementClass {
   return {
     'navigation__tab--active': String(route.params.id) === id,
   };
 }
 
-function selectTab(id: Route['id']): void {
+function selectTab(id: RouteEntity['id']): void {
   router.push({
     name: RouteNames.RoutePage,
     params: {
@@ -46,7 +46,7 @@ function selectTab(id: Route['id']): void {
   });
 }
 
-function closeTab(id: Route['id']): void {
+function closeTab(id: RouteEntity['id']): void {
   closeRoute(id);
 }
 

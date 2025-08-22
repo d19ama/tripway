@@ -32,7 +32,7 @@ export class RoutesService {
   }
 
   async createRoute(body: CreateRouteRequestDto): Promise<CreateRouteResponseDto> {
-    const newRoute: CreateRouteRequestDto = this.routesRepository.create(body);
+    const newRoute: CreateRouteResponseDto = this.routesRepository.create(body);
 
     return await this.routesRepository.save(newRoute);
   }
