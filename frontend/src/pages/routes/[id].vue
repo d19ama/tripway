@@ -13,8 +13,8 @@ import { RouteNames } from '@/app/router/route-names';
 import {
   CreateRouteSectionModal,
   RouteSection,
+  useRouteSection,
 } from '@/modules/route-sections';
-import { useRouteSection } from '@/modules/route-sections/composables';
 
 const {
   isError,

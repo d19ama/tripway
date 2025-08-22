@@ -9,6 +9,7 @@ import {
   DeleteRouteConfirmationModal,
   RouteCard,
   type RouteEntity,
+  UpdateRouteModal,
   useRoutes,
 } from '@/modules/routes';
 import { AppButton } from '@/common/components';
@@ -19,7 +20,6 @@ import { RouteNames } from '@/app/router/route-names';
 const {
   routes,
   isError,
-  editRoute,
   openRoute,
   closeRoute,
   readRoutes,
@@ -32,16 +32,31 @@ const {
 const router = useRouter();
 
 const selectedRouteId = ref<RouteEntity['id']>('');
+const selectedRouteName = ref<RouteEntity['name']>('');
 const isCreateRouteModalVisible = ref<boolean>(false);
+const isUpdateRouteModalVisible = ref<boolean>(false);
 const isDeleteConfirmationModalVisible = ref<boolean>(false);
 
 function openCreateRouteModal(): void {
   isCreateRouteModalVisible.value = true;
 }
 
+function openUpdateRouteModal({
+  id,
+  name,
+}: Pick<RouteEntity, 'id' | 'name'>): void {
+  selectedRouteId.value = id;
+  selectedRouteName.value = name;
+  isUpdateRouteModalVisible.value = true;
+}
+
 function openDeleteRouteModal(id: RouteEntity['id']): void {
   selectedRouteId.value = id;
   isDeleteConfirmationModalVisible.value = true;
+}
+
+async function updateRoutes(): Promise<void> {
+  await showUntil(readRoutes());
 }
 
 async function onRouteCreated(id: RouteEntity['id']): Promise<void> {
@@ -73,8 +88,8 @@ onMounted(async () => {
       v-for="item in routes"
       :key="item.id"
       :route="item"
-      @edit:route="editRoute"
       @close:route="closeRoute"
+      @update:route="openUpdateRouteModal"
       @delete:route="openDeleteRouteModal"
       @click="openRoute"
     />
@@ -85,10 +100,17 @@ onMounted(async () => {
     @create:route:success="onRouteCreated"
   />
 
+  <UpdateRouteModal
+    v-model:visible="isUpdateRouteModalVisible"
+    :route-id="selectedRouteId"
+    :route-name="selectedRouteName"
+    @update:route:success="updateRoutes"
+  />
+
   <DeleteRouteConfirmationModal
     v-model:visible="isDeleteConfirmationModalVisible"
     :route-id="selectedRouteId"
-    @delete:route:success="showUntil(readRoutes())"
+    @delete:route:success="updateRoutes"
   />
 
   <UnknownHttpErrorModal

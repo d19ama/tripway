@@ -23,10 +23,10 @@ interface UseRoutesReturn {
   readRoutes: () => Promise<void>;
   readRoute: (id: RouteEntity['id']) => Promise<void>;
   deleteRoute: (id: RouteEntity['id']) => Promise<void>;
+  updateRoute: (id: RouteEntity['id'], route: Partial<RouteEntity>) => Promise<void>;
   createRoute: (name: RouteEntity['name']) => Promise<RouteEntity['id'] | undefined>;
 
   // route actions
-  editRoute: (id: RouteEntity['id']) => void;
   removeRoute: (id: RouteEntity['id']) => void;
   openRoute: (id: RouteEntity['id']) => void;
   closeRoute: (id: RouteEntity['id']) => void;
@@ -113,6 +113,20 @@ export function useRoutes(): UseRoutesReturn {
     }
   }
 
+  async function updateRoute(id: RouteEntity['id'], route: Partial<RouteEntity>): Promise<void> {
+    isLoading.value = true;
+
+    const response = await httpService.patchData<RouteEntity>(`/routes/${id}`, {
+      ...route,
+    });
+
+    isLoading.value = false;
+
+    if (!response) {
+      isError.value = true;
+    }
+  }
+
   async function deleteRoute(id: RouteEntity['id']): Promise<void> {
     isLoading.value = true;
 
@@ -189,24 +203,6 @@ export function useRoutes(): UseRoutesReturn {
     });
   }
 
-  async function editRoute(id: RouteEntity['id']): Promise<void> {
-    const currentRoute: RouteEntity | undefined = _routes.value.find((item) => {
-      return item.id === id;
-    });
-
-    if (currentRoute) {
-      currentRoute.state = 'edit';
-      currentRoute.opened = true;
-    }
-
-    await router.replace({
-      name: RouteNames.RoutePage,
-      params: {
-        id,
-      },
-    });
-  }
-
   return {
     // variables
     routes,
@@ -218,11 +214,11 @@ export function useRoutes(): UseRoutesReturn {
     // requests
     readRoute,
     readRoutes,
+    updateRoute,
     createRoute,
     deleteRoute,
 
     // route actions
-    editRoute,
     removeRoute,
     openRoute,
     closeRoute,

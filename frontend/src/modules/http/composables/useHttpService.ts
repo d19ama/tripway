@@ -1,7 +1,7 @@
 interface UseHttpServiceReturn {
-  getData: <T>(url: string) => Promise<T | undefined>;
-  postData: <T, K extends T = T>(url: string, body: K) => Promise<T | undefined>;
-  patchData: <T, K extends T = T>(url: string, body: K) => Promise<T | undefined>;
+  getData: <RETURN>(url: string) => Promise<RETURN | undefined>;
+  postData: <RETURN, BODY extends RETURN = RETURN>(url: string, body: BODY) => Promise<RETURN | undefined>;
+  patchData: <RETURN, BODY extends Partial<RETURN> = Partial<RETURN>>(url: string, body: BODY) => Promise<RETURN | undefined>;
   deleteData: (url: string) => Promise<boolean>;
 }
 
@@ -10,7 +10,7 @@ export function useHttpService(): UseHttpServiceReturn {
     'Content-Type': 'application/json;charset=utf-8',
   };
 
-  async function getData<T>(url: string): Promise<T | undefined> {
+  async function getData<RETURN>(url: string): Promise<RETURN | undefined> {
     const response: Response = await fetch(`${import.meta.env.VITE_API_BASE_URL}${url}`, {
       method: 'GET',
     });
@@ -20,7 +20,7 @@ export function useHttpService(): UseHttpServiceReturn {
       : undefined;
   }
 
-  async function postData<T, K extends T = T>(url: string, body: K): Promise<T | undefined> {
+  async function postData<RETURN, BODY extends RETURN = RETURN>(url: string, body: BODY): Promise<RETURN | undefined> {
     const response: Response = await fetch(`${import.meta.env.VITE_API_BASE_URL}${url}`, {
       method: 'POST',
       headers: DEFAULT_HEADERS,
@@ -34,7 +34,7 @@ export function useHttpService(): UseHttpServiceReturn {
       : undefined;
   }
 
-  async function patchData<T, K extends T = T>(url: string, body: K): Promise<T | undefined> {
+  async function patchData<RETURN, BODY extends Partial<RETURN> = Partial<RETURN>>(url: string, body: BODY): Promise<RETURN | undefined> {
     const response: Response = await fetch(`${import.meta.env.VITE_API_BASE_URL}${url}`, {
       method: 'PATCH',
       headers: DEFAULT_HEADERS,
