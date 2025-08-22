@@ -7,12 +7,16 @@ import {
   type ValidationArgs,
   useVuelidate,
 } from '@vuelidate/core';
+import { useRouteSection } from '../../../composables';
+import {
+  DEFAULT_ROUTE_SECTION,
+  ROUTE_SECTION_TRANSPORT_TYPE_MAP,
+} from '../../../constants';
 import type {
-  Route,
-  RouteSection,
-  RouteSectionTransportType,
+  RouteSectionEntity,
+  TransportType,
 } from '../../../types';
-import { useRoutes } from '../../../composables';
+import type { RouteEntity } from '@/modules/routes';
 import {
   AppButton,
   AppDatePicker,
@@ -25,35 +29,38 @@ import {
   AppTitle,
 } from '@/common/components';
 import {
-  DEFAULT_ROUTE_SECTION,
-  ROUTE_SECTION_TRANSPORT_TYPE_MAP,
-} from '@/modules/routes/constants';
-import {
   maxLength,
   minLength,
   required,
 } from '@/common/validators';
 
 interface Props {
-  routeId?: Route['id'];
+  routeId: RouteEntity['id'];
+}
+
+interface Emits {
+  'create:route-section:success': [];
 }
 
 const props = defineProps<Props>();
 
+const emit = defineEmits<Emits>();
+
 const {
-  addRouteSection,
-} = useRoutes();
+  isError,
+  createRouteSection,
+} = useRouteSection();
 
 const visible = defineModel<boolean>('visible', {
   required: false,
   default: false,
 });
 
-const form = ref<RouteSection>({
+const form = ref<RouteSectionEntity>({
   ...DEFAULT_ROUTE_SECTION,
 });
 
-const transportTypeOptions = ref<AppSelectOption<RouteSectionTransportType>[]>([
+const transportTypeOptions = ref<AppSelectOption<TransportType>[]>([
   {
     id: 'airplane',
     text: ROUTE_SECTION_TRANSPORT_TYPE_MAP.airplane,
@@ -94,36 +101,34 @@ const transportTypeOptions = ref<AppSelectOption<RouteSectionTransportType>[]>([
 
 const rules = computed<ValidationArgs>(() => {
   return {
-    transport: {
-      departure: {
-        required,
-      },
-      arrival: {
-        required,
-      },
+    departure: {
+      required,
     },
-    location: {
-      city: {
-        required,
-        maxLength: maxLength(100),
-        minLength: minLength(2),
-      },
-      country: {
-        required,
-        maxLength: maxLength(100),
-        minLength: minLength(3),
-      },
+    arrival: {
+      required,
+    },
+    destinationCity: {
+      required,
+      maxLength: maxLength(100),
+      minLength: minLength(2),
+    },
+    destinationCountry: {
+      required,
+      maxLength: maxLength(100),
+      minLength: minLength(3),
     },
   };
 });
 
-const validation = useVuelidate<RouteSection>(rules, form);
+const validation = useVuelidate<RouteSectionEntity>(rules, form);
 
-function onAdd(): void {
+async function onCreate(): Promise<void> {
   visible.value = false;
 
-  if (props.routeId) {
-    addRouteSection(props.routeId, form.value);
+  await createRouteSection(props.routeId, form.value);
+
+  if (!isError.value) {
+    emit('create:route-section:success');
   }
 }
 </script>
@@ -142,19 +147,19 @@ function onAdd(): void {
       </div>
       <div class="col-default-6">
         <AppInput
-          v-model:value="form.location.country"
+          v-model:value.trim="form.destinationCountry"
           label="Страна"
           placeholder="Введите страну назначения"
-          :validation="validation.location.country"
+          :validation="validation.destinationCountry"
           required
         />
       </div>
       <div class="col-default-6">
         <AppInput
-          v-model:value="form.location.city"
+          v-model:value.trim="form.destinationCity"
           label="Город"
           placeholder="Введите город назначения"
-          :validation="validation.location.city"
+          :validation="validation.destinationCity"
           required
         />
       </div>
@@ -170,25 +175,25 @@ function onAdd(): void {
       </div>
       <div class="col-default-6">
         <AppDatePicker
-          v-model:date="form.transport.departure"
+          v-model:date="form.departure"
           label="Дата отправления"
           placeholder="Выберите дату отправления"
-          :validation="validation.transport.departure"
+          :validation="validation.departure"
           required
         />
       </div>
       <div class="col-default-6">
         <AppDatePicker
-          v-model:date="form.transport.arrival"
+          v-model:date="form.arrival"
           label="Дата прибытия"
           placeholder="Выберите дату прибытия"
-          :validation="validation.transport.arrival"
+          :validation="validation.arrival"
           required
         />
       </div>
       <div class="col-default-6">
         <AppSelect
-          v-model:selected="form.transport.type"
+          v-model:value="form.transportType"
           :options="transportTypeOptions"
           label="Вид транспорта"
           placeholder="Выберите вид транспорта"
@@ -196,7 +201,7 @@ function onAdd(): void {
       </div>
       <div class="col-default-6">
         <AppInput
-          v-model:value="form.transport.price"
+          v-model:value.trim="form.movingCost"
           label="Цена проживания"
           placeholder="Введите цену"
         />
@@ -213,14 +218,14 @@ function onAdd(): void {
       </div>
       <div class="col-default-6">
         <AppInput
-          v-model:value="form.habitation.address"
+          v-model:value.trim="form.stayingPlace"
           label="Адрес проживания"
           placeholder="Введите адрес"
         />
       </div>
       <div class="col-default-6">
         <AppInput
-          v-model:value="form.habitation.price"
+          v-model:value.trim="form.stayingCost"
           label="Цена проживания"
           placeholder="Введите цену"
         />
@@ -236,7 +241,7 @@ function onAdd(): void {
           size="l"
           theme="blue-dark"
           :disabled="validation.$invalid"
-          @click="onAdd"
+          @click="onCreate"
         >
           Добавить
         </AppButton>

@@ -3,20 +3,29 @@
  * Do not make direct changes to the file.
  */
 
+
 export interface paths {
-  '/api/v1/routes': {
+  "/api/v1/routes": {
     /** Получение всех маршрутов */
-    get: operations['readAllRoutes'];
+    get: operations["readAllRoutes"];
     /** Создание нового маршрута */
-    post: operations['createRoute'];
+    post: operations["createRoute"];
   };
-  '/api/v1/routes/{id}': {
+  "/api/v1/routes/{id}": {
     /** Получение маршрута по id */
-    get: operations['readRoute'];
+    get: operations["readRoute"];
     /** Удаление маршрута по id */
-    delete: operations['deleteRoute'];
+    delete: operations["deleteRoute"];
     /** Обновление маршрута по id */
-    patch: operations['updateRoute'];
+    patch: operations["updateRoute"];
+  };
+  "/api/v1/route-sections/{routeId}": {
+    /** Получение всех секций маршрута */
+    get: operations["readAllRouteSections"];
+  };
+  "/api/v1/route-sections": {
+    /** Создание нового маршрута */
+    post: operations["createRouteSection"];
   };
 }
 
@@ -25,7 +34,7 @@ export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
     /** @enum {string} */
-    RouteState: 'new' | 'edit' | 'completed';
+    RouteState: "new" | "edit" | "completed";
     RouteEntity: {
       /**
        * @description Уникальный идентификатор маршрута
@@ -76,7 +85,15 @@ export interface components {
        * @description Состояние маршрута
        * @example new
        */
-      state: components['schemas']['RouteState'];
+      state: components["schemas"]["RouteState"];
+      /**
+       * @description Массив идентификаторов секций в маршруте
+       * @example [
+       *   "1234",
+       *   "5678"
+       * ]
+       */
+      routeSectionsIds: string[];
     };
     CreateRouteRequestDto: {
       /**
@@ -128,7 +145,15 @@ export interface components {
        * @description Состояние маршрута
        * @example new
        */
-      state: components['schemas']['RouteState'];
+      state: components["schemas"]["RouteState"];
+      /**
+       * @description Массив идентификаторов секций в маршруте
+       * @example [
+       *   "1234",
+       *   "5678"
+       * ]
+       */
+      routeSectionsIds: string[];
     };
     CreateRouteResponseDto: {
       /**
@@ -180,7 +205,15 @@ export interface components {
        * @description Состояние маршрута
        * @example new
        */
-      state: components['schemas']['RouteState'];
+      state: components["schemas"]["RouteState"];
+      /**
+       * @description Массив идентификаторов секций в маршруте
+       * @example [
+       *   "1234",
+       *   "5678"
+       * ]
+       */
+      routeSectionsIds: string[];
     };
     ReadRouteResponseDto: {
       /**
@@ -232,7 +265,15 @@ export interface components {
        * @description Состояние маршрута
        * @example new
        */
-      state: components['schemas']['RouteState'];
+      state: components["schemas"]["RouteState"];
+      /**
+       * @description Массив идентификаторов секций в маршруте
+       * @example [
+       *   "1234",
+       *   "5678"
+       * ]
+       */
+      routeSectionsIds: string[];
     };
     UpdateRouteRequestDto: {
       /**
@@ -284,7 +325,15 @@ export interface components {
        * @description Состояние маршрута
        * @example new
        */
-      state?: components['schemas']['RouteState'];
+      state?: components["schemas"]["RouteState"];
+      /**
+       * @description Массив идентификаторов секций в маршруте
+       * @example [
+       *   "1234",
+       *   "5678"
+       * ]
+       */
+      routeSectionsIds?: string[];
     };
     UpdateRouteResponseDto: {
       /**
@@ -336,7 +385,203 @@ export interface components {
        * @description Состояние маршрута
        * @example new
        */
-      state: components['schemas']['RouteState'];
+      state: components["schemas"]["RouteState"];
+      /**
+       * @description Массив идентификаторов секций в маршруте
+       * @example [
+       *   "1234",
+       *   "5678"
+       * ]
+       */
+      routeSectionsIds: string[];
+    };
+    /** @enum {string} */
+    TransportType: "airplane" | "train" | "bus" | "car" | "bicycle" | "other";
+    RouteSectionEntity: {
+      /**
+       * @description Уникальный идентификатор секции маршрута
+       * @example 1234567890
+       */
+      id: string;
+      /**
+       * @description Дата создания секции маршрута
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      createdAt: string;
+      /**
+       * @description Дата обновления секции маршрута
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      updatedAt: string;
+      /**
+       * @description Идентификатор маршрута
+       * @example 1234567890
+       */
+      routeId: string;
+      /**
+       * @description Город назначения
+       * @example Москва
+       */
+      destinationCity: string;
+      /**
+       * @description Страна назначения
+       * @example Россия
+       */
+      destinationCountry: string;
+      /**
+       * @description Дата отправления
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      departure: string;
+      /**
+       * @description Дата прибытия
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      arrival: string;
+      /**
+       * @description Тип транспортного средства
+       * @example airplane
+       */
+      transportType?: components["schemas"]["TransportType"];
+      /**
+       * @description Стоимость перемещения
+       * @example 0
+       */
+      movingCost?: string;
+      /**
+       * @description Место пребывания
+       * @example Отель
+       */
+      stayingPlace: string;
+      /**
+       * @description Стоимость проживания
+       * @example 0
+       */
+      stayingCost?: string;
+    };
+    CreateRouteSectionRequestDto: {
+      /**
+       * @description Уникальный идентификатор секции маршрута
+       * @example 1234567890
+       */
+      id: string;
+      /**
+       * @description Дата создания секции маршрута
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      createdAt: string;
+      /**
+       * @description Дата обновления секции маршрута
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      updatedAt: string;
+      /**
+       * @description Идентификатор маршрута
+       * @example 1234567890
+       */
+      routeId: string;
+      /**
+       * @description Город назначения
+       * @example Москва
+       */
+      destinationCity: string;
+      /**
+       * @description Страна назначения
+       * @example Россия
+       */
+      destinationCountry: string;
+      /**
+       * @description Дата отправления
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      departure: string;
+      /**
+       * @description Дата прибытия
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      arrival: string;
+      /**
+       * @description Тип транспортного средства
+       * @example airplane
+       */
+      transportType?: components["schemas"]["TransportType"];
+      /**
+       * @description Стоимость перемещения
+       * @example 0
+       */
+      movingCost?: string;
+      /**
+       * @description Место пребывания
+       * @example Отель
+       */
+      stayingPlace: string;
+      /**
+       * @description Стоимость проживания
+       * @example 0
+       */
+      stayingCost?: string;
+    };
+    CreateRouteSectionResponseDto: {
+      /**
+       * @description Уникальный идентификатор секции маршрута
+       * @example 1234567890
+       */
+      id: string;
+      /**
+       * @description Дата создания секции маршрута
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      createdAt: string;
+      /**
+       * @description Дата обновления секции маршрута
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      updatedAt: string;
+      /**
+       * @description Идентификатор маршрута
+       * @example 1234567890
+       */
+      routeId: string;
+      /**
+       * @description Город назначения
+       * @example Москва
+       */
+      destinationCity: string;
+      /**
+       * @description Страна назначения
+       * @example Россия
+       */
+      destinationCountry: string;
+      /**
+       * @description Дата отправления
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      departure: string;
+      /**
+       * @description Дата прибытия
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      arrival: string;
+      /**
+       * @description Тип транспортного средства
+       * @example airplane
+       */
+      transportType?: components["schemas"]["TransportType"];
+      /**
+       * @description Стоимость перемещения
+       * @example 0
+       */
+      movingCost?: string;
+      /**
+       * @description Место пребывания
+       * @example Отель
+       */
+      stayingPlace: string;
+      /**
+       * @description Стоимость проживания
+       * @example 0
+       */
+      stayingCost?: string;
     };
   };
   responses: never;
@@ -357,7 +602,7 @@ export interface operations {
     responses: {
       200: {
         content: {
-          'application/json': components['schemas']['RouteEntity'][];
+          "application/json": components["schemas"]["RouteEntity"][];
         };
       };
     };
@@ -366,13 +611,13 @@ export interface operations {
   createRoute: {
     requestBody: {
       content: {
-        'application/json': components['schemas']['CreateRouteRequestDto'];
+        "application/json": components["schemas"]["CreateRouteRequestDto"];
       };
     };
     responses: {
       201: {
         content: {
-          'application/json': components['schemas']['CreateRouteResponseDto'];
+          "application/json": components["schemas"]["CreateRouteResponseDto"];
         };
       };
     };
@@ -382,7 +627,7 @@ export interface operations {
     responses: {
       200: {
         content: {
-          'application/json': components['schemas']['ReadRouteResponseDto'];
+          "application/json": components["schemas"]["ReadRouteResponseDto"];
         };
       };
     };
@@ -399,13 +644,38 @@ export interface operations {
   updateRoute: {
     requestBody: {
       content: {
-        'application/json': components['schemas']['UpdateRouteRequestDto'];
+        "application/json": components["schemas"]["UpdateRouteRequestDto"];
       };
     };
     responses: {
       200: {
         content: {
-          'application/json': components['schemas']['UpdateRouteResponseDto'];
+          "application/json": components["schemas"]["UpdateRouteResponseDto"];
+        };
+      };
+    };
+  };
+  /** Получение всех секций маршрута */
+  readAllRouteSections: {
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["RouteSectionEntity"][];
+        };
+      };
+    };
+  };
+  /** Создание нового маршрута */
+  createRouteSection: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateRouteSectionRequestDto"];
+      };
+    };
+    responses: {
+      201: {
+        content: {
+          "application/json": components["schemas"]["CreateRouteSectionResponseDto"];
         };
       };
     };

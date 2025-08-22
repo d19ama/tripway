@@ -14,7 +14,7 @@ import {
   AppModalActions,
 } from '@/common/components';
 import {
-  type Route,
+  type RouteEntity,
   useRoutes,
 } from '@/modules/routes';
 import {
@@ -27,7 +27,7 @@ import { usePageLoadingIndicator } from '@/common/composables';
 import { UnknownHttpErrorModal } from '@/modules/http';
 
 interface Emits {
-  'create:route:success': [id: Route['id']];
+  'create:route:success': [id: RouteEntity['id']];
 }
 
 const emit = defineEmits<Emits>();
@@ -46,7 +46,7 @@ const visible = defineModel<boolean>('visible', {
   default: false,
 });
 
-const form = ref<Pick<Route, 'name'>>({
+const form = ref<Pick<RouteEntity, 'name'>>({
   name: '',
 });
 
@@ -64,12 +64,12 @@ const rules = computed<ValidationArgs>(() => {
   };
 });
 
-const validation = useVuelidate<Pick<Route, 'name'>>(rules, form);
+const validation = useVuelidate<Pick<RouteEntity, 'name'>>(rules, form);
 
 async function onCreate(): Promise<void> {
   visible.value = false;
 
-  const id: Route['id'] | undefined = await showUntil(createRoute(form.value.name));
+  const id: RouteEntity['id'] | undefined = await showUntil(createRoute(form.value.name));
 
   if (!isError.value && id) {
     emit('create:route:success', id);

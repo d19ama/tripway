@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { Route } from '../../';
+import type { RouteEntity } from '../../';
 import {
   AppButton,
   AppTitle,
@@ -13,14 +13,14 @@ import {
 import { DASH_SYMBOL } from '@/common/constants';
 
 interface Props {
-  route: Route;
+  route: RouteEntity;
 }
 
 interface Emits {
-  'click': [id: Route['id']];
-  'edit:route': [id: Route['id']];
-  'close:route': [id: Route['id']];
-  'delete:route': [id: Route['id']];
+  'click': [id: RouteEntity['id']];
+  'edit:route': [id: RouteEntity['id']];
+  'close:route': [id: RouteEntity['id']];
+  'delete:route': [id: RouteEntity['id']];
 }
 
 const props = defineProps<Props>();

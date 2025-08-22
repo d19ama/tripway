@@ -1,43 +1,5 @@
-export type RouteState = 'new' | 'completed' | 'edit';
+import type { components } from '@/generated/api/v1';
 
-export interface Route {
-  id: string;
-  name: string;
-  endDate: string;
-  startDate: string;
-  createdAt: string;
-  updatedAt: string;
-  costs?: number;
-  opened: boolean;
-  active: boolean;
-  state: RouteState;
-  route: RouteSection[];
-}
+export type RouteState = components['schemas']['RouteState'];
 
-export type RouteSectionTransportType = 'airplane' | 'train' | 'bus' | 'car' | 'bicycle' | 'other';
-
-export interface RouteSectionPrice {
-  price?: string;
-}
-
-export interface RouteSectionLocation {
-  city: string;
-  country: string;
-}
-
-export interface RouteSectionTransport extends RouteSectionPrice {
-  departure: string;
-  arrival: string;
-  type?: RouteSectionTransportType;
-}
-
-export interface RouteSectionHabitation extends RouteSectionPrice {
-  address?: string;
-}
-
-export interface RouteSection {
-  id: string;
-  location: RouteSectionLocation;
-  transport: RouteSectionTransport;
-  habitation: RouteSectionHabitation;
-}
+export type RouteEntity = components['schemas']['RouteEntity'];

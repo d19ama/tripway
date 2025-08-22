@@ -157,4 +157,26 @@ export class RouteEntity {
     required: true,
   })
   state: RouteStateEnum;
+
+  @Column({
+    name: 'Идентификаторы секций',
+    type: 'text',
+    array: true,
+    default: [],
+  })
+  @IsString({
+    each: true,
+  })
+  @ApiProperty({
+    description: 'Массив идентификаторов секций в маршруте',
+    example: [
+      '1234',
+      '5678',
+    ],
+    type: [
+      String,
+    ],
+    required: true,
+  })
+  routeSectionsIds: string[];
 }

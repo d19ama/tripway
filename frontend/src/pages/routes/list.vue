@@ -7,8 +7,8 @@ import { useRouter } from 'vue-router';
 import {
   CreateRouteModal,
   DeleteRouteConfirmationModal,
-  type Route,
   RouteCard,
+  type RouteEntity,
   useRoutes,
 } from '@/modules/routes';
 import { AppButton } from '@/common/components';
@@ -31,7 +31,7 @@ const {
 
 const router = useRouter();
 
-const selectedRouteId = ref<Route['id']>('');
+const selectedRouteId = ref<RouteEntity['id']>('');
 const isCreateRouteModalVisible = ref<boolean>(false);
 const isDeleteConfirmationModalVisible = ref<boolean>(false);
 
@@ -39,12 +39,12 @@ function openCreateRouteModal(): void {
   isCreateRouteModalVisible.value = true;
 }
 
-function openDeleteRouteModal(id: Route['id']): void {
+function openDeleteRouteModal(id: RouteEntity['id']): void {
   selectedRouteId.value = id;
   isDeleteConfirmationModalVisible.value = true;
 }
 
-async function onRouteCreated(id: Route['id']): Promise<void> {
+async function onRouteCreated(id: RouteEntity['id']): Promise<void> {
   await router.push({
     name: RouteNames.RoutePage,
     params: {

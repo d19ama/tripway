@@ -6,8 +6,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { EmptyResponseInterceptor } from './interceptors';
 
+// MODULES
 import { RouteEntity } from './modules/routes/entities';
 import { RoutesModule } from './modules/routes/routes.module';
+import { RoutesSectionsModule } from './modules/route-sections/route-sections.module';
+import { RouteSectionEntity } from './modules/route-sections/entities';
 
 @Module({
   imports: [
@@ -28,12 +31,15 @@ import { RoutesModule } from './modules/routes/routes.module';
       synchronize: process.env.ENV !== 'production',
       entities: [
         RouteEntity,
+        RouteSectionEntity,
       ],
     }),
     TypeOrmModule.forFeature([
       RouteEntity,
+      RouteSectionEntity,
     ]),
     RoutesModule,
+    RoutesSectionsModule,
   ],
   providers: [
     {
