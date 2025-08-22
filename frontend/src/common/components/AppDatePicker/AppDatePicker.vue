@@ -133,7 +133,7 @@ $padding: 1rem;
   display: flex;
   align-items: flex-start;
   flex-flow: column nowrap;
-  gap: .5rem;
+  gap: .25rem;
   position: relative;
 
   &__wrapper {

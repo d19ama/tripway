@@ -120,7 +120,8 @@ function price(value: string | undefined): string {
     left: -2rem;
     z-index: 1;
     background-color: var(--color-gray-lite);
-    box-shadow: $box-shadow;
+    // TODO тень накладывается на линию маршрутов, подумать
+    //box-shadow: $box-shadow;
   }
 
   &:after {

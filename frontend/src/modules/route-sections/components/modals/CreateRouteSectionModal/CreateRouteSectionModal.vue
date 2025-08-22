@@ -19,6 +19,7 @@ import type {
 import type { RouteEntity } from '@/modules/routes';
 import {
   AppButton,
+  AppCheckbox,
   AppDatePicker,
   AppDivider,
   AppInput,
@@ -59,6 +60,9 @@ const visible = defineModel<boolean>('visible', {
 const form = ref<RouteSectionEntity>({
   ...DEFAULT_ROUTE_SECTION,
 });
+
+const isMovingCostUnknown = ref<boolean>(false);
+const isStayingCostUnknown = ref<boolean>(false);
 
 const transportTypeOptions = ref<AppSelectOption<TransportType>[]>([
   {
@@ -150,6 +154,7 @@ async function onCreate(): Promise<void> {
           v-model:value.trim="form.destinationCountry"
           label="Страна"
           placeholder="Введите страну назначения"
+          hint="Прим. Великобритания"
           :validation="validation.destinationCountry"
           required
         />
@@ -159,6 +164,7 @@ async function onCreate(): Promise<void> {
           v-model:value.trim="form.destinationCity"
           label="Город"
           placeholder="Введите город назначения"
+          hint="Прим. Лондон"
           :validation="validation.destinationCity"
           required
         />
@@ -199,11 +205,19 @@ async function onCreate(): Promise<void> {
           placeholder="Выберите вид транспорта"
         />
       </div>
-      <div class="col-default-6">
+      <div class="col-default-3">
         <AppInput
           v-model:value.trim="form.movingCost"
-          label="Цена проживания"
-          placeholder="Введите цену"
+          :disabled="isMovingCostUnknown"
+          label="Стоимость дороги"
+          placeholder="Введите сумму"
+        />
+      </div>
+      <div class="col-default-3">
+        <AppCheckbox
+          v-model:checked="isMovingCostUnknown"
+          text="Пока не знаю"
+          class="margin-top--s"
         />
       </div>
     </div>
@@ -221,13 +235,22 @@ async function onCreate(): Promise<void> {
           v-model:value.trim="form.stayingPlace"
           label="Адрес проживания"
           placeholder="Введите адрес"
+          hint="Прим. Отель 'Будапешт'"
         />
       </div>
-      <div class="col-default-6">
+      <div class="col-default-3">
         <AppInput
           v-model:value.trim="form.stayingCost"
-          label="Цена проживания"
-          placeholder="Введите цену"
+          :disabled="isStayingCostUnknown"
+          label="Стоимость проживания"
+          placeholder="Введите сумму"
+        />
+      </div>
+      <div class="col-default-3">
+        <AppCheckbox
+          v-model:checked="isStayingCostUnknown"
+          text="Пока не знаю"
+          class="margin-top--s"
         />
       </div>
     </div>
