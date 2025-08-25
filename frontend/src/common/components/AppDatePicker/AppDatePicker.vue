@@ -18,6 +18,7 @@ const props = withDefaults(defineProps<AppDatePickerProps>(), {
   placeholder: '',
   autoApply: true,
   disabled: false,
+  position: 'left',
   yearPicker: false,
   monthPicker: false,
   modelType: 'format',
@@ -65,6 +66,19 @@ const isErrorVisible = computed<boolean>(() => {
     && !!errorMessage.value;
 });
 
+const offset = computed<number>(() => {
+  const htmlElement: HTMLElementTagNameMap['html'] | null = document.querySelector('html');
+
+  if (!htmlElement) {
+    return 0;
+  }
+
+  const fontSize: string = window.getComputedStyle(htmlElement, null).fontSize;
+  const fontSizeNumber: string = fontSize.replace(/[^\d-]/g, '');
+
+  return Number(fontSizeNumber) * 1.5;
+});
+
 function onBlur(): void {
   validate();
 }
@@ -94,10 +108,14 @@ function validate(): void {
         v-model="date"
         :range="props.range"
         :format="props.format"
+        :min-date="props.minDate"
+        :max-date="props.maxDate"
+        :position="props.position"
         :auto-apply="props.autoApply"
         :model-type="props.modelType"
         :year-picker="props.yearPicker"
         :month-picker="props.monthPicker"
+        :offset="offset"
         @blur="onBlur"
       />
       <span
@@ -196,6 +214,8 @@ $padding: 1rem;
 }
 
 .dp__theme_light {
+  --dp-primary-color: var(--color-red);
+  --dp-hover-color: var(--color-gray-middle);
   --dp-background-color: var(--color-gray-lite);
   --dp-text-color: var(--color-gray-dark);
   --dp-border-color: none;
@@ -217,6 +237,11 @@ $padding: 1rem;
 
   .dp__input_icons {
     padding: 0 $padding;
+  }
+
+  .dp--menu-wrapper {
+    overflow: hidden;
+    border-radius: .5rem;
   }
 }
 </style>

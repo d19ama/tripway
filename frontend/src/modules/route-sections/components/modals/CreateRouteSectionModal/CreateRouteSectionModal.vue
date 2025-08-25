@@ -34,6 +34,7 @@ import {
   minLength,
   required,
 } from '@/common/validators';
+import { dayjs } from '@/app/plugins/dayjs';
 
 interface Props {
   routeId: RouteEntity['id'];
@@ -126,6 +127,16 @@ const rules = computed<ValidationArgs>(() => {
 
 const validation = useVuelidate<RouteSectionEntity>(rules, form);
 
+const minDepartureDate = computed<string>(() => {
+  return dayjs().format();
+});
+
+const minArrivalDate = computed<string>(() => {
+  return form.value.departure.length > 0
+    ? form.value.departure
+    : '';
+});
+
 async function onCreate(): Promise<void> {
   visible.value = false;
 
@@ -185,6 +196,7 @@ async function onCreate(): Promise<void> {
           label="Дата отправления"
           placeholder="Выберите дату отправления"
           :validation="validation.departure"
+          :min-date="minDepartureDate"
           required
         />
       </div>
@@ -194,6 +206,7 @@ async function onCreate(): Promise<void> {
           label="Дата прибытия"
           placeholder="Выберите дату прибытия"
           :validation="validation.arrival"
+          :min-date="minArrivalDate"
           required
         />
       </div>

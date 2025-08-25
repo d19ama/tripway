@@ -1,2 +1,2 @@
 export { delay } from './delay';
-export { roundNumber } from './roundNumber';
+export { roundNumber } from './round-number';
