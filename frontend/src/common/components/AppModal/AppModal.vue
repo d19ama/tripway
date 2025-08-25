@@ -186,18 +186,23 @@ watch(
   z-index: 999;
   pointer-events: none;
 
+  &--xs {
+    --modal-width: 26rem;
+    --modal-x-padding: 20px;
+  }
+
   &--s {
-    --modal-width: 532px;
+    --modal-width: 34rem;
     --modal-x-padding: 20px;
   }
 
   &--m {
-    --modal-width: 718px;
+    --modal-width: 42rem;
     --modal-x-padding: 20px;
   }
 
   &--l {
-    --modal-width: 994px;
+    --modal-width: 50rem;
     --modal-x-padding: 20px;
   }
 

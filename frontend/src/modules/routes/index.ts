@@ -2,4 +2,4 @@ export * from './components';
 
 export * from './composables';
 
-export type * from './types';
+export type { RouteEntity } from './types';

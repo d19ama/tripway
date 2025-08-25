@@ -3,12 +3,16 @@ import {
   AppLogo,
   AppNavigation,
 } from '../';
+import { AppProfile } from '@/app/layouts';
 </script>
 
 <template>
   <header class="app-header">
     <AppLogo />
     <AppNavigation />
+    <AppProfile
+      class="app-header__profile"
+    />
   </header>
 </template>
 
@@ -29,5 +33,9 @@ import {
   z-index: 100;
   background-color: var(--color-white);
   box-shadow: inset 0 1px 0 0 rgba($gray-dark, .2), 6px 6px 20px rgba($black, 0.2);
+
+  &__profile {
+    margin-left: auto;
+  }
 }
 </style>
