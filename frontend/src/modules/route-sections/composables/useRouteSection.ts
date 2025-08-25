@@ -22,7 +22,9 @@ interface UseRouteSectionReturn {
 const _routeSections = ref<RouteSectionEntity[]>([]);
 
 export function useRouteSection(): UseRouteSectionReturn {
-  const httpService = useHttpService();
+  const {
+    fetch,
+  } = useHttpService();
 
   const isError = ref<boolean>(false);
   const isLoading = ref<boolean>(false);
@@ -39,31 +41,36 @@ export function useRouteSection(): UseRouteSectionReturn {
   async function readRouteSections(routeId: RouteEntity['id']): Promise<void> {
     isLoading.value = true;
 
-    const response = await httpService.getData<RouteSectionEntity[]>(`/route-sections/${routeId}`);
+    const {
+      data,
+      error,
+    } = await fetch<RouteSectionEntity[]>(`/route-sections/${routeId}`).get().json();
 
     isLoading.value = false;
 
-    if (!response) {
+    if (error.value) {
       isError.value = true;
       return;
     }
 
-    if (response) {
-      _routeSections.value = response;
+    if (data.value) {
+      _routeSections.value = data.value;
     }
   }
 
   async function createRouteSection(routeId: RouteEntity['id'], routeSection: RouteSectionEntity): Promise<void> {
     isLoading.value = true;
 
-    const response = await httpService.postData<RouteSectionEntity>('/route-sections', {
+    const {
+      error,
+    } = await fetch<RouteSectionEntity>('/route-sections').post({
       ...routeSection,
       routeId,
-    });
+    }).json();
 
     isLoading.value = false;
 
-    if (!response) {
+    if (error.value) {
       isError.value = true;
     }
   }

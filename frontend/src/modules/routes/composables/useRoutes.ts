@@ -26,7 +26,9 @@ interface UseRoutesReturn {
 const _routes = ref<RouteEntity[]>([]);
 
 export function useRoutes(): UseRoutesReturn {
-  const httpService = useHttpService();
+  const {
+    fetch,
+  } = useHttpService();
 
   const isError = ref<boolean>(false);
   const isLoading = ref<boolean>(false);
@@ -45,57 +47,66 @@ export function useRoutes(): UseRoutesReturn {
   async function readRoutes(): Promise<void> {
     isLoading.value = true;
 
-    const response = await httpService.getData<RouteEntity[]>('/routes');
+    const {
+      data,
+      error,
+    } = await fetch<RouteEntity[]>('/routes').get().json();
 
     isLoading.value = false;
 
-    if (!response) {
+    if (error.value) {
       isError.value = true;
       return;
     }
 
-    if (response) {
-      _routes.value = response;
+    if (data.value) {
+      _routes.value = data.value;
     }
   }
 
   async function createRoute(name: RouteEntity['name']): Promise<RouteEntity['id'] | undefined> {
     isLoading.value = true;
 
-    const response = await httpService.postData<RouteEntity>('/routes', {
+    const {
+      data,
+      error,
+    } = await fetch<RouteEntity>('/routes').post({
       ...DEFAULT_ROUTE,
       name,
-    });
+    }).json();
 
     isLoading.value = false;
 
-    if (!response) {
+    if (error.value) {
       isError.value = true;
       return;
     }
 
-    if (response) {
-      return response.id;
+    if (data.value) {
+      return data.value.id;
     }
   }
 
   async function readRoute(id: RouteEntity['id']): Promise<void> {
     isLoading.value = true;
 
-    const response = await httpService.getData<RouteEntity>(`/routes/${id}`);
+    const {
+      data,
+      error,
+    } = await fetch<RouteEntity>(`/routes/${id}`).get().json();
 
     isLoading.value = false;
 
-    if (!response) {
+    if (error.value) {
       isError.value = true;
       return;
     }
 
-    if (response) {
-      activeRoute.value = response;
+    if (data.value) {
+      activeRoute.value = data.value;
       _routes.value = [
         {
-          ...response,
+          ...data.value,
           opened: true,
         },
       ];
@@ -105,13 +116,13 @@ export function useRoutes(): UseRoutesReturn {
   async function updateRoute(id: RouteEntity['id'], route: Partial<RouteEntity>): Promise<void> {
     isLoading.value = true;
 
-    const response = await httpService.patchData<RouteEntity>(`/routes/${id}`, {
-      ...route,
-    });
+    const {
+      error,
+    } = await fetch<void>(`/routes/${id}`).patch(route);
 
     isLoading.value = false;
 
-    if (!response) {
+    if (error.value) {
       isError.value = true;
     }
   }
@@ -119,11 +130,13 @@ export function useRoutes(): UseRoutesReturn {
   async function deleteRoute(id: RouteEntity['id']): Promise<void> {
     isLoading.value = true;
 
-    const response = await httpService.deleteData(`/routes/${id}`);
+    const {
+      error,
+    } = await fetch<void>(`/routes/${id}`).delete();
 
     isLoading.value = false;
 
-    if (!response) {
+    if (error.value) {
       isError.value = true;
     }
   }
