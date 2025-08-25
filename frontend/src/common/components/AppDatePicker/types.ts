@@ -7,6 +7,9 @@ export type AppDatePickerModel = Date | number | string | string[];
 export interface AppDatePickerProps {
   range?: VueDatePickerProps['range'];
   format?: VueDatePickerProps['format'];
+  minDate?: VueDatePickerProps['minDate'];
+  maxDate?: VueDatePickerProps['maxDate'];
+  position?: VueDatePickerProps['position'];
   required?: VueDatePickerProps['required'];
   disabled?: VueDatePickerProps['disabled'];
   autoApply?: VueDatePickerProps['autoApply'];
@@ -14,7 +17,6 @@ export interface AppDatePickerProps {
   yearPicker?: VueDatePickerProps['yearPicker'];
   monthPicker?: VueDatePickerProps['yearPicker'];
   placeholder?: VueDatePickerProps['placeholder'];
-
   hint?: string;
   label?: string;
   errorText?: string;
