@@ -9,12 +9,9 @@ import type { RouteSectionEntity } from '@/modules/route-sections';
 import { useHttpService } from '@/modules/http';
 
 interface UseRouteSectionReturn {
-  // variables
   isError: Ref<boolean>;
   isLoading: Ref<boolean>;
   routeSections: WritableComputedRef<RouteSectionEntity[]>;
-
-  // requests
   readRouteSections: (routeId: RouteEntity['id']) => Promise<void>;
   createRouteSection: (routeId: RouteEntity['id'], routeSection: RouteSectionEntity) => Promise<void>;
 }
@@ -76,12 +73,9 @@ export function useRouteSection(): UseRouteSectionReturn {
   }
 
   return {
-    // variables
     isError,
     isLoading,
     routeSections,
-
-    // requests
     readRouteSections,
     createRouteSection,
   };

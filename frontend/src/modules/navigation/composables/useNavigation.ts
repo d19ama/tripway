@@ -10,10 +10,7 @@ import {
 } from '@/modules/routes';
 
 interface UseNavigationReturn {
-  // variables
   selectedRoutes: ComputedRef<RouteEntity[]>;
-
-  // methods
   openRoute: (id: RouteEntity['id']) => void;
   closeRoute: (id: RouteEntity['id']) => void;
   closeAllRoutes: () => void;
@@ -87,10 +84,7 @@ export function useNavigation(): UseNavigationReturn {
   }
 
   return {
-    // variables
     selectedRoutes,
-
-    // methods
     openRoute,
     closeRoute,
     closeAllRoutes,

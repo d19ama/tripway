@@ -9,13 +9,10 @@ import { DEFAULT_ROUTE } from '../constants';
 import { useHttpService } from '@/modules/http';
 
 interface UseRoutesReturn {
-  // variables
   isError: Ref<boolean>;
   isLoading: Ref<boolean>;
   activeRoute: Ref<RouteEntity | undefined>;
   routes: WritableComputedRef<RouteEntity[]>;
-
-  // requests
   readRoutes: () => Promise<void>;
   readRoute: (id: RouteEntity['id']) => Promise<void>;
   deleteRoute: (id: RouteEntity['id']) => Promise<void>;
@@ -142,13 +139,10 @@ export function useRoutes(): UseRoutesReturn {
   }
 
   return {
-    // variables
     routes,
     isError,
     isLoading,
     activeRoute,
-
-    // requests
     readRoute,
     readRoutes,
     updateRoute,

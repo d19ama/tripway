@@ -4,10 +4,8 @@ import {
   Get,
   Param,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
-import { AuthGuard } from '../auth/guards/auth.guard';
 import { RouteSectionsService } from './route-sections.service';
 
 // ENTITIES
@@ -26,7 +24,6 @@ export class RouteSectionsController {
     private readonly routeSectionsService: RouteSectionsService,
   ) {}
 
-  @UseGuards(AuthGuard)
   @Get(':routeId')
   @ApiOperation({
     summary: 'Получение всех секций маршрута',
@@ -38,7 +35,6 @@ export class RouteSectionsController {
     return this.routeSectionsService.readAllRouteSections(routeId);
   }
 
-  @UseGuards(AuthGuard)
   @Post()
   @ApiOperation({
     summary: 'Создание нового маршрута',

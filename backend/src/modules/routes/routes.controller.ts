@@ -6,10 +6,8 @@ import {
   Param,
   Patch,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
-import { AuthGuard } from '../auth/guards/auth.guard';
 import { RoutesService } from './routes.service';
 
 // ENTITIES
@@ -36,7 +34,6 @@ export class RoutesController {
     private readonly routesService: RoutesService,
   ) {}
 
-  @UseGuards(AuthGuard)
   @Get()
   @ApiOperation({
     summary: 'Получение всех маршрутов',
@@ -46,7 +43,6 @@ export class RoutesController {
     return this.routesService.readAllRoutes();
   }
 
-  @UseGuards(AuthGuard)
   @Post()
   @ApiOperation({
     summary: 'Создание нового маршрута',
@@ -58,7 +54,6 @@ export class RoutesController {
     return this.routesService.createRoute(body);
   }
 
-  @UseGuards(AuthGuard)
   @Get(':id')
   @ApiOperation({
     summary: 'Получение маршрута по id',
@@ -70,7 +65,6 @@ export class RoutesController {
     return await this.routesService.readRoute(id);
   }
 
-  @UseGuards(AuthGuard)
   @Patch(':id')
   @ApiOperation({
     summary: 'Обновление маршрута по id',
@@ -83,7 +77,6 @@ export class RoutesController {
     return this.routesService.updateRoute(id, body);
   }
 
-  @UseGuards(AuthGuard)
   @Delete(':id')
   @ApiOperation({
     summary: 'Удаление маршрута по id',

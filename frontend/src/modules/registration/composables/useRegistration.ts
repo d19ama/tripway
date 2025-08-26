@@ -6,11 +6,8 @@ import type { RegistrationRequestDto } from '../types';
 import { useHttpService } from '@/modules/http';
 
 interface UseRegistrationReturn {
-  // variables
   isError: Ref<boolean>;
   isLoading: Ref<boolean>;
-
-  // methods
   register: (body: RegistrationRequestDto) => Promise<void>;
 }
 
@@ -39,7 +36,6 @@ export function useRegistration(): UseRegistrationReturn {
   return {
     isError,
     isLoading,
-
     register,
   };
 }

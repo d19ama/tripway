@@ -6,11 +6,8 @@ import type { SignInRequestDto } from '../types';
 import { useHttpService } from '@/modules/http';
 
 interface UseAuthReturn {
-  // variables
   isError: Ref<boolean>;
   isLoading: Ref<boolean>;
-
-  // methods
   signIn: (body: SignInRequestDto) => Promise<void>;
 }
 
@@ -37,11 +34,8 @@ export function useAuth(): UseAuthReturn {
   }
 
   return {
-    // variables
     isError,
     isLoading,
-
-    // methods
     signIn,
   };
 }

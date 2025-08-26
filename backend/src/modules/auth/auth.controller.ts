@@ -6,6 +6,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
+import { Public } from '../../decorators';
 import { AuthService } from './auth.service';
 
 // DTO
@@ -20,6 +21,7 @@ export class AuthController {
     private authService: AuthService,
   ) {}
 
+  @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
   @ApiOperation({

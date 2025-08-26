@@ -11,7 +11,6 @@ interface UseUsersReturn {
   isError: Ref<boolean>;
   isLoading: Ref<boolean>;
   user: ComputedRef<UserEntity | undefined>;
-
   readUser: () => Promise<void>;
 }
 
@@ -53,7 +52,6 @@ export function useUsers(): UseUsersReturn {
     user,
     isError,
     isLoading,
-
     readUser,
   };
 }

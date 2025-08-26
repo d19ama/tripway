@@ -1,3 +1,3 @@
 export class SignInResponseDto {
-  access_token: string;
+  token: string;
 }

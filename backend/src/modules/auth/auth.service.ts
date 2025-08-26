@@ -3,24 +3,22 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 import { UsersService } from '../users/users.service';
-
-// ENTITIES
 import { UserEntity } from '../users/entities';
 
-// DTO
-import { RegistrationRequestDto } from '../registration/dto/registration';
+import { AuthProvider } from './providers/auth.provider';
 import {
   SignInRequestDto,
   SignInResponseDto,
 } from './dto/sign-in';
-import { AuthProvider } from './providers/auth.provider';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
 
   async signIn(body: SignInRequestDto): Promise<SignInResponseDto> {
@@ -35,17 +33,15 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const payload = {
+    const token = await this.jwtService.signAsync({
       sub: user.id,
-      username: user.email,
-    };
+    }, {
+      secret: this.configService.get('JWT_SECRET_KEY'),
+      expiresIn: this.configService.get('JWT_EXPIRES'),
+    });
 
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      token,
     };
-  }
-
-  async registration(body: RegistrationRequestDto): Promise<void> {
-    await this.usersService.createUser(body);
   }
 }

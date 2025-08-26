@@ -69,4 +69,4 @@ async function bootstrap(): Promise<void> {
   await app.listen(configService.get('PORT', process.env.PORT));
 }
 
-bootstrap();
+void bootstrap();
