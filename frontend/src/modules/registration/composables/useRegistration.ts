@@ -2,19 +2,19 @@ import {
   type Ref,
   ref,
 } from 'vue';
-import type { SignInRequestDto } from '../types';
+import type { RegistrationRequestDto } from '../types';
 import { useHttpService } from '@/modules/http';
 
-interface UseAuthReturn {
+interface UseRegistrationReturn {
   // variables
   isError: Ref<boolean>;
   isLoading: Ref<boolean>;
 
   // methods
-  signIn: (body: SignInRequestDto) => Promise<void>;
+  register: (body: RegistrationRequestDto) => Promise<void>;
 }
 
-export function useAuth(): UseAuthReturn {
+export function useRegistration(): UseRegistrationReturn {
   const {
     fetch,
   } = useHttpService();
@@ -22,12 +22,12 @@ export function useAuth(): UseAuthReturn {
   const isError = ref<boolean>(false);
   const isLoading = ref<boolean>(false);
 
-  async function signIn(body: SignInRequestDto): Promise<void> {
+  async function register(body: RegistrationRequestDto): Promise<void> {
     isLoading.value = true;
 
     const {
       error,
-    } = await fetch('/auth/login').post(body).json();
+    } = await fetch('/registration').post(body).json();
 
     isLoading.value = false;
 
@@ -37,11 +37,9 @@ export function useAuth(): UseAuthReturn {
   }
 
   return {
-    // variables
     isError,
     isLoading,
 
-    // methods
-    signIn,
+    register,
   };
 }

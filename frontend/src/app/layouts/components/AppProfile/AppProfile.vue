@@ -6,10 +6,12 @@ import {
 import type { HTMLElementClass } from '@/common/types';
 import { AppLink } from '@/common/components';
 import { AuthModal } from '@/modules/auth';
+import { RegistrationModal } from '@/modules/registration';
 
 const isAuthorized = ref<boolean>(false);
 const isMenuVisible = ref<boolean>(false);
 const isAuthModalVisible = ref<boolean>(false);
+const isRegistrationModalVisible = ref<boolean>(false);
 
 const elementClass = computed<HTMLElementClass>(() => {
   return {
@@ -23,6 +25,10 @@ function openMenu(): void {
 
 function openAuthModal(): void {
   isAuthModalVisible.value = true;
+}
+
+function openRegistrationModal(): void {
+  isRegistrationModalVisible.value = true;
 }
 </script>
 
@@ -68,6 +74,11 @@ function openAuthModal(): void {
 
     <AuthModal
       v-model:visible="isAuthModalVisible"
+      @open:registration="openRegistrationModal"
+    />
+
+    <RegistrationModal
+      v-model:visible="isRegistrationModalVisible"
     />
   </div>
 </template>

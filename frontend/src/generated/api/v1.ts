@@ -3,42 +3,43 @@
  * Do not make direct changes to the file.
  */
 
+
 export interface paths {
-  '/api/v1/routes': {
+  "/api/v1/routes": {
     /** Получение всех маршрутов */
-    get: operations['readAllRoutes'];
+    get: operations["readAllRoutes"];
     /** Создание нового маршрута */
-    post: operations['createRoute'];
+    post: operations["createRoute"];
   };
-  '/api/v1/routes/{id}': {
+  "/api/v1/routes/{id}": {
     /** Получение маршрута по id */
-    get: operations['readRoute'];
+    get: operations["readRoute"];
     /** Удаление маршрута по id */
-    delete: operations['deleteRoute'];
+    delete: operations["deleteRoute"];
     /** Обновление маршрута по id */
-    patch: operations['updateRoute'];
+    patch: operations["updateRoute"];
   };
-  '/api/v1/route-sections/{routeId}': {
+  "/api/v1/route-sections/{routeId}": {
     /** Получение всех секций маршрута */
-    get: operations['readAllRouteSections'];
+    get: operations["readAllRouteSections"];
   };
-  '/api/v1/route-sections': {
+  "/api/v1/route-sections": {
     /** Создание нового маршрута */
-    post: operations['createRouteSection'];
+    post: operations["createRouteSection"];
   };
-  '/api/v1/users': {
+  "/api/v1/users": {
     /** Получение пользователя */
-    get: operations['readUser'];
+    get: operations["readUser"];
     /** Создание пользователя */
-    post: operations['createUser'];
+    post: operations["createUser"];
   };
-  '/api/v1/auth/login': {
+  "/api/v1/auth/login": {
     /** Авторизация */
-    post: operations['signIn'];
+    post: operations["signIn"];
   };
-  '/api/v1/auth/registration': {
+  "/api/v1/registration": {
     /** Регистрация */
-    post: operations['registration'];
+    post: operations["registration"];
   };
 }
 
@@ -47,7 +48,7 @@ export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
     /** @enum {string} */
-    RouteState: 'new' | 'edit' | 'completed';
+    RouteState: "new" | "edit" | "completed";
     RouteEntity: {
       /**
        * @description Уникальный идентификатор маршрута
@@ -98,7 +99,7 @@ export interface components {
        * @description Состояние маршрута
        * @example new
        */
-      state: components['schemas']['RouteState'];
+      state: components["schemas"]["RouteState"];
       /**
        * @description Массив идентификаторов секций в маршруте
        * @example [
@@ -158,7 +159,7 @@ export interface components {
        * @description Состояние маршрута
        * @example new
        */
-      state: components['schemas']['RouteState'];
+      state: components["schemas"]["RouteState"];
       /**
        * @description Массив идентификаторов секций в маршруте
        * @example [
@@ -218,7 +219,7 @@ export interface components {
        * @description Состояние маршрута
        * @example new
        */
-      state: components['schemas']['RouteState'];
+      state: components["schemas"]["RouteState"];
       /**
        * @description Массив идентификаторов секций в маршруте
        * @example [
@@ -278,7 +279,7 @@ export interface components {
        * @description Состояние маршрута
        * @example new
        */
-      state: components['schemas']['RouteState'];
+      state: components["schemas"]["RouteState"];
       /**
        * @description Массив идентификаторов секций в маршруте
        * @example [
@@ -338,7 +339,7 @@ export interface components {
        * @description Состояние маршрута
        * @example new
        */
-      state?: components['schemas']['RouteState'];
+      state?: components["schemas"]["RouteState"];
       /**
        * @description Массив идентификаторов секций в маршруте
        * @example [
@@ -398,7 +399,7 @@ export interface components {
        * @description Состояние маршрута
        * @example new
        */
-      state: components['schemas']['RouteState'];
+      state: components["schemas"]["RouteState"];
       /**
        * @description Массив идентификаторов секций в маршруте
        * @example [
@@ -409,7 +410,7 @@ export interface components {
       routeSectionsIds: string[];
     };
     /** @enum {string} */
-    TransportType: 'airplane' | 'train' | 'bus' | 'car' | 'bicycle' | 'other';
+    TransportType: "airplane" | "train" | "bus" | "car" | "bicycle" | "other";
     RouteSectionEntity: {
       /**
        * @description Уникальный идентификатор секции маршрута
@@ -455,7 +456,7 @@ export interface components {
        * @description Тип транспортного средства
        * @example airplane
        */
-      transportType?: components['schemas']['TransportType'];
+      transportType?: components["schemas"]["TransportType"];
       /**
        * @description Стоимость перемещения
        * @example 0
@@ -517,7 +518,7 @@ export interface components {
        * @description Тип транспортного средства
        * @example airplane
        */
-      transportType?: components['schemas']['TransportType'];
+      transportType?: components["schemas"]["TransportType"];
       /**
        * @description Стоимость перемещения
        * @example 0
@@ -579,7 +580,7 @@ export interface components {
        * @description Тип транспортного средства
        * @example airplane
        */
-      transportType?: components['schemas']['TransportType'];
+      transportType?: components["schemas"]["TransportType"];
       /**
        * @description Стоимость перемещения
        * @example 0
@@ -693,47 +694,7 @@ export interface components {
       password: string;
     };
     SignInResponseDto: {
-      /**
-       * @description Уникальный идентификатор
-       * @example 1234567890
-       */
-      id: string;
-      /**
-       * @description Дата создания
-       * @example 2025-08-21T07:48:50.363Z
-       */
-      createdAt: string;
-      /**
-       * @description Дата обновления
-       * @example 2025-08-21T07:48:50.363Z
-       */
-      updatedAt: string;
-      /**
-       * @description Имя
-       * @example Артём
-       */
-      name: string;
-      /**
-       * @description Фамилия
-       * @example Анпилов
-       */
-      surname: string;
-      /**
-       * @description Отчество
-       * @example Михайлович
-       */
-      patronymic?: string;
-      /**
-       * Format: email
-       * @description Email
-       * @example example@example.com
-       */
-      email: string;
-      /**
-       * @description Пароль
-       * @example password
-       */
-      password: string;
+      access_token: string;
     };
     RegistrationRequestDto: {
       /**
@@ -797,7 +758,7 @@ export interface operations {
     responses: {
       200: {
         content: {
-          'application/json': components['schemas']['RouteEntity'][];
+          "application/json": components["schemas"]["RouteEntity"][];
         };
       };
     };
@@ -806,13 +767,13 @@ export interface operations {
   createRoute: {
     requestBody: {
       content: {
-        'application/json': components['schemas']['CreateRouteRequestDto'];
+        "application/json": components["schemas"]["CreateRouteRequestDto"];
       };
     };
     responses: {
       201: {
         content: {
-          'application/json': components['schemas']['CreateRouteResponseDto'];
+          "application/json": components["schemas"]["CreateRouteResponseDto"];
         };
       };
     };
@@ -822,7 +783,7 @@ export interface operations {
     responses: {
       200: {
         content: {
-          'application/json': components['schemas']['ReadRouteResponseDto'];
+          "application/json": components["schemas"]["ReadRouteResponseDto"];
         };
       };
     };
@@ -839,13 +800,13 @@ export interface operations {
   updateRoute: {
     requestBody: {
       content: {
-        'application/json': components['schemas']['UpdateRouteRequestDto'];
+        "application/json": components["schemas"]["UpdateRouteRequestDto"];
       };
     };
     responses: {
       200: {
         content: {
-          'application/json': components['schemas']['UpdateRouteResponseDto'];
+          "application/json": components["schemas"]["UpdateRouteResponseDto"];
         };
       };
     };
@@ -855,7 +816,7 @@ export interface operations {
     responses: {
       200: {
         content: {
-          'application/json': components['schemas']['RouteSectionEntity'][];
+          "application/json": components["schemas"]["RouteSectionEntity"][];
         };
       };
     };
@@ -864,13 +825,13 @@ export interface operations {
   createRouteSection: {
     requestBody: {
       content: {
-        'application/json': components['schemas']['CreateRouteSectionRequestDto'];
+        "application/json": components["schemas"]["CreateRouteSectionRequestDto"];
       };
     };
     responses: {
       201: {
         content: {
-          'application/json': components['schemas']['CreateRouteSectionResponseDto'];
+          "application/json": components["schemas"]["CreateRouteSectionResponseDto"];
         };
       };
     };
@@ -880,7 +841,7 @@ export interface operations {
     responses: {
       200: {
         content: {
-          'application/json': components['schemas']['UserEntity'];
+          "application/json": components["schemas"]["UserEntity"];
         };
       };
     };
@@ -889,13 +850,13 @@ export interface operations {
   createUser: {
     requestBody: {
       content: {
-        'application/json': components['schemas']['CreateUserRequestDto'];
+        "application/json": components["schemas"]["CreateUserRequestDto"];
       };
     };
     responses: {
       201: {
         content: {
-          'application/json': components['schemas']['UserEntity'];
+          "application/json": components["schemas"]["UserEntity"];
         };
       };
     };
@@ -904,13 +865,13 @@ export interface operations {
   signIn: {
     requestBody: {
       content: {
-        'application/json': components['schemas']['SignInRequestDto'];
+        "application/json": components["schemas"]["SignInRequestDto"];
       };
     };
     responses: {
       200: {
         content: {
-          'application/json': components['schemas']['SignInResponseDto'];
+          "application/json": components["schemas"]["SignInResponseDto"];
         };
       };
     };
@@ -919,7 +880,7 @@ export interface operations {
   registration: {
     requestBody: {
       content: {
-        'application/json': components['schemas']['RegistrationRequestDto'];
+        "application/json": components["schemas"]["RegistrationRequestDto"];
       };
     };
     responses: {

@@ -1,3 +1,3 @@
-import { UserEntity } from '../../../users/entities';
-
-export class SignInResponseDto extends UserEntity {}
+export class SignInResponseDto {
+  access_token: string;
+}

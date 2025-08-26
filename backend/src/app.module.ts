@@ -10,9 +10,11 @@ import { AuthModule } from './modules/auth/auth.module';
 import { RoutesModule } from './modules/routes/routes.module';
 import { RoutesSectionsModule } from './modules/route-sections/route-sections.module';
 import { UsersModule } from './modules/users/users.module';
+import { RegistrationModule } from './modules/registration/registration.module';
 
 // SUBSCRIBERS
 import { AuthSubscriber } from './modules/auth/subscribers/auth.subscriber';
+import { CreateRouteSectionSubscriber } from './modules/route-sections/subscribers/create-route-section.subscriber';
 
 // ENTITIES
 import { RouteEntity } from './modules/routes/entities';
@@ -38,6 +40,7 @@ import { UserEntity } from './modules/users/entities';
       synchronize: process.env.ENV !== 'production',
       subscribers: [
         AuthSubscriber,
+        CreateRouteSectionSubscriber,
       ],
       entities: [
         UserEntity,
@@ -54,6 +57,7 @@ import { UserEntity } from './modules/users/entities';
     RoutesSectionsModule,
     UsersModule,
     AuthModule,
+    RegistrationModule,
   ],
   providers: [
     {

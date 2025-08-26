@@ -13,7 +13,6 @@ import {
   SignInRequestDto,
   SignInResponseDto,
 } from './dto/sign-in';
-import { RegistrationRequestDto } from './dto/registration';
 
 @Controller('auth')
 export class AuthController {
@@ -29,15 +28,5 @@ export class AuthController {
   })
   signIn(@Body() body: SignInRequestDto): Promise<SignInResponseDto> {
     return this.authService.signIn(body);
-  }
-
-  @HttpCode(HttpStatus.OK)
-  @Post('registration')
-  @ApiOperation({
-    summary: 'Регистрация',
-    operationId: 'registration',
-  })
-  registration(@Body() body: RegistrationRequestDto): Promise<void> {
-    return this.authService.registration(body);
   }
 }

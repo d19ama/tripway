@@ -32,7 +32,7 @@ export class AuthSubscriber implements EntitySubscriberInterface<UserEntity> {
     databaseEntity,
   }: UpdateEvent<UserEntity>): Promise<void> {
     if (entity.password) {
-      const password = await AuthProvider.generateHash(
+      const password: string = await AuthProvider.generateHash(
         entity.password,
       );
 

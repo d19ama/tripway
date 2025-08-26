@@ -8,11 +8,13 @@ import {
   type ValidationArgs,
   useVuelidate,
 } from '@vuelidate/core';
+import { useRouter } from 'vue-router';
 import type { SignInRequestDto } from '../../../types';
 import { useAuth } from '../../../';
 import {
   AppButton,
   AppInput,
+  AppLink,
   AppModal,
   AppModalActions,
 } from '@/common/components';
@@ -21,6 +23,13 @@ import {
   required,
 } from '@/common/validators';
 import { UnknownHttpErrorModal } from '@/modules/http';
+import { RouteNames } from '@/app/router/route-names';
+
+interface Emits {
+  'open:registration': [];
+}
+
+const emit = defineEmits<Emits>();
 
 const visible = defineModel<boolean>('visible', {
   required: false,
@@ -31,6 +40,8 @@ const {
   isError,
   signIn,
 } = useAuth();
+
+const router = useRouter();
 
 const form = ref<SignInRequestDto>({
   email: '',
@@ -53,6 +64,17 @@ const validation = useVuelidate<SignInRequestDto>(rules, form);
 
 async function onAuth(): Promise<void> {
   await signIn(form.value);
+  visible.value = false;
+
+  if (!isError.value) {
+    await router.replace({
+      name: RouteNames.RoutesList,
+    });
+  }
+}
+
+function onRegistration(): void {
+  emit('open:registration');
 }
 
 watch(visible, () => {
@@ -84,6 +106,9 @@ watch(visible, () => {
       :validation="validation.password"
       required
     />
+    <AppLink @click.prevent="onRegistration">
+      Регистрация
+    </AppLink>
     <template #footer="{ close }">
       <AppModalActions>
         <AppButton
