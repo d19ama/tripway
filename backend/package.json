@@ -30,6 +30,7 @@
     "class-validator": "^0.14.0",
     "connect-redis": "^7.1.0",
     "cookie-parser": "^1.4.6",
+    "express-session": "^1.18.2",
     "pg": "^8.16.3",
     "reflect-metadata": "^0.1.13"
   },
@@ -40,6 +41,7 @@
     "@nestjs/testing": "^10.4.8",
     "@rushstack/eslint-patch": "^1.2.0",
     "@types/express": "^4.17.17",
+    "@types/express-session": "^1.18.2",
     "@types/jest": "^29.5.2",
     "@types/node": "^20.3.1",
     "@types/supertest": "^2.0.12",

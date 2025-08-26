@@ -1,4 +1,3 @@
-import * as process from 'node:process';
 import {
   CanActivate,
   ExecutionContext,
@@ -7,10 +6,13 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
+import { JWT_SECRET_KEY } from '../../../common/constants';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -24,7 +26,7 @@ export class AuthGuard implements CanActivate {
       request.user = await this.jwtService.verifyAsync(
         token,
         {
-          secret: process.env.JWT_SECRET,
+          secret: JWT_SECRET_KEY,
         },
       );
     } catch {
