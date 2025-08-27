@@ -77,6 +77,21 @@ export class UserEntity {
   surname: string;
 
   @Column({
+    name: 'Прозвище',
+    type: 'text',
+    unique: true,
+    default: '',
+  })
+  @IsString()
+  @ApiPropertyOptional({
+    description: 'Прозвище',
+    example: 'Fucker666',
+    type: String,
+    required: false,
+  })
+  nickname?: string;
+
+  @Column({
     name: 'Отчество',
     type: 'text',
   })

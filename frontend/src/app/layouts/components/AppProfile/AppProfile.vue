@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import {
   computed,
+  onMounted,
   ref,
 } from 'vue';
 import { useRouter } from 'vue-router';
@@ -9,13 +10,46 @@ import { AppLink } from '@/common/components';
 import { AuthModal } from '@/modules/auth';
 import { RegistrationModal } from '@/modules/registration';
 import { RouteNames } from '@/app/router/route-names';
+import {
+  type UserEntity,
+  useUsers,
+} from '@/modules/users';
+import { usePageLoadingIndicator } from '@/common/composables';
 
 const router = useRouter();
 
-const isAuthorized = ref<boolean>(false);
+const {
+  user,
+  readUser,
+} = useUsers();
+
+const {
+  showUntil,
+} = usePageLoadingIndicator();
+
 const isMenuVisible = ref<boolean>(false);
 const isAuthModalVisible = ref<boolean>(false);
 const isRegistrationModalVisible = ref<boolean>(false);
+
+const isAuthorized = computed<boolean>(() => {
+  return user.value !== undefined;
+});
+
+const userName = computed<string>(() => {
+  if (!user.value) {
+    return '';
+  }
+
+  if (user.value.nickname) {
+    return user.value.nickname;
+  }
+
+  const [
+    firstLetter,
+  ] = user.value.surname.split('');
+
+  return `${user.value.name} ${firstLetter}.`;
+});
 
 const elementClass = computed<HTMLElementClass>(() => {
   return {
@@ -31,8 +65,9 @@ function openAuthModal(): void {
   isAuthModalVisible.value = true;
 }
 
-function onAuthSuccess(): void {
-  router.replace({
+async function onAuthSuccess(email: UserEntity['email']): Promise<void> {
+  await showUntil(readUser(email));
+  await router.replace({
     name: RouteNames.RoutesList,
   });
 }
@@ -46,6 +81,16 @@ function onRegistrationSuccess(): void {
     name: RouteNames.RoutesList,
   });
 }
+
+function openProfile(): void {
+  router.replace({
+    name: RouteNames.Profile,
+  });
+}
+
+onMounted(async () => {
+  await showUntil(readUser('mr.anpilov@vk.com'));
+});
 </script>
 
 <template>
@@ -57,8 +102,13 @@ function onRegistrationSuccess(): void {
     <span
       v-if="isAuthorized"
       class="app-profile__name"
-    >BlindResist</span>
-    <AppLink @click.prevent="openAuthModal">
+    >
+      {{ userName }}
+    </span>
+    <AppLink
+      v-else
+      @click.prevent="openAuthModal"
+    >
       Войти
     </AppLink>
     <div class="app-profile__photo">
@@ -77,7 +127,11 @@ function onRegistrationSuccess(): void {
       class="app-profile__menu"
     >
       <div class="app-profile__menu-item">
-        <AppLink :underline="false">
+        <AppLink
+          :underline="false"
+          target="_self"
+          @click.prevent="openProfile"
+        >
           Профиль
         </AppLink>
       </div>
@@ -142,6 +196,7 @@ function onRegistrationSuccess(): void {
 
   &__menu {
     width: 7rem;
+    overflow: hidden;
     position: absolute;
     top: calc(100% + .5rem);
     right: 0;
@@ -149,33 +204,15 @@ function onRegistrationSuccess(): void {
     border-radius: .25rem;
     background-color: var(--color-white);
     text-align: right;
-
-    &:before {
-      content: '';
-      display: block;
-      width: 1rem;
-      height: 1rem;
-      position: absolute;
-      bottom: 3.15rem;
-      right: .75rem;
-      transform: rotate(45deg);
-      background-color: var(--color-white);
-    }
   }
 
   &__menu-item {
     padding: .5rem;
     font-size: .75rem;
-    //border-bottom: 1px solid var(--color-red);
     user-select: none;
-  }
 
-  &--active {
-    //border-left: 1px solid var(--color-red);
-    //background-color: var(--color-red);
-
-    #{$parent}__name {
-      //color: var(--color-white);
+    &:hover {
+      background-color: var(--color-gray-lite);
     }
   }
 }

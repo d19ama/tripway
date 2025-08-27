@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Get,
   Param,
   Post,
 } from '@nestjs/common';
@@ -17,7 +16,7 @@ export class UsersController {
     private readonly usersService: UsersService,
   ) {}
 
-  @Get()
+  @Post()
   @ApiOperation({
     summary: 'Получение пользователя',
     operationId: 'readUser',

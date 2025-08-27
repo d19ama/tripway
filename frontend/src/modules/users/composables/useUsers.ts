@@ -11,7 +11,7 @@ interface UseUsersReturn {
   isError: Ref<boolean>;
   isLoading: Ref<boolean>;
   user: ComputedRef<UserEntity | undefined>;
-  readUser: () => Promise<void>;
+  readUser: (email: UserEntity['email']) => Promise<void>;
 }
 
 const _user = ref<UserEntity | undefined>();
@@ -28,13 +28,15 @@ export function useUsers(): UseUsersReturn {
     return _user.value;
   });
 
-  async function readUser(): Promise<void> {
+  async function readUser(email: UserEntity['email']): Promise<void> {
     isLoading.value = true;
 
     const {
       data,
       error,
-    } = await fetch<UserEntity>(`/users`).get().json();
+    } = await fetch<UserEntity>(`/users`).post({
+      email,
+    }).json();
 
     isLoading.value = false;
 

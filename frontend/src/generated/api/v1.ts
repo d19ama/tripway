@@ -28,8 +28,6 @@ export interface paths {
     post: operations["createRouteSection"];
   };
   "/api/v1/users": {
-    /** Получение пользователя */
-    get: operations["readUser"];
     /** Создание пользователя */
     post: operations["createUser"];
   };
@@ -624,6 +622,11 @@ export interface components {
        */
       surname: string;
       /**
+       * @description Прозвище
+       * @example Fucker666
+       */
+      nickname?: string;
+      /**
        * @description Отчество
        * @example Михайлович
        */
@@ -666,6 +669,11 @@ export interface components {
        * @example Анпилов
        */
       surname: string;
+      /**
+       * @description Прозвище
+       * @example Fucker666
+       */
+      nickname?: string;
       /**
        * @description Отчество
        * @example Михайлович
@@ -722,6 +730,11 @@ export interface components {
        * @example Анпилов
        */
       surname: string;
+      /**
+       * @description Прозвище
+       * @example Fucker666
+       */
+      nickname?: string;
       /**
        * @description Отчество
        * @example Михайлович
@@ -832,16 +845,6 @@ export interface operations {
       201: {
         content: {
           "application/json": components["schemas"]["CreateRouteSectionResponseDto"];
-        };
-      };
-    };
-  };
-  /** Получение пользователя */
-  readUser: {
-    responses: {
-      200: {
-        content: {
-          "application/json": components["schemas"]["UserEntity"];
         };
       };
     };

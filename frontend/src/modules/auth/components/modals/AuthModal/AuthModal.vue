@@ -23,10 +23,11 @@ import {
 } from '@/common/validators';
 import { UnknownHttpErrorModal } from '@/modules/http';
 import { usePageLoadingIndicator } from '@/common/composables';
+import type { UserEntity } from '@/modules/users';
 
 interface Emits {
   'open:registration': [];
-  'auth:success': [];
+  'auth:success': [email: UserEntity['email']];
 }
 
 const emit = defineEmits<Emits>();
@@ -69,7 +70,7 @@ async function onAuth(): Promise<void> {
 
   if (!isError.value) {
     visible.value = false;
-    emit('auth:success');
+    emit('auth:success', form.value.email);
   }
 }
 
