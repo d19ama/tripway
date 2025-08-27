@@ -7,7 +7,7 @@ const route = useRoute();
 
 const elementClass = computed<HTMLElementClass>(() => {
   return {
-    'app-container--background-image': route.meta.backgroundImage,
+    'app-container--background-image': route.meta.backgroundImage !== undefined && route.meta.backgroundImage,
   };
 });
 </script>

@@ -8,6 +8,8 @@ import type { GEO_ISO2 } from '@/modules/geo/types';
 interface UseGeoReturn {
   isError: Ref<boolean>;
   isLoading: Ref<boolean>;
+  country: Ref<object>;
+  countries: Ref<object[]>;
   getCountry: (iso2: GEO_ISO2) => Promise<void>;
   getAllCountries: () => Promise<void>;
 }
@@ -27,9 +29,9 @@ export function useGeo(): UseGeoReturn {
   const isError = ref<boolean>(false);
   const isLoading = ref<boolean>(false);
 
-  // TODO Убрать any!
-  const countries = ref<any[]>([]);
   const country = ref<object>({});
+  // TODO Убрать any!
+  const countries = ref<object[]>([]);
 
   async function getAllCountries(): Promise<void> {
     isLoading.value = true;
@@ -74,6 +76,8 @@ export function useGeo(): UseGeoReturn {
   return {
     isError,
     isLoading,
+    country,
+    countries,
     getCountry,
     getAllCountries,
   };
