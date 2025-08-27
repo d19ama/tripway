@@ -11,9 +11,9 @@ import { AuthService } from './auth.service';
 
 // DTO
 import {
-  SignInRequestDto,
-  SignInResponseDto,
-} from './dto/sign-in';
+  LoginInRequestDto,
+  LoginResponseDto,
+} from './dto/login';
 
 @Controller('auth')
 export class AuthController {
@@ -26,9 +26,9 @@ export class AuthController {
   @Post('login')
   @ApiOperation({
     summary: 'Авторизация',
-    operationId: 'signIn',
+    operationId: 'login',
   })
-  signIn(@Body() body: SignInRequestDto): Promise<SignInResponseDto> {
-    return this.authService.signIn(body);
+  login(@Body() body: LoginInRequestDto): Promise<LoginResponseDto> {
+    return this.authService.login(body);
   }
 }

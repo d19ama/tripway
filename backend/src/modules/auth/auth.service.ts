@@ -9,9 +9,9 @@ import { UserEntity } from '../users/entities';
 
 import { AuthProvider } from './providers/auth.provider';
 import {
-  SignInRequestDto,
-  SignInResponseDto,
-} from './dto/sign-in';
+  LoginInRequestDto,
+  LoginResponseDto,
+} from './dto/login';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +21,7 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  async signIn(body: SignInRequestDto): Promise<SignInResponseDto> {
+  async login(body: LoginInRequestDto): Promise<LoginResponseDto> {
     const user: UserEntity = await this.usersService.readUser(body.email);
 
     const isAccessGranted: boolean = await AuthProvider.comparePasswords(
@@ -35,6 +35,7 @@ export class AuthService {
 
     const token = await this.jwtService.signAsync({
       sub: user.id,
+      email: user.email,
     }, {
       secret: this.configService.get('JWT_SECRET_KEY'),
       expiresIn: this.configService.get('JWT_EXPIRES'),
