@@ -1,2 +1,2 @@
-export { LoginInRequestDto } from './request.dto';
+export { LoginRequestDto } from './request.dto';
 export { LoginResponseDto } from './response.dto';

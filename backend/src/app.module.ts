@@ -2,33 +2,19 @@ import * as process from 'node:process';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtModule } from '@nestjs/jwt';
-
-// MODULES
 import { AuthModule } from './modules/auth/auth.module';
 import { RoutesModule } from './modules/routes/routes.module';
 import { RoutesSectionsModule } from './modules/route-sections/route-sections.module';
 import { UsersModule } from './modules/users/users.module';
 import { RegistrationModule } from './modules/registration/registration.module';
-
-// SUBSCRIBERS
 import { AuthSubscriber } from './modules/auth/subscribers/auth.subscriber';
 import { CreateRouteSectionSubscriber } from './modules/route-sections/subscribers/create-route-section.subscriber';
-
-// GUARDS
-import { AuthGuard } from './guards';
-
-// ENTITIES
 import { RouteEntity } from './modules/routes/entities';
 import { RouteSectionEntity } from './modules/route-sections/entities';
 import { UserEntity } from './modules/users/entities';
 
 @Module({
   imports: [
-    JwtModule.register({
-      global: true,
-    }),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: [
@@ -65,11 +51,6 @@ import { UserEntity } from './modules/users/entities';
     AuthModule,
     RegistrationModule,
   ],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    },
-  ],
+  providers: [],
 })
 export class AppModule {}

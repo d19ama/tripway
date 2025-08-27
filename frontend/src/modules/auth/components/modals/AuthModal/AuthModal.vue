@@ -8,8 +8,7 @@ import {
   type ValidationArgs,
   useVuelidate,
 } from '@vuelidate/core';
-import { useRouter } from 'vue-router';
-import type { SignInRequestDto } from '../../../types';
+import type { LoginRequestDto } from '../../../types';
 import { useAuth } from '../../../';
 import {
   AppButton,
@@ -23,10 +22,11 @@ import {
   required,
 } from '@/common/validators';
 import { UnknownHttpErrorModal } from '@/modules/http';
-import { RouteNames } from '@/app/router/route-names';
+import { usePageLoadingIndicator } from '@/common/composables';
 
 interface Emits {
   'open:registration': [];
+  'auth:success': [];
 }
 
 const emit = defineEmits<Emits>();
@@ -38,12 +38,14 @@ const visible = defineModel<boolean>('visible', {
 
 const {
   isError,
-  signIn,
+  login,
 } = useAuth();
 
-const router = useRouter();
+const {
+  showUntil,
+} = usePageLoadingIndicator();
 
-const form = ref<SignInRequestDto>({
+const form = ref<LoginRequestDto>({
   email: '',
   password: '',
 });
@@ -60,20 +62,19 @@ const rules = computed<ValidationArgs>(() => {
   };
 });
 
-const validation = useVuelidate<SignInRequestDto>(rules, form);
+const validation = useVuelidate<LoginRequestDto>(rules, form);
 
 async function onAuth(): Promise<void> {
-  await signIn(form.value);
-  visible.value = false;
+  await showUntil(login(form.value));
 
   if (!isError.value) {
-    await router.replace({
-      name: RouteNames.RoutesList,
-    });
+    visible.value = false;
+    emit('auth:success');
   }
 }
 
 function onRegistration(): void {
+  visible.value = false;
   emit('open:registration');
 }
 

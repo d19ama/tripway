@@ -35,7 +35,7 @@ export interface paths {
   };
   "/api/v1/auth/login": {
     /** Авторизация */
-    post: operations["signIn"];
+    post: operations["login"];
   };
   "/api/v1/registration": {
     /** Регистрация */
@@ -683,7 +683,7 @@ export interface components {
        */
       password: string;
     };
-    SignInRequestDto: {
+    LoginRequestDto: {
       /**
        * Format: email
        * @description Email
@@ -693,8 +693,8 @@ export interface components {
       /** @description Пароль */
       password: string;
     };
-    SignInResponseDto: {
-      access_token: string;
+    LoginResponseDto: {
+      token: string;
     };
     RegistrationRequestDto: {
       /**
@@ -862,16 +862,16 @@ export interface operations {
     };
   };
   /** Авторизация */
-  signIn: {
+  login: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["SignInRequestDto"];
+        "application/json": components["schemas"]["LoginRequestDto"];
       };
     };
     responses: {
       200: {
         content: {
-          "application/json": components["schemas"]["SignInResponseDto"];
+          "application/json": components["schemas"]["LoginResponseDto"];
         };
       };
     };

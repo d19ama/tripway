@@ -11,7 +11,7 @@ import { AuthService } from './auth.service';
 
 // DTO
 import {
-  LoginInRequestDto,
+  LoginRequestDto,
   LoginResponseDto,
 } from './dto/login';
 
@@ -28,7 +28,7 @@ export class AuthController {
     summary: 'Авторизация',
     operationId: 'login',
   })
-  login(@Body() body: LoginInRequestDto): Promise<LoginResponseDto> {
+  login(@Body() body: LoginRequestDto): Promise<LoginResponseDto> {
     return this.authService.login(body);
   }
 }

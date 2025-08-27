@@ -7,11 +7,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { RouteSectionsService } from './route-sections.service';
-
-// ENTITIES
 import { RouteSectionEntity } from './entities';
-
-// DTO
 import {
   CreateRouteSectionRequestDto,
   CreateRouteSectionResponseDto,

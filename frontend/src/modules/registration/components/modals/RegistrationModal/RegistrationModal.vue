@@ -1,15 +1,27 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import {
+  computed,
+  ref,
+} from 'vue';
+import {
+  type ValidationArgs,
+  useVuelidate,
+} from '@vuelidate/core';
 import { useRegistration } from '../../../composables';
 import { DEFAULT_REGISTRATION } from '../../../constants';
 import type { RegistrationRequestDto } from '../../../types';
 import {
   AppButton,
   AppModal,
+  AppModalActions,
 } from '@/common/components';
 import { usePageLoadingIndicator } from '@/common/composables';
-import { RouteNames } from '@/app/router/route-names';
+
+interface Emits {
+  'registration:success': [];
+}
+
+const emit = defineEmits<Emits>();
 
 const visible = defineModel<boolean>('visible', {
   required: false,
@@ -25,25 +37,22 @@ const {
   showUntil,
 } = usePageLoadingIndicator();
 
-const router = useRouter();
-
 const form = ref<RegistrationRequestDto>({
   ...DEFAULT_REGISTRATION,
-  // name: 'Артём',
-  // surname: 'Анпилов',
-  // patronymic: 'Михайлович',
-  // email: 'mr.anpilov@vk.com',
-  // password: 'Z1tomem=1',
 });
+
+const rules = computed<ValidationArgs>(() => {
+  return {};
+});
+
+const validation = useVuelidate<RegistrationRequestDto>(rules, form);
 
 async function onRegistration(): Promise<void> {
   await showUntil(register(form.value));
-  visible.value = false;
 
   if (!isError.value) {
-    await router.replace({
-      name: RouteNames.RoutesList,
-    });
+    visible.value = false;
+    emit('registration:success');
   }
 }
 </script>
@@ -54,9 +63,28 @@ async function onRegistration(): Promise<void> {
     size="s"
     title="Регистрация"
   >
-    <AppButton @click="onRegistration">
-      Зарегистрироваться
-    </AppButton>
+    <template #footer="{ close }">
+      <AppModalActions layout="column">
+        <AppButton
+          rounded
+          size="l"
+          theme="blue-dark"
+          :disabled="validation.$invalid"
+          @click="onRegistration"
+        >
+          Зарегистрироваться
+        </AppButton>
+
+        <AppButton
+          rounded
+          size="l"
+          theme="gray-lite"
+          @click="close"
+        >
+          Отмена
+        </AppButton>
+      </AppModalActions>
+    </template>
   </AppModal>
 </template>
 

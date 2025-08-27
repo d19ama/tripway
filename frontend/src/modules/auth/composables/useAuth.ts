@@ -2,13 +2,13 @@ import {
   type Ref,
   ref,
 } from 'vue';
-import type { SignInRequestDto } from '../types';
+import type { LoginRequestDto } from '../types';
 import { useHttpService } from '@/modules/http';
 
 interface UseAuthReturn {
   isError: Ref<boolean>;
   isLoading: Ref<boolean>;
-  signIn: (body: SignInRequestDto) => Promise<void>;
+  login: (body: LoginRequestDto) => Promise<void>;
 }
 
 export function useAuth(): UseAuthReturn {
@@ -19,7 +19,7 @@ export function useAuth(): UseAuthReturn {
   const isError = ref<boolean>(false);
   const isLoading = ref<boolean>(false);
 
-  async function signIn(body: SignInRequestDto): Promise<void> {
+  async function login(body: LoginRequestDto): Promise<void> {
     isLoading.value = true;
 
     const {
@@ -36,6 +36,6 @@ export function useAuth(): UseAuthReturn {
   return {
     isError,
     isLoading,
-    signIn,
+    login,
   };
 }

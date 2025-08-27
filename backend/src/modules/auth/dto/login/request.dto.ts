@@ -4,7 +4,7 @@ import {
   IsString,
 } from 'class-validator';
 
-export class LoginInRequestDto {
+export class LoginRequestDto {
   @IsEmail()
   @ApiProperty({
     description: 'Email',

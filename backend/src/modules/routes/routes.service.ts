@@ -1,11 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-
-// ENTITIES
 import { RouteEntity } from './entities';
-
-// DTO
 import {
   ReadRouteRequestDto,
   ReadRouteResponseDto,

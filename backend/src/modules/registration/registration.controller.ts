@@ -8,8 +8,6 @@ import {
 import { ApiOperation } from '@nestjs/swagger';
 import { Public } from '../../decorators';
 import { RegistrationService } from './registration.service';
-
-// DTO
 import { RegistrationRequestDto } from './dto/registration';
 
 @Controller('registration')

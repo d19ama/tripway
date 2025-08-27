@@ -3,10 +3,14 @@ import {
   computed,
   ref,
 } from 'vue';
+import { useRouter } from 'vue-router';
 import type { HTMLElementClass } from '@/common/types';
 import { AppLink } from '@/common/components';
 import { AuthModal } from '@/modules/auth';
 import { RegistrationModal } from '@/modules/registration';
+import { RouteNames } from '@/app/router/route-names';
+
+const router = useRouter();
 
 const isAuthorized = ref<boolean>(false);
 const isMenuVisible = ref<boolean>(false);
@@ -27,8 +31,20 @@ function openAuthModal(): void {
   isAuthModalVisible.value = true;
 }
 
+function onAuthSuccess(): void {
+  router.replace({
+    name: RouteNames.RoutesList,
+  });
+}
+
 function openRegistrationModal(): void {
   isRegistrationModalVisible.value = true;
+}
+
+function onRegistrationSuccess(): void {
+  router.replace({
+    name: RouteNames.RoutesList,
+  });
 }
 </script>
 
@@ -74,11 +90,13 @@ function openRegistrationModal(): void {
 
     <AuthModal
       v-model:visible="isAuthModalVisible"
+      @auth:success="onAuthSuccess"
       @open:registration="openRegistrationModal"
     />
 
     <RegistrationModal
       v-model:visible="isRegistrationModalVisible"
+      @registration:success="onRegistrationSuccess"
     />
   </div>
 </template>

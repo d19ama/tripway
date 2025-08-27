@@ -9,7 +9,7 @@ import { UserEntity } from '../users/entities';
 
 import { AuthProvider } from './providers/auth.provider';
 import {
-  LoginInRequestDto,
+  LoginRequestDto,
   LoginResponseDto,
 } from './dto/login';
 
@@ -21,7 +21,7 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  async login(body: LoginInRequestDto): Promise<LoginResponseDto> {
+  async login(body: LoginRequestDto): Promise<LoginResponseDto> {
     const user: UserEntity = await this.usersService.readUser(body.email);
 
     const isAccessGranted: boolean = await AuthProvider.comparePasswords(
