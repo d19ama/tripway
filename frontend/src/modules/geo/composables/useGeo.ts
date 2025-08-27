@@ -11,7 +11,8 @@ interface UseGeoReturn {
   country: Ref<object>;
   countries: Ref<object[]>;
   getCountry: (iso2: GEO_ISO2) => Promise<void>;
-  getAllCountries: () => Promise<void>;
+  getCountries: () => Promise<void>;
+  getCities: (iso2: GEO_ISO2) => Promise<void>;
 }
 
 export function useGeo(): UseGeoReturn {
@@ -30,10 +31,11 @@ export function useGeo(): UseGeoReturn {
   const isLoading = ref<boolean>(false);
 
   const country = ref<object>({});
-  // TODO Убрать any!
   const countries = ref<object[]>([]);
 
-  async function getAllCountries(): Promise<void> {
+  const cities = ref<object[]>([]);
+
+  async function getCountries(): Promise<void> {
     isLoading.value = true;
 
     const {
@@ -73,12 +75,33 @@ export function useGeo(): UseGeoReturn {
     }
   }
 
+  async function getCities(iso2: GEO_ISO2): Promise<void> {
+    isLoading.value = true;
+
+    const {
+      data,
+      error,
+    } = await fetch(`/countries/${iso2}/cities`).get().json();
+
+    isLoading.value = false;
+
+    if (error.value) {
+      isError.value = true;
+      return;
+    }
+
+    if (data.value) {
+      cities.value = data.value;
+    }
+  }
+
   return {
     isError,
     isLoading,
     country,
     countries,
     getCountry,
-    getAllCountries,
+    getCountries,
+    getCities,
   };
 }
