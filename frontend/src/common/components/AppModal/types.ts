@@ -1,6 +1,6 @@
 import type { VNode } from 'vue';
 
-export type AppModalSize = 's' | 'm' | 'l' | 'full-width' | 'full-page';
+export type AppModalSize = 'xs' | 's' | 'm' | 'l' | 'full-width' | 'full-page';
 
 export interface AppModalProps {
   title?: string;

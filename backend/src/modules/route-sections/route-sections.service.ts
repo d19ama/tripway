@@ -1,12 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-
-// ENTITIES
-import { RoutesService } from '../routes/routes.service';
 import { RouteSectionEntity } from './entities';
-
-// DTO
 import {
   CreateRouteSectionRequestDto,
   CreateRouteSectionResponseDto,
@@ -18,7 +13,6 @@ export class RouteSectionsService {
   constructor(
     @InjectRepository(RouteSectionEntity)
     private routeSectionsRepository: Repository<RouteSectionEntity>,
-    private routesService: RoutesService,
   ) {}
 
   async readAllRouteSections(routeId: ReadRouteSectionsRequestDto['routeId']): Promise<RouteSectionEntity[]> {
@@ -30,14 +24,6 @@ export class RouteSectionsService {
   async createRouteSection(body: CreateRouteSectionRequestDto): Promise<CreateRouteSectionResponseDto> {
     const newRouteSection: CreateRouteSectionResponseDto = this.routeSectionsRepository.create(body);
 
-    const savedRouteSection = await this.routeSectionsRepository.save(newRouteSection);
-
-    await this.routesService.updateRoute(body.routeId, {
-      routeSectionsIds: [
-        savedRouteSection.id,
-      ],
-    });
-
-    return savedRouteSection;
+    return await this.routeSectionsRepository.save(newRouteSection);
   }
 }

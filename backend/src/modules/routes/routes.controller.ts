@@ -9,11 +9,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { RoutesService } from './routes.service';
-
-// ENTITIES
 import { RouteEntity } from './entities';
-
-// DTO
 import {
   ReadRouteRequestDto,
   ReadRouteResponseDto,

@@ -27,6 +27,18 @@ export interface paths {
     /** Создание нового маршрута */
     post: operations["createRouteSection"];
   };
+  "/api/v1/users": {
+    /** Создание пользователя */
+    post: operations["createUser"];
+  };
+  "/api/v1/auth/login": {
+    /** Авторизация */
+    post: operations["login"];
+  };
+  "/api/v1/registration": {
+    /** Регистрация */
+    post: operations["registration"];
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -583,6 +595,163 @@ export interface components {
        */
       stayingCost?: string;
     };
+    UserEntity: {
+      /**
+       * @description Уникальный идентификатор
+       * @example 1234567890
+       */
+      id: string;
+      /**
+       * @description Дата создания
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      createdAt: string;
+      /**
+       * @description Дата обновления
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      updatedAt: string;
+      /**
+       * @description Имя
+       * @example Артём
+       */
+      name: string;
+      /**
+       * @description Фамилия
+       * @example Анпилов
+       */
+      surname: string;
+      /**
+       * @description Прозвище
+       * @example Fucker666
+       */
+      nickname?: string;
+      /**
+       * @description Отчество
+       * @example Михайлович
+       */
+      patronymic?: string;
+      /**
+       * Format: email
+       * @description Email
+       * @example example@example.com
+       */
+      email: string;
+      /**
+       * @description Пароль
+       * @example password
+       */
+      password: string;
+    };
+    CreateUserRequestDto: {
+      /**
+       * @description Уникальный идентификатор
+       * @example 1234567890
+       */
+      id: string;
+      /**
+       * @description Дата создания
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      createdAt: string;
+      /**
+       * @description Дата обновления
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      updatedAt: string;
+      /**
+       * @description Имя
+       * @example Артём
+       */
+      name: string;
+      /**
+       * @description Фамилия
+       * @example Анпилов
+       */
+      surname: string;
+      /**
+       * @description Прозвище
+       * @example Fucker666
+       */
+      nickname?: string;
+      /**
+       * @description Отчество
+       * @example Михайлович
+       */
+      patronymic?: string;
+      /**
+       * Format: email
+       * @description Email
+       * @example example@example.com
+       */
+      email: string;
+      /**
+       * @description Пароль
+       * @example password
+       */
+      password: string;
+    };
+    LoginRequestDto: {
+      /**
+       * Format: email
+       * @description Email
+       * @example email@email.com
+       */
+      email: string;
+      /** @description Пароль */
+      password: string;
+    };
+    LoginResponseDto: {
+      token: string;
+    };
+    RegistrationRequestDto: {
+      /**
+       * @description Уникальный идентификатор
+       * @example 1234567890
+       */
+      id: string;
+      /**
+       * @description Дата создания
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      createdAt: string;
+      /**
+       * @description Дата обновления
+       * @example 2025-08-21T07:48:50.363Z
+       */
+      updatedAt: string;
+      /**
+       * @description Имя
+       * @example Артём
+       */
+      name: string;
+      /**
+       * @description Фамилия
+       * @example Анпилов
+       */
+      surname: string;
+      /**
+       * @description Прозвище
+       * @example Fucker666
+       */
+      nickname?: string;
+      /**
+       * @description Отчество
+       * @example Михайлович
+       */
+      patronymic?: string;
+      /**
+       * Format: email
+       * @description Email
+       * @example example@example.com
+       */
+      email: string;
+      /**
+       * @description Пароль
+       * @example password
+       */
+      password: string;
+    };
   };
   responses: never;
   parameters: never;
@@ -677,6 +846,49 @@ export interface operations {
         content: {
           "application/json": components["schemas"]["CreateRouteSectionResponseDto"];
         };
+      };
+    };
+  };
+  /** Создание пользователя */
+  createUser: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateUserRequestDto"];
+      };
+    };
+    responses: {
+      201: {
+        content: {
+          "application/json": components["schemas"]["UserEntity"];
+        };
+      };
+    };
+  };
+  /** Авторизация */
+  login: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["LoginRequestDto"];
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["LoginResponseDto"];
+        };
+      };
+    };
+  };
+  /** Регистрация */
+  registration: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RegistrationRequestDto"];
+      };
+    };
+    responses: {
+      200: {
+        content: never;
       };
     };
   };

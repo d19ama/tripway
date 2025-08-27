@@ -12,6 +12,15 @@ export const routes: RouteRecordRaw[] = [
     },
   },
   {
+    path: '/profile',
+    name: RouteNames.Profile,
+    component: () => import('@/pages/profile/index.vue'),
+    meta: {
+      title: 'Profile',
+      backgroundImage: false,
+    },
+  },
+  {
     path: '/routes',
     name: RouteNames.Routes,
     component: () => import('@/pages/routes/index.vue'),

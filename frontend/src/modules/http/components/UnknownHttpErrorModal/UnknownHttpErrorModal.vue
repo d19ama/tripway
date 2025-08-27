@@ -14,6 +14,7 @@ const visible = defineModel<boolean>('visible', {
 <template>
   <AppModal
     v-model:visible="visible"
+    size="s"
     title="Ой! Что-то пошло не так!"
   >
     <template #default>

@@ -22,4 +22,3 @@ export * from './AppTransition';
 export * from './AppDatePicker';
 export * from './AppContentBlock';
 export * from './AppKeyIndicator';
-export * from './AppSanitizedHtml';

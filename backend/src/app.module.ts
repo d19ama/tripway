@@ -1,16 +1,17 @@
 import * as process from 'node:process';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
-import { EmptyResponseInterceptor } from './interceptors';
-
-// MODULES
-import { RouteEntity } from './modules/routes/entities';
+import { AuthModule } from './modules/auth/auth.module';
 import { RoutesModule } from './modules/routes/routes.module';
 import { RoutesSectionsModule } from './modules/route-sections/route-sections.module';
+import { UsersModule } from './modules/users/users.module';
+import { RegistrationModule } from './modules/registration/registration.module';
+import { AuthSubscriber } from './modules/auth/subscribers/auth.subscriber';
+import { CreateRouteSectionSubscriber } from './modules/route-sections/subscribers/create-route-section.subscriber';
+import { RouteEntity } from './modules/routes/entities';
 import { RouteSectionEntity } from './modules/route-sections/entities';
+import { UserEntity } from './modules/users/entities';
 
 @Module({
   imports: [
@@ -29,23 +30,27 @@ import { RouteSectionEntity } from './modules/route-sections/entities';
       username: process.env.DATABASE_USER_NAME,
       password: process.env.DATABASE_USER_PASSWORD,
       synchronize: process.env.ENV !== 'production',
+      subscribers: [
+        AuthSubscriber,
+        CreateRouteSectionSubscriber,
+      ],
       entities: [
+        UserEntity,
         RouteEntity,
         RouteSectionEntity,
       ],
     }),
     TypeOrmModule.forFeature([
+      UserEntity,
       RouteEntity,
       RouteSectionEntity,
     ]),
     RoutesModule,
     RoutesSectionsModule,
+    UsersModule,
+    AuthModule,
+    RegistrationModule,
   ],
-  providers: [
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: EmptyResponseInterceptor,
-    },
-  ],
+  providers: [],
 })
 export class AppModule {}
