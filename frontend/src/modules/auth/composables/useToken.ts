@@ -10,6 +10,7 @@ import {
 interface UseTokenReturn {
   setToken: (token: AuthToken) => void;
   getToken: () => AuthToken;
+  removeToken: () => void;
 }
 
 export function useToken(): UseTokenReturn {
@@ -23,8 +24,13 @@ export function useToken(): UseTokenReturn {
     return storage.value;
   }
 
+  function removeToken(): void {
+    storage.value = '';
+  }
+
   return {
     setToken,
     getToken,
+    removeToken,
   };
 }

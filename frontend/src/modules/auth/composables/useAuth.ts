@@ -6,7 +6,7 @@ import type {
   LoginRequestDto,
   LoginResponseDto,
 } from '../types';
-import { useHttpService } from '@/modules/http';
+import { api } from '@/modules/http';
 import { useToken } from '@/modules/auth/composables/useToken';
 
 interface UseAuthReturn {
@@ -16,10 +16,6 @@ interface UseAuthReturn {
 }
 
 export function useAuth(): UseAuthReturn {
-  const {
-    fetch,
-  } = useHttpService();
-
   const {
     setToken,
   } = useToken();
@@ -32,17 +28,18 @@ export function useAuth(): UseAuthReturn {
 
     const {
       data,
-      error,
-    } = await fetch<LoginResponseDto>('/auth/login').post(body).json();
+    } = await api.post<LoginResponseDto>('/auth/login', {
+      body,
+    });
 
     isLoading.value = false;
 
-    if (error.value) {
+    if (!data) {
       isError.value = true;
     }
 
-    if (data.value) {
-      setToken(data.value.token);
+    if (data) {
+      setToken(data.token);
     }
   }
 

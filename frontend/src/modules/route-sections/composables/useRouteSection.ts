@@ -6,7 +6,7 @@ import {
 } from 'vue';
 import type { RouteEntity } from '@/modules/routes';
 import type { RouteSectionEntity } from '@/modules/route-sections';
-import { useJwtHttpService } from '@/modules/http';
+import { api } from '@/modules/http';
 
 interface UseRouteSectionReturn {
   isError: Ref<boolean>;
@@ -19,10 +19,6 @@ interface UseRouteSectionReturn {
 const _routeSections = ref<RouteSectionEntity[]>([]);
 
 export function useRouteSection(): UseRouteSectionReturn {
-  const {
-    fetch,
-  } = useJwtHttpService();
-
   const isError = ref<boolean>(false);
   const isLoading = ref<boolean>(false);
 
@@ -40,18 +36,17 @@ export function useRouteSection(): UseRouteSectionReturn {
 
     const {
       data,
-      error,
-    } = await fetch<RouteSectionEntity[]>(`/route-sections/${routeId}`).get().json();
+    } = await api.get<RouteSectionEntity[]>(`/route-sections/${routeId}`);
 
     isLoading.value = false;
 
-    if (error.value) {
+    if (!data) {
       isError.value = true;
       return;
     }
 
-    if (data.value) {
-      _routeSections.value = data.value;
+    if (data) {
+      _routeSections.value = data;
     }
   }
 
@@ -59,15 +54,17 @@ export function useRouteSection(): UseRouteSectionReturn {
     isLoading.value = true;
 
     const {
-      error,
-    } = await fetch<RouteSectionEntity>('/route-sections').post({
-      ...routeSection,
-      routeId,
-    }).json();
+      status,
+    } = await api.post<RouteSectionEntity>('/route-sections', {
+      body: {
+        ...routeSection,
+        routeId,
+      },
+    });
 
     isLoading.value = false;
 
-    if (error.value) {
+    if (status !== 200) {
       isError.value = true;
     }
   }

@@ -4,7 +4,7 @@ import {
   computed,
   ref,
 } from 'vue';
-import { useHttpService } from '@/modules/http';
+import { api } from '@/modules/http';
 import type { UserEntity } from '@/modules/users';
 
 interface UseUsersReturn {
@@ -17,10 +17,6 @@ interface UseUsersReturn {
 const _user = ref<UserEntity | undefined>();
 
 export function useUsers(): UseUsersReturn {
-  const {
-    fetch,
-  } = useHttpService();
-
   const isError = ref<boolean>(false);
   const isLoading = ref<boolean>(false);
 
@@ -33,20 +29,21 @@ export function useUsers(): UseUsersReturn {
 
     const {
       data,
-      error,
-    } = await fetch<UserEntity>(`/users`).post({
-      email,
-    }).json();
+    } = await api.post<UserEntity>(`/users`, {
+      body: {
+        email,
+      },
+    });
 
     isLoading.value = false;
 
-    if (error.value) {
+    if (!data) {
       isError.value = true;
       return;
     }
 
-    if (data.value) {
-      _user.value = data.value;
+    if (data) {
+      _user.value = data;
     }
   }
 

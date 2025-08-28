@@ -2,8 +2,8 @@ import {
   type Ref,
   ref,
 } from 'vue';
-import { useHttpService } from '@/modules/http';
-import type { GEO_ISO2 } from '@/modules/geo/types';
+import type { GEO_ISO2 } from '../types';
+import { api } from '@/modules/http';
 
 interface UseGeoReturn {
   isError: Ref<boolean>;
@@ -16,16 +16,11 @@ interface UseGeoReturn {
 }
 
 export function useGeo(): UseGeoReturn {
-  const {
-    fetch,
-  } = useHttpService({
-    baseUrl: import.meta.env.VITE_GEO_API_BASE_URL,
-    fetchOptions: {
-      headers: {
-        'X-CSCAPI-KEY': import.meta.env.VITE_GEO_API_KEY,
-      },
+  const config = {
+    headers: {
+      'X-CSCAPI-KEY': import.meta.env.VITE_GEO_API_KEY,
     },
-  });
+  };
 
   const isError = ref<boolean>(false);
   const isLoading = ref<boolean>(false);
@@ -40,18 +35,17 @@ export function useGeo(): UseGeoReturn {
 
     const {
       data,
-      error,
-    } = await fetch('/countries').get().json();
+    } = await api.get('/countries', config);
 
     isLoading.value = false;
 
-    if (error.value) {
+    if (!data) {
       isError.value = true;
       return;
     }
 
-    if (data.value) {
-      countries.value = data.value;
+    if (data) {
+      countries.value = data;
     }
   }
 
@@ -60,18 +54,17 @@ export function useGeo(): UseGeoReturn {
 
     const {
       data,
-      error,
-    } = await fetch(`/countries/${iso2}`).get().json();
+    } = await api.get(`/countries/${iso2}`, config);
 
     isLoading.value = false;
 
-    if (error.value) {
+    if (!data) {
       isError.value = true;
       return;
     }
 
-    if (data.value) {
-      country.value = data.value;
+    if (data) {
+      country.value = data;
     }
   }
 
@@ -80,18 +73,17 @@ export function useGeo(): UseGeoReturn {
 
     const {
       data,
-      error,
-    } = await fetch(`/countries/${iso2}/cities`).get().json();
+    } = await api.get(`/countries/${iso2}/cities`, config);
 
     isLoading.value = false;
 
-    if (error.value) {
+    if (!data) {
       isError.value = true;
       return;
     }
 
-    if (data.value) {
-      cities.value = data.value;
+    if (data) {
+      cities.value = data;
     }
   }
 

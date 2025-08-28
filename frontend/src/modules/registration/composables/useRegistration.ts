@@ -3,7 +3,7 @@ import {
   ref,
 } from 'vue';
 import type { RegistrationRequestDto } from '../types';
-import { useHttpService } from '@/modules/http';
+import { api } from '@/modules/http';
 
 interface UseRegistrationReturn {
   isError: Ref<boolean>;
@@ -12,10 +12,6 @@ interface UseRegistrationReturn {
 }
 
 export function useRegistration(): UseRegistrationReturn {
-  const {
-    fetch,
-  } = useHttpService();
-
   const isError = ref<boolean>(false);
   const isLoading = ref<boolean>(false);
 
@@ -23,12 +19,14 @@ export function useRegistration(): UseRegistrationReturn {
     isLoading.value = true;
 
     const {
-      error,
-    } = await fetch('/registration').post(body).json();
+      status,
+    } = await api.post<void>('/registration', {
+      body,
+    });
 
     isLoading.value = false;
 
-    if (error.value) {
+    if (status !== 200) {
       isError.value = true;
     }
   }

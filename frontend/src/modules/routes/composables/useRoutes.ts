@@ -6,7 +6,7 @@ import {
 } from 'vue';
 import type { RouteEntity } from '../';
 import { DEFAULT_ROUTE } from '../constants';
-import { useJwtHttpService } from '@/modules/http';
+import { api } from '@/modules/http';
 
 interface UseRoutesReturn {
   isError: Ref<boolean>;
@@ -23,10 +23,6 @@ interface UseRoutesReturn {
 const _routes = ref<RouteEntity[]>([]);
 
 export function useRoutes(): UseRoutesReturn {
-  const {
-    fetch,
-  } = useJwtHttpService();
-
   const isError = ref<boolean>(false);
   const isLoading = ref<boolean>(false);
 
@@ -46,18 +42,17 @@ export function useRoutes(): UseRoutesReturn {
 
     const {
       data,
-      error,
-    } = await fetch<RouteEntity[]>('/routes').get().json();
+    } = await api.get<RouteEntity[]>('/routes');
 
     isLoading.value = false;
 
-    if (error.value) {
+    if (!data) {
       isError.value = true;
       return;
     }
 
-    if (data.value) {
-      _routes.value = data.value;
+    if (data) {
+      _routes.value = data;
     }
   }
 
@@ -66,21 +61,22 @@ export function useRoutes(): UseRoutesReturn {
 
     const {
       data,
-      error,
-    } = await fetch<RouteEntity>('/routes').post({
-      ...DEFAULT_ROUTE,
-      name,
-    }).json();
+    } = await api.post<RouteEntity>('/routes', {
+      body: {
+        ...DEFAULT_ROUTE,
+        name,
+      },
+    });
 
     isLoading.value = false;
 
-    if (error.value) {
+    if (!data) {
       isError.value = true;
       return;
     }
 
-    if (data.value) {
-      return data.value.id;
+    if (data) {
+      return data.id;
     }
   }
 
@@ -89,21 +85,20 @@ export function useRoutes(): UseRoutesReturn {
 
     const {
       data,
-      error,
-    } = await fetch<RouteEntity>(`/routes/${id}`).get().json();
+    } = await api.get<RouteEntity>(`/routes/${id}`);
 
     isLoading.value = false;
 
-    if (error.value) {
+    if (!data) {
       isError.value = true;
       return;
     }
 
-    if (data.value) {
-      activeRoute.value = data.value;
+    if (data) {
+      activeRoute.value = data;
       _routes.value = [
         {
-          ...data.value,
+          ...data,
           opened: true,
         },
       ];
@@ -113,13 +108,11 @@ export function useRoutes(): UseRoutesReturn {
   async function updateRoute(id: RouteEntity['id'], route: Partial<RouteEntity>): Promise<void> {
     isLoading.value = true;
 
-    const {
-      error,
-    } = await fetch<void>(`/routes/${id}`).patch(route);
+    const response = await api.patch<void>(`/routes/${id}`, route);
 
     isLoading.value = false;
 
-    if (error.value) {
+    if (response.status !== 200) {
       isError.value = true;
     }
   }
@@ -127,13 +120,11 @@ export function useRoutes(): UseRoutesReturn {
   async function deleteRoute(id: RouteEntity['id']): Promise<void> {
     isLoading.value = true;
 
-    const {
-      error,
-    } = await fetch<void>(`/routes/${id}`).delete();
+    const response = await api.delete<void>(`/routes/${id}`);
 
     isLoading.value = false;
 
-    if (error.value) {
+    if (response.status !== 200) {
       isError.value = true;
     }
   }
