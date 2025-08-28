@@ -18,8 +18,8 @@ const _routeSections = ref<RouteSectionEntity[]>([]);
 
 export function useRouteSection(): UseRouteSectionReturn {
   const {
-    isError,
-    isLoading,
+    httpError,
+    httpLoading,
     callApi,
   } = useApi();
 
@@ -52,8 +52,8 @@ export function useRouteSection(): UseRouteSectionReturn {
   }
 
   return {
-    isError,
-    isLoading,
+    httpError,
+    httpLoading,
     routeSections,
     readRouteSections,
     createRouteSection,

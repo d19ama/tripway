@@ -22,8 +22,8 @@ export function useGeo(): UseGeoReturn {
   };
 
   const {
-    isError,
-    isLoading,
+    httpError,
+    httpLoading,
     callApi,
   } = useApi();
 
@@ -69,8 +69,8 @@ export function useGeo(): UseGeoReturn {
   }
 
   return {
-    isError,
-    isLoading,
+    httpError,
+    httpLoading,
     country,
     countries,
     getCountry,

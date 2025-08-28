@@ -24,7 +24,7 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const {
-  isError,
+  httpError,
   deleteRoute,
 } = useRoutes();
 
@@ -41,7 +41,7 @@ async function closeModal(): Promise<void> {
   visible.value = false;
   await showUntil(deleteRoute(props.routeId));
 
-  if (!isError.value) {
+  if (!httpError.value) {
     emit('delete:route:success');
   }
 }
@@ -79,6 +79,6 @@ async function closeModal(): Promise<void> {
   </AppModal>
 
   <UnknownHttpErrorModal
-    v-model:visible="isError"
+    v-model:visible="httpError"
   />
 </template>

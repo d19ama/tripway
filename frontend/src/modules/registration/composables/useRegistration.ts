@@ -8,8 +8,8 @@ interface UseRegistrationReturn extends HttpStates {
 
 export function useRegistration(): UseRegistrationReturn {
   const {
-    isError,
-    isLoading,
+    httpError,
+    httpLoading,
     callApi,
   } = useApi();
 
@@ -22,8 +22,8 @@ export function useRegistration(): UseRegistrationReturn {
   }
 
   return {
-    isError,
-    isLoading,
+    httpError,
+    httpLoading,
     register,
   };
 }

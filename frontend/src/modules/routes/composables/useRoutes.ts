@@ -25,8 +25,8 @@ const _routes = ref<RouteEntity[]>([]);
 
 export function useRoutes(): UseRoutesReturn {
   const {
-    isError,
-    isLoading,
+    httpError,
+    httpLoading,
     callApi,
   } = useApi();
 
@@ -92,8 +92,8 @@ export function useRoutes(): UseRoutesReturn {
 
   return {
     routes,
-    isError,
-    isLoading,
+    httpError,
+    httpLoading,
     activeRoute,
     readRoute,
     readRoutes,

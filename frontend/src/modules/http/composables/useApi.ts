@@ -10,8 +10,8 @@ interface UseApiReturn extends HttpStates {
 }
 
 export function useApi(): UseApiReturn {
-  const isError = ref<boolean>(false);
-  const isLoading = ref<boolean>(false);
+  const httpError = ref<boolean>(false);
+  const httpLoading = ref<boolean>(false);
 
   async function callApi<T>(
     method: HttpMethods,
@@ -19,23 +19,23 @@ export function useApi(): UseApiReturn {
     data?: any,
   ): Promise<T | undefined> {
     try {
-      isLoading.value = true;
-      isError.value = false;
+      httpLoading.value = true;
+      httpError.value = false;
 
       const response = await api[method](url, data);
 
       return response.data;
     } catch (err: any) {
-      isError.value = true;
+      httpError.value = true;
       return undefined;
     } finally {
-      isLoading.value = false;
+      httpLoading.value = false;
     }
   }
 
   return {
-    isError,
-    isLoading,
+    httpError,
+    httpLoading,
     callApi,
   };
 }

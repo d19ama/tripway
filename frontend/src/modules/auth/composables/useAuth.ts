@@ -16,8 +16,8 @@ export function useAuth(): UseAuthReturn {
   } = useToken();
 
   const {
-    isError,
-    isLoading,
+    httpError,
+    httpLoading,
     callApi,
   } = useApi();
 
@@ -34,8 +34,8 @@ export function useAuth(): UseAuthReturn {
   }
 
   return {
-    isError,
-    isLoading,
+    httpError,
+    httpLoading,
     login,
   };
 }

@@ -41,7 +41,7 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const {
-  isError,
+  httpError,
   updateRoute,
 } = useRoutes();
 
@@ -81,7 +81,7 @@ async function onEdit(): Promise<void> {
     name: form.value.name,
   }));
 
-  if (!isError.value) {
+  if (!httpError.value) {
     emit('update:route:success');
   }
 }
@@ -134,6 +134,6 @@ watch(visible, () => {
   </AppModal>
 
   <UnknownHttpErrorModal
-    v-model:visible="isError"
+    v-model:visible="httpError"
   />
 </template>

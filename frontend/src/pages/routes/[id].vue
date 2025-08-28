@@ -22,12 +22,12 @@ import {
 } from '@/modules/routes';
 
 const {
-  isError: isRouteError,
+  httpError: isRouteError,
   readRoute,
 } = useRoutes();
 
 const {
-  isError: isRouteSectionError,
+  httpError: isRouteSectionError,
   routeSections,
   readRouteSections,
 } = useRouteSection();

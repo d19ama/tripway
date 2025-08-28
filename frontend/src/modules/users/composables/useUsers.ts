@@ -18,8 +18,8 @@ const _user = ref<UserEntity | undefined>();
 
 export function useUsers(): UseUsersReturn {
   const {
-    isError,
-    isLoading,
+    httpError,
+    httpLoading,
     callApi,
   } = useApi();
 
@@ -43,8 +43,8 @@ export function useUsers(): UseUsersReturn {
 
   return {
     user,
-    isError,
-    isLoading,
+    httpError,
+    httpLoading,
     readUser,
   };
 }
