@@ -8,11 +8,13 @@ import { useApi } from '@/modules/http/composables';
 
 interface UseAuthReturn extends HttpStates {
   login: (body: LoginRequestDto) => Promise<void>;
+  logout: () => void;
 }
 
 export function useAuth(): UseAuthReturn {
   const {
     setToken,
+    removeToken,
   } = useToken();
 
   const {
@@ -33,9 +35,14 @@ export function useAuth(): UseAuthReturn {
     }
   }
 
+  function logout(): void {
+    removeToken();
+  }
+
   return {
     httpError,
     httpLoading,
     login,
+    logout,
   };
 }

@@ -9,7 +9,11 @@ import { useRouter } from 'vue-router';
 import { onClickOutside } from '@vueuse/core';
 import type { HTMLElementClass } from '@/common/types';
 import { AppLink } from '@/common/components';
-import { AuthModal } from '@/modules/auth';
+import {
+  AuthModal,
+  useAuth,
+  useToken,
+} from '@/modules/auth';
 import { RegistrationModal } from '@/modules/registration';
 import { RouteNames } from '@/app/router/route-names';
 import {
@@ -19,6 +23,14 @@ import {
 import { usePageLoadingIndicator } from '@/common/composables';
 
 const router = useRouter();
+
+const {
+  isAuthenticated,
+} = useToken();
+
+const {
+  logout,
+} = useAuth();
 
 const {
   user,
@@ -97,7 +109,9 @@ onClickOutside(menuRef, () => {
 });
 
 onMounted(async () => {
-  await showUntil(readUser('mr.anpilov@vk.com'));
+  if (isAuthenticated.value) {
+    await showUntil(readUser('mr.anpilov@vk.com'));
+  }
 });
 </script>
 
@@ -142,7 +156,10 @@ onMounted(async () => {
         <span class="icon icon-profile" />
         Профиль
       </div>
-      <div class="app-profile__menu-item">
+      <div
+        class="app-profile__menu-item"
+        @click="logout"
+      >
         <span class="icon icon-exit" />
         Выйти
       </div>

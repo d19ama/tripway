@@ -1,14 +1,10 @@
 <script setup lang="ts">
-import {
-  provide,
-  ref,
-} from 'vue';
 import { AppSpinnerOverlay } from '@/common/components';
-import { PAGE_LOADING_INDICATOR_INJECTION_KEY } from '@/common/composables';
+import { usePageLoadingIndicator } from '@/common/composables';
 
-const loading = ref<boolean>(false);
-
-provide(PAGE_LOADING_INDICATOR_INJECTION_KEY, loading);
+const {
+  loading,
+} = usePageLoadingIndicator();
 </script>
 
 <template>

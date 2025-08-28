@@ -17,7 +17,7 @@ export function isAuthenticated(): NavigationGuard {
     }
 
     if (to.meta.auth === 'private' && !isAuthenticated.value) {
-      next({
+      return next({
         name: RouteNames.Home,
       });
     }
