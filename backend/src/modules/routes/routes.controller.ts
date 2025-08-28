@@ -33,10 +33,10 @@ export class RoutesController {
   @Get()
   @ApiOperation({
     summary: 'Получение всех маршрутов',
-    operationId: 'readAllRoutes',
+    operationId: 'readRoutes',
   })
-  readAllRoutes(): Promise<RouteEntity[]> {
-    return this.routesService.readAllRoutes();
+  readRoutes(): Promise<RouteEntity[]> {
+    return this.routesService.readRoutes();
   }
 
   @Post()

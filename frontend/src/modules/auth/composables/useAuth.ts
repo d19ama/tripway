@@ -2,8 +2,12 @@ import {
   type Ref,
   ref,
 } from 'vue';
-import type { LoginRequestDto } from '../types';
+import type {
+  LoginRequestDto,
+  LoginResponseDto,
+} from '../types';
 import { useHttpService } from '@/modules/http';
+import { useToken } from '@/modules/auth/composables/useToken';
 
 interface UseAuthReturn {
   isError: Ref<boolean>;
@@ -16,6 +20,10 @@ export function useAuth(): UseAuthReturn {
     fetch,
   } = useHttpService();
 
+  const {
+    setToken,
+  } = useToken();
+
   const isError = ref<boolean>(false);
   const isLoading = ref<boolean>(false);
 
@@ -23,13 +31,18 @@ export function useAuth(): UseAuthReturn {
     isLoading.value = true;
 
     const {
+      data,
       error,
-    } = await fetch('/auth/login').post(body).json();
+    } = await fetch<LoginResponseDto>('/auth/login').post(body).json();
 
     isLoading.value = false;
 
     if (error.value) {
       isError.value = true;
+    }
+
+    if (data.value) {
+      setToken(data.value.token);
     }
   }
 

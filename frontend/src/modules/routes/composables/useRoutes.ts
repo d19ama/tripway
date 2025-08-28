@@ -6,7 +6,7 @@ import {
 } from 'vue';
 import type { RouteEntity } from '../';
 import { DEFAULT_ROUTE } from '../constants';
-import { useHttpService } from '@/modules/http';
+import { useJwtHttpService } from '@/modules/http';
 
 interface UseRoutesReturn {
   isError: Ref<boolean>;
@@ -25,7 +25,7 @@ const _routes = ref<RouteEntity[]>([]);
 export function useRoutes(): UseRoutesReturn {
   const {
     fetch,
-  } = useHttpService();
+  } = useJwtHttpService();
 
   const isError = ref<boolean>(false);
   const isLoading = ref<boolean>(false);

@@ -23,7 +23,7 @@ export class RoutesService {
     private routesRepository: Repository<RouteEntity>,
   ) {}
 
-  async readAllRoutes(): Promise<RouteEntity[]> {
+  async readRoutes(): Promise<RouteEntity[]> {
     return await this.routesRepository.find();
   }
 

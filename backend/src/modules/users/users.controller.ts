@@ -5,6 +5,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
+import { Public } from '../../decorators';
 import { UsersService } from './users.service';
 import { ReadUserRequestDto } from './dto/read-user';
 import { CreateUserRequestDto } from './dto/create-user';
@@ -16,6 +17,7 @@ export class UsersController {
     private readonly usersService: UsersService,
   ) {}
 
+  @Public()
   @Post()
   @ApiOperation({
     summary: 'Получение пользователя',
@@ -25,6 +27,7 @@ export class UsersController {
     return await this.usersService.readUser(email);
   }
 
+  @Public()
   @Post()
   @ApiOperation({
     summary: 'Создание пользователя',

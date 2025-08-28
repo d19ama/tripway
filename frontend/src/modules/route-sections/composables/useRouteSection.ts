@@ -6,7 +6,7 @@ import {
 } from 'vue';
 import type { RouteEntity } from '@/modules/routes';
 import type { RouteSectionEntity } from '@/modules/route-sections';
-import { useHttpService } from '@/modules/http';
+import { useJwtHttpService } from '@/modules/http';
 
 interface UseRouteSectionReturn {
   isError: Ref<boolean>;
@@ -21,7 +21,7 @@ const _routeSections = ref<RouteSectionEntity[]>([]);
 export function useRouteSection(): UseRouteSectionReturn {
   const {
     fetch,
-  } = useHttpService();
+  } = useJwtHttpService();
 
   const isError = ref<boolean>(false);
   const isLoading = ref<boolean>(false);
