@@ -1,15 +1,15 @@
 import {
   type ComputedRef,
-  type Ref,
   computed,
   ref,
 } from 'vue';
-import { api } from '@/modules/http';
 import type { UserEntity } from '@/modules/users';
+import {
+  type HttpStates,
+  useApi,
+} from '@/modules/http';
 
-interface UseUsersReturn {
-  isError: Ref<boolean>;
-  isLoading: Ref<boolean>;
+interface UseUsersReturn extends HttpStates {
   user: ComputedRef<UserEntity | undefined>;
   readUser: (email: UserEntity['email']) => Promise<void>;
 }
@@ -17,30 +17,24 @@ interface UseUsersReturn {
 const _user = ref<UserEntity | undefined>();
 
 export function useUsers(): UseUsersReturn {
-  const isError = ref<boolean>(false);
-  const isLoading = ref<boolean>(false);
+  const {
+    isError,
+    isLoading,
+    callApi,
+  } = useApi();
 
   const user = computed<UserEntity | undefined>(() => {
     return _user.value;
   });
 
   async function readUser(email: UserEntity['email']): Promise<void> {
-    isLoading.value = true;
-
-    const {
-      data,
-    } = await api.post<UserEntity>(`/users`, {
-      body: {
+    const data: UserEntity | undefined = await callApi<UserEntity>(
+      'post',
+      `/users`,
+      {
         email,
       },
-    });
-
-    isLoading.value = false;
-
-    if (!data) {
-      isError.value = true;
-      return;
-    }
+    );
 
     if (data) {
       _user.value = data;

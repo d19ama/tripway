@@ -1,34 +1,24 @@
-import {
-  type Ref,
-  ref,
-} from 'vue';
 import type { RegistrationRequestDto } from '../types';
-import { api } from '@/modules/http';
+import { useApi } from '@/modules/http/composables';
+import type { HttpStates } from '@/modules/http/types';
 
-interface UseRegistrationReturn {
-  isError: Ref<boolean>;
-  isLoading: Ref<boolean>;
+interface UseRegistrationReturn extends HttpStates {
   register: (body: RegistrationRequestDto) => Promise<void>;
 }
 
 export function useRegistration(): UseRegistrationReturn {
-  const isError = ref<boolean>(false);
-  const isLoading = ref<boolean>(false);
+  const {
+    isError,
+    isLoading,
+    callApi,
+  } = useApi();
 
   async function register(body: RegistrationRequestDto): Promise<void> {
-    isLoading.value = true;
-
-    const {
-      status,
-    } = await api.post<void>('/registration', {
+    await callApi<void>(
+      'post',
+      '/registration',
       body,
-    });
-
-    isLoading.value = false;
-
-    if (status !== 200) {
-      isError.value = true;
-    }
+    );
   }
 
   return {

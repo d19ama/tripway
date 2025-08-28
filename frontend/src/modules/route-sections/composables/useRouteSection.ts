@@ -1,16 +1,14 @@
 import {
-  type Ref,
   type WritableComputedRef,
   computed,
   ref,
 } from 'vue';
 import type { RouteEntity } from '@/modules/routes';
 import type { RouteSectionEntity } from '@/modules/route-sections';
-import { api } from '@/modules/http';
+import type { HttpStates } from '@/modules/http/types';
+import { useApi } from '@/modules/http/composables';
 
-interface UseRouteSectionReturn {
-  isError: Ref<boolean>;
-  isLoading: Ref<boolean>;
+interface UseRouteSectionReturn extends HttpStates {
   routeSections: WritableComputedRef<RouteSectionEntity[]>;
   readRouteSections: (routeId: RouteEntity['id']) => Promise<void>;
   createRouteSection: (routeId: RouteEntity['id'], routeSection: RouteSectionEntity) => Promise<void>;
@@ -19,8 +17,11 @@ interface UseRouteSectionReturn {
 const _routeSections = ref<RouteSectionEntity[]>([]);
 
 export function useRouteSection(): UseRouteSectionReturn {
-  const isError = ref<boolean>(false);
-  const isLoading = ref<boolean>(false);
+  const {
+    isError,
+    isLoading,
+    callApi,
+  } = useApi();
 
   const routeSections = computed<RouteSectionEntity[]>({
     get() {
@@ -32,18 +33,7 @@ export function useRouteSection(): UseRouteSectionReturn {
   });
 
   async function readRouteSections(routeId: RouteEntity['id']): Promise<void> {
-    isLoading.value = true;
-
-    const {
-      data,
-    } = await api.get<RouteSectionEntity[]>(`/route-sections/${routeId}`);
-
-    isLoading.value = false;
-
-    if (!data) {
-      isError.value = true;
-      return;
-    }
+    const data: RouteSectionEntity[] | undefined = await callApi<RouteSectionEntity[]>('get', `/route-sections/${routeId}`);
 
     if (data) {
       _routeSections.value = data;
@@ -51,22 +41,14 @@ export function useRouteSection(): UseRouteSectionReturn {
   }
 
   async function createRouteSection(routeId: RouteEntity['id'], routeSection: RouteSectionEntity): Promise<void> {
-    isLoading.value = true;
-
-    const {
-      status,
-    } = await api.post<RouteSectionEntity>('/route-sections', {
-      body: {
+    await callApi<RouteSectionEntity>(
+      'post',
+      '/route-sections',
+      {
         ...routeSection,
         routeId,
       },
-    });
-
-    isLoading.value = false;
-
-    if (status !== 200) {
-      isError.value = true;
-    }
+    );
   }
 
   return {

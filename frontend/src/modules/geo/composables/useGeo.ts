@@ -3,11 +3,10 @@ import {
   ref,
 } from 'vue';
 import type { GEO_ISO2 } from '../types';
-import { api } from '@/modules/http';
+import type { HttpStates } from '@/modules/http/types';
+import { useApi } from '@/modules/http/composables';
 
-interface UseGeoReturn {
-  isError: Ref<boolean>;
-  isLoading: Ref<boolean>;
+interface UseGeoReturn extends HttpStates {
   country: Ref<object>;
   countries: Ref<object[]>;
   getCountry: (iso2: GEO_ISO2) => Promise<void>;
@@ -22,27 +21,23 @@ export function useGeo(): UseGeoReturn {
     },
   };
 
-  const isError = ref<boolean>(false);
-  const isLoading = ref<boolean>(false);
+  const {
+    isError,
+    isLoading,
+    callApi,
+  } = useApi();
 
-  const country = ref<object>({});
-  const countries = ref<object[]>([]);
+  const country = ref<any>({});
+  const countries = ref<any[]>([]);
 
-  const cities = ref<object[]>([]);
+  const cities = ref<any[]>([]);
 
   async function getCountries(): Promise<void> {
-    isLoading.value = true;
-
-    const {
-      data,
-    } = await api.get('/countries', config);
-
-    isLoading.value = false;
-
-    if (!data) {
-      isError.value = true;
-      return;
-    }
+    const data: any[] | undefined = await callApi<any[]>(
+      'get',
+      '/countries',
+      config,
+    );
 
     if (data) {
       countries.value = data;
@@ -50,18 +45,11 @@ export function useGeo(): UseGeoReturn {
   }
 
   async function getCountry(iso2: GEO_ISO2): Promise<void> {
-    isLoading.value = true;
-
-    const {
-      data,
-    } = await api.get(`/countries/${iso2}`, config);
-
-    isLoading.value = false;
-
-    if (!data) {
-      isError.value = true;
-      return;
-    }
+    const data: any | undefined = await callApi<any>(
+      'get',
+      `/countries/${iso2}`,
+      config,
+    );
 
     if (data) {
       country.value = data;
@@ -69,18 +57,11 @@ export function useGeo(): UseGeoReturn {
   }
 
   async function getCities(iso2: GEO_ISO2): Promise<void> {
-    isLoading.value = true;
-
-    const {
-      data,
-    } = await api.get(`/countries/${iso2}/cities`, config);
-
-    isLoading.value = false;
-
-    if (!data) {
-      isError.value = true;
-      return;
-    }
+    const data: any | undefined = await callApi(
+      'get',
+      `/countries/${iso2}/cities`,
+      config,
+    );
 
     if (data) {
       cities.value = data;
