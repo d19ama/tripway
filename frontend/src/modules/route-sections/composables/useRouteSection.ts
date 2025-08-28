@@ -1,16 +1,14 @@
 import {
-  type Ref,
   type WritableComputedRef,
   computed,
   ref,
 } from 'vue';
 import type { RouteEntity } from '@/modules/routes';
 import type { RouteSectionEntity } from '@/modules/route-sections';
-import { useHttpService } from '@/modules/http';
+import type { HttpStates } from '@/modules/http/types';
+import { useApi } from '@/modules/http/composables';
 
-interface UseRouteSectionReturn {
-  isError: Ref<boolean>;
-  isLoading: Ref<boolean>;
+interface UseRouteSectionReturn extends HttpStates {
   routeSections: WritableComputedRef<RouteSectionEntity[]>;
   readRouteSections: (routeId: RouteEntity['id']) => Promise<void>;
   createRouteSection: (routeId: RouteEntity['id'], routeSection: RouteSectionEntity) => Promise<void>;
@@ -20,11 +18,10 @@ const _routeSections = ref<RouteSectionEntity[]>([]);
 
 export function useRouteSection(): UseRouteSectionReturn {
   const {
-    fetch,
-  } = useHttpService();
-
-  const isError = ref<boolean>(false);
-  const isLoading = ref<boolean>(false);
+    httpError,
+    httpLoading,
+    callApi,
+  } = useApi();
 
   const routeSections = computed<RouteSectionEntity[]>({
     get() {
@@ -36,45 +33,27 @@ export function useRouteSection(): UseRouteSectionReturn {
   });
 
   async function readRouteSections(routeId: RouteEntity['id']): Promise<void> {
-    isLoading.value = true;
+    const data: RouteSectionEntity[] | undefined = await callApi<RouteSectionEntity[]>('get', `/route-sections/${routeId}`);
 
-    const {
-      data,
-      error,
-    } = await fetch<RouteSectionEntity[]>(`/route-sections/${routeId}`).get().json();
-
-    isLoading.value = false;
-
-    if (error.value) {
-      isError.value = true;
-      return;
-    }
-
-    if (data.value) {
-      _routeSections.value = data.value;
+    if (data) {
+      _routeSections.value = data;
     }
   }
 
   async function createRouteSection(routeId: RouteEntity['id'], routeSection: RouteSectionEntity): Promise<void> {
-    isLoading.value = true;
-
-    const {
-      error,
-    } = await fetch<RouteSectionEntity>('/route-sections').post({
-      ...routeSection,
-      routeId,
-    }).json();
-
-    isLoading.value = false;
-
-    if (error.value) {
-      isError.value = true;
-    }
+    await callApi<RouteSectionEntity>(
+      'post',
+      '/route-sections',
+      {
+        ...routeSection,
+        routeId,
+      },
+    );
   }
 
   return {
-    isError,
-    isLoading,
+    httpError,
+    httpLoading,
     routeSections,
     readRouteSections,
     createRouteSection,

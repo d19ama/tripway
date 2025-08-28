@@ -34,7 +34,7 @@ interface Emits {
 const emit = defineEmits<Emits>();
 
 const {
-  isError,
+  httpError,
   createRoute,
 } = useRoutes();
 
@@ -72,7 +72,7 @@ async function onCreate(): Promise<void> {
 
   const id: RouteEntity['id'] | undefined = await showUntil(createRoute(form.value.name));
 
-  if (!isError.value && id) {
+  if (!httpError.value && id) {
     emit('create:route:success', id);
   }
 }
@@ -124,6 +124,6 @@ watch(visible, () => {
   </AppModal>
 
   <UnknownHttpErrorModal
-    v-model:visible="isError"
+    v-model:visible="httpError"
   />
 </template>

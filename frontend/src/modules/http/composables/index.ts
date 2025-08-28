@@ -1,1 +1,1 @@
-export { useHttpService } from './useHttpService';
+export { useApi } from './useApi';

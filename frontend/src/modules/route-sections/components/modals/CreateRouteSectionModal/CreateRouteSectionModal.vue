@@ -49,7 +49,7 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const {
-  isError,
+  httpError,
   createRouteSection,
 } = useRouteSection();
 
@@ -142,7 +142,7 @@ async function onCreate(): Promise<void> {
 
   await createRouteSection(props.routeId, form.value);
 
-  if (!isError.value) {
+  if (!httpError.value) {
     emit('create:route-section:success');
   }
 }

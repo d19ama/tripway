@@ -23,7 +23,7 @@ import { useNavigation } from '@/modules/navigation';
 
 const {
   routes,
-  isError,
+  httpError,
   readRoutes,
 } = useRoutes();
 
@@ -125,7 +125,7 @@ onMounted(async () => {
   />
 
   <UnknownHttpErrorModal
-    v-model:visible="isError"
+    v-model:visible="httpError"
   />
 </template>
 

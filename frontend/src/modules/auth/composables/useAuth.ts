@@ -1,41 +1,41 @@
-import {
-  type Ref,
-  ref,
-} from 'vue';
-import type { LoginRequestDto } from '../types';
-import { useHttpService } from '@/modules/http';
+import type {
+  LoginRequestDto,
+  LoginResponseDto,
+} from '../types';
+import { useToken } from '@/modules/auth/composables/useToken';
+import type { HttpStates } from '@/modules/http/types';
+import { useApi } from '@/modules/http/composables';
 
-interface UseAuthReturn {
-  isError: Ref<boolean>;
-  isLoading: Ref<boolean>;
+interface UseAuthReturn extends HttpStates {
   login: (body: LoginRequestDto) => Promise<void>;
 }
 
 export function useAuth(): UseAuthReturn {
   const {
-    fetch,
-  } = useHttpService();
+    setToken,
+  } = useToken();
 
-  const isError = ref<boolean>(false);
-  const isLoading = ref<boolean>(false);
+  const {
+    httpError,
+    httpLoading,
+    callApi,
+  } = useApi();
 
   async function login(body: LoginRequestDto): Promise<void> {
-    isLoading.value = true;
+    const data: LoginResponseDto | undefined = await callApi<LoginResponseDto>(
+      'post',
+      '/auth/login',
+      body,
+    );
 
-    const {
-      error,
-    } = await fetch('/auth/login').post(body).json();
-
-    isLoading.value = false;
-
-    if (error.value) {
-      isError.value = true;
+    if (data) {
+      setToken(data.token);
     }
   }
 
   return {
-    isError,
-    isLoading,
+    httpError,
+    httpLoading,
     login,
   };
 }

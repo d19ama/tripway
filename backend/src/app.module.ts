@@ -2,6 +2,8 @@ import * as process from 'node:process';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from './modules/auth/auth.module';
 import { RoutesModule } from './modules/routes/routes.module';
 import { RoutesSectionsModule } from './modules/route-sections/route-sections.module';
@@ -12,6 +14,7 @@ import { CreateRouteSectionSubscriber } from './modules/route-sections/subscribe
 import { RouteEntity } from './modules/routes/entities';
 import { RouteSectionEntity } from './modules/route-sections/entities';
 import { UserEntity } from './modules/users/entities';
+import { AuthGuard } from './guards';
 
 @Module({
   imports: [
@@ -21,6 +24,13 @@ import { UserEntity } from './modules/users/entities';
         '.env.local',
         '.env',
       ],
+    }),
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET_KEY,
+      signOptions: {
+        expiresIn: process.env.JWT_EXPIRES_IN,
+      },
     }),
     TypeOrmModule.forRoot({
       type: process.env.DATABASE_TYPE as any,
@@ -51,6 +61,11 @@ import { UserEntity } from './modules/users/entities';
     AuthModule,
     RegistrationModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AppModule {}

@@ -6,11 +6,12 @@ import {
 } from 'vue';
 import type { RouteEntity } from '../';
 import { DEFAULT_ROUTE } from '../constants';
-import { useHttpService } from '@/modules/http';
+import {
+  type HttpStates,
+  useApi,
+} from '@/modules/http';
 
-interface UseRoutesReturn {
-  isError: Ref<boolean>;
-  isLoading: Ref<boolean>;
+interface UseRoutesReturn extends HttpStates {
   activeRoute: Ref<RouteEntity | undefined>;
   routes: WritableComputedRef<RouteEntity[]>;
   readRoutes: () => Promise<void>;
@@ -24,11 +25,10 @@ const _routes = ref<RouteEntity[]>([]);
 
 export function useRoutes(): UseRoutesReturn {
   const {
-    fetch,
-  } = useHttpService();
-
-  const isError = ref<boolean>(false);
-  const isLoading = ref<boolean>(false);
+    httpError,
+    httpLoading,
+    callApi,
+  } = useApi();
 
   const activeRoute = ref<RouteEntity | undefined>();
 
@@ -42,68 +42,36 @@ export function useRoutes(): UseRoutesReturn {
   });
 
   async function readRoutes(): Promise<void> {
-    isLoading.value = true;
+    const data: RouteEntity[] | undefined = await callApi<RouteEntity[]>('get', '/routes');
 
-    const {
-      data,
-      error,
-    } = await fetch<RouteEntity[]>('/routes').get().json();
-
-    isLoading.value = false;
-
-    if (error.value) {
-      isError.value = true;
-      return;
-    }
-
-    if (data.value) {
-      _routes.value = data.value;
+    if (data) {
+      _routes.value = data;
     }
   }
 
   async function createRoute(name: RouteEntity['name']): Promise<RouteEntity['id'] | undefined> {
-    isLoading.value = true;
+    const data: RouteEntity | undefined = await callApi<RouteEntity>(
+      'post',
+      '/routes',
+      {
+        ...DEFAULT_ROUTE,
+        name,
+      },
+    );
 
-    const {
-      data,
-      error,
-    } = await fetch<RouteEntity>('/routes').post({
-      ...DEFAULT_ROUTE,
-      name,
-    }).json();
-
-    isLoading.value = false;
-
-    if (error.value) {
-      isError.value = true;
-      return;
-    }
-
-    if (data.value) {
-      return data.value.id;
+    if (data) {
+      return data.id;
     }
   }
 
   async function readRoute(id: RouteEntity['id']): Promise<void> {
-    isLoading.value = true;
+    const data: RouteEntity | undefined = await callApi<RouteEntity>('get', `/routes/${id}`);
 
-    const {
-      data,
-      error,
-    } = await fetch<RouteEntity>(`/routes/${id}`).get().json();
-
-    isLoading.value = false;
-
-    if (error.value) {
-      isError.value = true;
-      return;
-    }
-
-    if (data.value) {
-      activeRoute.value = data.value;
+    if (data) {
+      activeRoute.value = data;
       _routes.value = [
         {
-          ...data.value,
+          ...data,
           opened: true,
         },
       ];
@@ -111,37 +79,21 @@ export function useRoutes(): UseRoutesReturn {
   }
 
   async function updateRoute(id: RouteEntity['id'], route: Partial<RouteEntity>): Promise<void> {
-    isLoading.value = true;
-
-    const {
-      error,
-    } = await fetch<void>(`/routes/${id}`).patch(route);
-
-    isLoading.value = false;
-
-    if (error.value) {
-      isError.value = true;
-    }
+    await callApi<void>(
+      'patch',
+      `/routes/${id}`,
+      route,
+    );
   }
 
   async function deleteRoute(id: RouteEntity['id']): Promise<void> {
-    isLoading.value = true;
-
-    const {
-      error,
-    } = await fetch<void>(`/routes/${id}`).delete();
-
-    isLoading.value = false;
-
-    if (error.value) {
-      isError.value = true;
-    }
+    await callApi<void>('delete', `/routes/${id}`);
   }
 
   return {
     routes,
-    isError,
-    isLoading,
+    httpError,
+    httpLoading,
     activeRoute,
     readRoute,
     readRoutes,

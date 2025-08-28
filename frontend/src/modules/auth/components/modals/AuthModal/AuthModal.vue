@@ -38,7 +38,7 @@ const visible = defineModel<boolean>('visible', {
 });
 
 const {
-  isError,
+  httpError,
   login,
 } = useAuth();
 
@@ -68,7 +68,7 @@ const validation = useVuelidate<LoginRequestDto>(rules, form);
 async function onAuth(): Promise<void> {
   await showUntil(login(form.value));
 
-  if (!isError.value) {
+  if (!httpError.value) {
     visible.value = false;
     emit('auth:success', form.value.email);
   }
@@ -136,6 +136,6 @@ watch(visible, () => {
   </AppModal>
 
   <UnknownHttpErrorModal
-    v-model:visible="isError"
+    v-model:visible="httpError"
   />
 </template>

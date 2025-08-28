@@ -29,7 +29,7 @@ const visible = defineModel<boolean>('visible', {
 });
 
 const {
-  isError,
+  httpError,
   register,
 } = useRegistration();
 
@@ -50,7 +50,7 @@ const validation = useVuelidate<RegistrationRequestDto>(rules, form);
 async function onRegistration(): Promise<void> {
   await showUntil(register(form.value));
 
-  if (!isError.value) {
+  if (!httpError.value) {
     visible.value = false;
     emit('registration:success');
   }
