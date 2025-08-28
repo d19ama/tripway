@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -31,6 +33,7 @@ export class RoutesController {
   ) {}
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Получение всех маршрутов',
     operationId: 'readRoutes',
@@ -40,6 +43,7 @@ export class RoutesController {
   }
 
   @Post()
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Создание нового маршрута',
     operationId: 'createRoute',
@@ -51,6 +55,7 @@ export class RoutesController {
   }
 
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Получение маршрута по id',
     operationId: 'readRoute',
@@ -62,6 +67,7 @@ export class RoutesController {
   }
 
   @Patch(':id')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Обновление маршрута по id',
     operationId: 'updateRoute',
@@ -74,6 +80,7 @@ export class RoutesController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Удаление маршрута по id',
     operationId: 'deleteRoute',

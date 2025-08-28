@@ -12,7 +12,6 @@ import { AppLink } from '@/common/components';
 import {
   AuthModal,
   useAuth,
-  useToken,
 } from '@/modules/auth';
 import { RegistrationModal } from '@/modules/registration';
 import { RouteNames } from '@/app/router/route-names';
@@ -25,11 +24,8 @@ import { usePageLoadingIndicator } from '@/common/composables';
 const router = useRouter();
 
 const {
-  isAuthenticated,
-} = useToken();
-
-const {
   logout,
+  authenticate,
 } = useAuth();
 
 const {
@@ -109,9 +105,7 @@ onClickOutside(menuRef, () => {
 });
 
 onMounted(async () => {
-  if (isAuthenticated.value) {
-    await showUntil(readUser('mr.anpilov@vk.com'));
-  }
+  await showUntil(authenticate());
 });
 </script>
 

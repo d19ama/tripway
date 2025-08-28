@@ -1,11 +1,14 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
+  Req,
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
+import { Request } from 'express';
 import { Public } from '../../decorators';
 import { AuthService } from './auth.service';
 
@@ -30,5 +33,15 @@ export class AuthController {
   })
   login(@Body() body: LoginRequestDto): Promise<LoginResponseDto> {
     return this.authService.login(body);
+  }
+
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Аутентификация',
+    operationId: 'authenticate',
+  })
+  async authenticate(@Req() request: Request) {
+    return request.user;
   }
 }
