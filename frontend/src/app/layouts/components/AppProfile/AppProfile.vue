@@ -3,8 +3,10 @@ import {
   computed,
   onMounted,
   ref,
+  useTemplateRef,
 } from 'vue';
 import { useRouter } from 'vue-router';
+import { onClickOutside } from '@vueuse/core';
 import type { HTMLElementClass } from '@/common/types';
 import { AppLink } from '@/common/components';
 import { AuthModal } from '@/modules/auth';
@@ -30,6 +32,8 @@ const {
 const isMenuVisible = ref<boolean>(false);
 const isAuthModalVisible = ref<boolean>(false);
 const isRegistrationModalVisible = ref<boolean>(false);
+
+const menuRef = useTemplateRef<HTMLElement>('menuRef');
 
 const isAuthorized = computed<boolean>(() => {
   return user.value !== undefined;
@@ -88,6 +92,10 @@ function openProfile(): void {
   });
 }
 
+onClickOutside(menuRef, () => {
+  isMenuVisible.value = false;
+});
+
 onMounted(async () => {
   await showUntil(readUser('mr.anpilov@vk.com'));
 });
@@ -124,21 +132,19 @@ onMounted(async () => {
     </div>
     <div
       v-if="isAuthorized && isMenuVisible"
+      ref="menuRef"
       class="app-profile__menu"
     >
-      <div class="app-profile__menu-item">
-        <AppLink
-          :underline="false"
-          target="_self"
-          @click.prevent="openProfile"
-        >
-          Профиль
-        </AppLink>
+      <div
+        class="app-profile__menu-item"
+        @click="openProfile"
+      >
+        <span class="icon icon-profile" />
+        Профиль
       </div>
       <div class="app-profile__menu-item">
-        <AppLink :underline="false">
-          Выйти
-        </AppLink>
+        <span class="icon icon-exit" />
+        Выйти
       </div>
     </div>
 
@@ -203,15 +209,21 @@ onMounted(async () => {
     z-index: 80;
     border-radius: .25rem;
     background-color: var(--color-white);
-    text-align: right;
   }
 
   &__menu-item {
-    padding: .5rem;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: .5rem;
+    padding: .75rem;
     font-size: .75rem;
     user-select: none;
+    cursor: pointer;
 
     &:hover {
+      color: var(--color-red);
       background-color: var(--color-gray-lite);
     }
   }
