@@ -4,16 +4,31 @@ import {
   type useFetch,
 } from '@vueuse/core';
 
+interface UseHttpServiceArgs {
+  baseUrl?: string;
+  options?: UseFetchOptions;
+  fetchOptions?: RequestInit;
+}
+
 interface UseHttpServiceReturn {
   fetch: typeof useFetch;
 }
 
-export function useHttpService(options?: UseFetchOptions): UseHttpServiceReturn {
+const DEFAULT_ARGS: UseHttpServiceArgs = {
+  baseUrl: import.meta.env.VITE_API_BASE_URL,
+};
+
+export function useHttpService({
+  baseUrl,
+  options,
+  fetchOptions,
+}: UseHttpServiceArgs = DEFAULT_ARGS): UseHttpServiceReturn {
   const fetch: typeof useFetch = createFetch({
-    baseUrl: import.meta.env.VITE_API_BASE_URL,
+    baseUrl,
     combination: 'chain',
     fetchOptions: {
       mode: 'cors',
+      ...fetchOptions,
     },
     options,
   });
