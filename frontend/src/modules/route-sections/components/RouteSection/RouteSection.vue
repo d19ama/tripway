@@ -16,9 +16,12 @@ import {
   iconCar,
   iconTrain,
 } from '@/app/assets/images/icons';
+import type { HTMLElementClass } from '@/common/types';
 
 interface Props {
   data: RouteSectionEntity;
+  isLast: boolean;
+  isFirst: boolean;
 }
 
 const props = defineProps<Props>();
@@ -36,6 +39,13 @@ const transport = computed<string | undefined>(() => {
   return resolver[props.data.transportType!];
 });
 
+const elementClass = computed<HTMLElementClass>(() => {
+  return {
+    'route-section--last': props.isLast,
+    'route-section--first': props.isFirst,
+  };
+});
+
 function price(value: string | undefined): string {
   return value
     ? currency(+value)
@@ -44,7 +54,10 @@ function price(value: string | undefined): string {
 </script>
 
 <template>
-  <div class="route-section">
+  <div
+    class="route-section"
+    :class="elementClass"
+  >
     <div class="route-section__inner">
       <div class="route-section__info">
         <div class="route-section__date">
@@ -103,10 +116,35 @@ function price(value: string | undefined): string {
   justify-content: flex-start;
   flex-grow: 1;
   min-width: 20%;
-  max-width: calc(100%/3);
+  max-width: 25%;
   height: 10rem;
   position: relative;
   cursor: pointer;
+
+  @include breakpoint(xl) {
+    min-width: 20%;
+    max-width: 25%;
+  }
+
+  @include breakpoint(lg) {
+    min-width: calc(100% / 3);
+    max-width: 50%;
+  }
+
+  @include breakpoint(md) {
+    min-width: calc(100% / 3);
+    max-width: 50%;
+  }
+
+  @include breakpoint(sm) {
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  @include breakpoint(xs) {
+    min-width: 100%;
+    max-width: 100%;
+  }
 
   &:before {
     content: '';
@@ -120,8 +158,6 @@ function price(value: string | undefined): string {
     left: -2rem;
     z-index: 1;
     background-color: var(--color-gray-lite);
-    // TODO тень накладывается на линию маршрутов, подумать
-    //box-shadow: $box-shadow;
   }
 
   &:after {
@@ -140,14 +176,35 @@ function price(value: string | undefined): string {
     transition: border-color var(--transition);
   }
 
-  &:last-of-type:before {
-    width: 100%;
+  &--first {
+    &:before {
+      width: 100%;
+
+      @include breakpoint(sm) {
+        width: calc(100% + 4rem);
+      }
+    }
   }
 
-  &:last-of-type:after {
-    position: absolute;
-    right: 34px;
-    transform: rotate(180deg);
+  &--last {
+    &:before {
+      width: calc(100% + 2rem);
+
+      @include breakpoint(sm) {
+        width: calc(100% + 4rem);
+      }
+    }
+
+    &:after {
+      position: absolute;
+      right: 34px;
+      transform: rotate(180deg);
+
+      @include breakpoint(sm) {
+        position: static;
+        transform: none;
+      }
+    }
   }
 
   &__inner {
