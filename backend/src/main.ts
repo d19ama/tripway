@@ -64,6 +64,12 @@ async function bootstrap(): Promise<void> {
   app.useGlobalPipes(validation);
   app.getHttpAdapter().getInstance().disable('x-powered-by').set('etag', false);
 
+  // app.use(session({
+  //   secret: 'my-secret',
+  //   resave: false,
+  //   saveUninitialized: false,
+  // }));
+
   app.use(cookieParser());
 
   await app.listen(configService.get('PORT', process.env.PORT));

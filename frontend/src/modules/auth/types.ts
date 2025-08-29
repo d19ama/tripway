@@ -5,3 +5,7 @@ export type AuthToken = string;
 export type LoginRequestDto = components['schemas']['LoginRequestDto'];
 
 export type LoginResponseDto = components['schemas']['LoginResponseDto'];
+
+export interface AuthenticationResponse {
+  email: string;
+}

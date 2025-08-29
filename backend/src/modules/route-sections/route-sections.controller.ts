@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
 } from '@nestjs/common';
@@ -21,6 +23,7 @@ export class RouteSectionsController {
   ) {}
 
   @Get(':routeId')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Получение всех секций маршрута',
     operationId: 'readAllRouteSections',
@@ -32,6 +35,7 @@ export class RouteSectionsController {
   }
 
   @Post()
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Создание нового маршрута',
     operationId: 'createRouteSection',

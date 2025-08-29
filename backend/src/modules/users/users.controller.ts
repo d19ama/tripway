@@ -1,6 +1,8 @@
 import {
   Body,
   Controller,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
 } from '@nestjs/common';
@@ -19,6 +21,7 @@ export class UsersController {
 
   @Public()
   @Post()
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Получение пользователя',
     operationId: 'readUser',
@@ -29,6 +32,7 @@ export class UsersController {
 
   @Public()
   @Post()
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Создание пользователя',
     operationId: 'createUser',

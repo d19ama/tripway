@@ -10,6 +10,7 @@ declare module 'vue-router' {
   interface RouteMeta {
     title: string;
     backgroundImage?: boolean;
+    auth?: 'public' | 'private';
     layout?: ComponentInstance<any>;
   }
 }
@@ -26,6 +27,10 @@ router.beforeEach((to) => {
 
   if (to.meta.backgroundImage === undefined) {
     to.meta.backgroundImage = true;
+  }
+
+  if (to.meta.auth === undefined) {
+    to.meta.auth = 'private';
   }
 });
 

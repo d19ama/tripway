@@ -1,5 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router';
 import { Routes } from '../layouts';
+import { isAuthenticated } from './guards';
 import { RouteNames } from '@/app/router/route-names';
 
 export const routes: RouteRecordRaw[] = [
@@ -9,6 +10,7 @@ export const routes: RouteRecordRaw[] = [
     component: () => import('@/pages/index.vue'),
     meta: {
       title: 'Home',
+      auth: 'public',
     },
   },
   {
@@ -19,6 +21,9 @@ export const routes: RouteRecordRaw[] = [
       title: 'Profile',
       backgroundImage: false,
     },
+    beforeEnter: [
+      isAuthenticated(),
+    ],
   },
   {
     path: '/routes',
@@ -31,6 +36,9 @@ export const routes: RouteRecordRaw[] = [
     redirect: {
       name: RouteNames.RoutesList,
     },
+    beforeEnter: [
+      isAuthenticated(),
+    ],
     children: [
       {
         path: 'list',
