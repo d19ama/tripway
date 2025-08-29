@@ -35,7 +35,7 @@ const props = withDefaults(defineProps<Props>(), {
   text-shadow: $shadow;
   cursor: pointer;
 
-  @include breakpoint(mobile) {
+  @include breakpoint(sm) {
     width: 100%;
   }
 }

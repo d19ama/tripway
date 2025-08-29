@@ -7,11 +7,11 @@ html {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
 
-  @include breakpoint(tablet) {
+  @include breakpoint(md) {
     font-size: 14px;
   }
 
-  @include breakpoint(v-mobile) {
+  @include breakpoint(xs) {
     font-size: 10px;
   }
 }

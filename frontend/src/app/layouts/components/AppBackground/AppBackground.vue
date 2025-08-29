@@ -69,7 +69,7 @@ function getRandomInt(min: number, max: number): number {
 
   &__parent {
 
-    @include breakpoint(tablet) {
+    @include breakpoint(md) {
       height: 100%;
     }
   }
