@@ -51,9 +51,9 @@ async function closeModal(): Promise<void> {
   <AppModal
     v-model:visible="visible"
     size="s"
-    title="Удалить маршрут"
+    title="Удалить путешествие"
   >
-    Вы уверены что хотите удалить маршрут?
+    Вы уверены что хотите удалить путешествие?
 
     <template #footer="{ close }">
       <AppModalActions>

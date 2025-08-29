@@ -23,14 +23,14 @@ interface UseRoutesReturn extends HttpStates {
 
 const _routes = ref<RouteEntity[]>([]);
 
+const activeRoute = ref<RouteEntity | undefined>();
+
 export function useRoutes(): UseRoutesReturn {
   const {
     httpError,
     httpLoading,
     callApi,
   } = useApi();
-
-  const activeRoute = ref<RouteEntity | undefined>();
 
   const routes = computed<RouteEntity[]>({
     get() {

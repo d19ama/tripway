@@ -9,7 +9,8 @@ export const routes: RouteRecordRaw[] = [
     name: RouteNames.Home,
     component: () => import('@/pages/index.vue'),
     meta: {
-      title: 'Home',
+      title: 'Главная страница',
+      menuLabel: 'Главная',
       auth: 'public',
     },
   },
@@ -18,7 +19,8 @@ export const routes: RouteRecordRaw[] = [
     name: RouteNames.Profile,
     component: () => import('@/pages/profile/index.vue'),
     meta: {
-      title: 'Profile',
+      title: 'Страница профиля',
+      menuLabel: 'Профиль',
       backgroundImage: false,
     },
     beforeEnter: [
@@ -30,7 +32,8 @@ export const routes: RouteRecordRaw[] = [
     name: RouteNames.Routes,
     component: () => import('@/pages/routes/index.vue'),
     meta: {
-      title: 'Routes',
+      title: 'Мои путешествия',
+      menuLabel: 'Мои путешествия',
       layout: Routes,
     },
     redirect: {
@@ -45,7 +48,8 @@ export const routes: RouteRecordRaw[] = [
         name: RouteNames.RoutesList,
         component: () => import('@/pages/routes/list.vue'),
         meta: {
-          title: 'Route page',
+          title: 'Мои путешествия',
+          menuLabel: 'Мои путешествия',
         },
       },
       {
@@ -53,7 +57,8 @@ export const routes: RouteRecordRaw[] = [
         name: RouteNames.RoutePage,
         component: () => import('@/pages/routes/[id].vue'),
         meta: {
-          title: 'Route page',
+          title: 'Просмотр маршрута путешествия',
+          menuLabel: 'Просмотр маршрута путешествия',
         },
       },
     ],

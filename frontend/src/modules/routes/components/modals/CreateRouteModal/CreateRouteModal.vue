@@ -85,14 +85,14 @@ watch(visible, () => {
 <template>
   <AppModal
     v-model:visible="visible"
-    title="Создать маршрут"
+    title="Создать новое путешествие!"
   >
     <p class="margin-bottom--xs">
-      Укажите название нового маршрута
+      Укажите название нового путешествия :)
     </p>
     <AppInput
       v-model:value="form.name"
-      label="Название маршрута"
+      label="Название путешествия"
       placeholder="Введите название"
       :hint="hint"
       :validation="validation.name"

@@ -9,6 +9,7 @@ import { routes } from './routes';
 declare module 'vue-router' {
   interface RouteMeta {
     title: string;
+    menuLabel: string;
     backgroundImage?: boolean;
     auth?: 'public' | 'private';
     layout?: ComponentInstance<any>;
