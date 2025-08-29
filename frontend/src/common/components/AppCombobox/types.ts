@@ -11,6 +11,7 @@ export interface AppComboboxProps {
   errorText?: string;
   maxLength?: string;
   placeholder?: string;
+  searchError?: boolean;
   validation?: BaseValidation;
 }
 
