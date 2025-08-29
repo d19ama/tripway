@@ -8,6 +8,7 @@ import {
   type ValidationArgs,
   useVuelidate,
 } from '@vuelidate/core';
+import { useDebounceFn } from '@vueuse/core';
 import { useRouteSection } from '../../../composables';
 import {
   DEFAULT_ROUTE_SECTION,
@@ -21,6 +22,7 @@ import type { RouteEntity } from '@/modules/routes';
 import {
   AppButton,
   AppCheckbox,
+  AppCombobox,
   AppDatePicker,
   AppDivider,
   AppInput,
@@ -37,6 +39,7 @@ import {
 } from '@/common/validators';
 import { dayjs } from '@/app/plugins/dayjs';
 import type { AppInputMaskParams } from '@/common/components/AppInput/types';
+import { useGeo } from '@/modules/geo';
 
 interface Props {
   routeId: RouteEntity['id'];
@@ -62,6 +65,15 @@ const {
   createRouteSection,
 } = useRouteSection();
 
+const {
+  httpError: geoHttpError,
+  httpLoading,
+  cities,
+  countries,
+  getCity,
+  getCountry,
+} = useGeo();
+
 const visible = defineModel<boolean>('visible', {
   required: false,
   default: false,
@@ -73,6 +85,17 @@ const form = ref<RouteSectionEntity>({
 
 const isMovingCostUnknown = ref<boolean>(false);
 const isStayingCostUnknown = ref<boolean>(false);
+
+const city = ref<string>('');
+const country = ref<string>('');
+
+const updateCountry = useDebounceFn(async (country: string) => {
+  await getCountry(country);
+}, 1000);
+
+const updateCity = useDebounceFn(async (city: string, country: string) => {
+  await getCity(city, country);
+}, 1000);
 
 const transportTypeOptions = ref<AppSelectOption<TransportType>[]>([
   {
@@ -136,6 +159,28 @@ const rules = computed<ValidationArgs>(() => {
 
 const validation = useVuelidate<RouteSectionEntity>(rules, form);
 
+const citiesOptions = computed<AppSelectOption[]>(() => {
+  return cities.value.map((item) => {
+    return {
+      id: item.place_id,
+      text: item.name,
+      selected: false,
+      disabled: false,
+    };
+  });
+});
+
+const countriesOptions = computed<AppSelectOption[]>(() => {
+  return countries.value.map((item) => {
+    return {
+      id: item.place_id,
+      text: item.name,
+      selected: false,
+      disabled: false,
+    };
+  });
+});
+
 const minDepartureDate = computed<string>(() => {
   return dayjs().format();
 });
@@ -161,6 +206,14 @@ watch(visible, () => {
     ...DEFAULT_ROUTE_SECTION,
   };
 });
+
+watch(country, async (value) => {
+  await updateCountry(value);
+});
+
+watch(city, async (city) => {
+  await updateCity(city, country.value);
+});
 </script>
 
 <template>
@@ -176,22 +229,31 @@ watch(visible, () => {
         </AppTitle>
       </div>
       <div class="col-default-6">
-        <AppInput
-          v-model:value.trim="form.destinationCountry"
+        <AppCombobox
+          v-model:selected="form.destinationCountry"
+          v-model:search="country"
+          :loading="httpLoading"
+          :search-error="geoHttpError"
+          :options="countriesOptions"
+          :validation="validation.destinationCountry"
           label="Страна"
           placeholder="Введите страну назначения"
           hint="Прим. Великобритания"
-          :validation="validation.destinationCountry"
           required
         />
       </div>
       <div class="col-default-6">
-        <AppInput
-          v-model:value.trim="form.destinationCity"
+        <AppCombobox
+          v-model:selected="form.destinationCity"
+          v-model:search="city"
+          :loading="httpLoading"
+          :search-error="geoHttpError"
+          :disabled="!form.destinationCountry"
+          :options="citiesOptions"
+          :validation="validation.destinationCity"
           label="Город"
           placeholder="Введите город назначения"
           hint="Прим. Лондон"
-          :validation="validation.destinationCity"
           required
         />
       </div>

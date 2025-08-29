@@ -2,79 +2,84 @@ import {
   type Ref,
   ref,
 } from 'vue';
-import type { GEO_ISO2 } from '../types';
+import axios, { type AxiosInstance } from 'axios';
 import type { HttpStates } from '@/modules/http/types';
-import { useApi } from '@/modules/http/composables';
 
 interface UseGeoReturn extends HttpStates {
-  country: Ref<object>;
-  countries: Ref<object[]>;
-  getCountry: (iso2: GEO_ISO2) => Promise<void>;
-  getCountries: () => Promise<void>;
-  getCities: (iso2: GEO_ISO2) => Promise<void>;
+  cities: Ref<any[]>;
+  countries: Ref<any[]>;
+  getCountry: (country: string) => Promise<void>;
+  getCity: (city: string, country: string) => Promise<void>;
 }
 
+const COMMON_PARAMS = {
+  'format': 'json',
+  'accept-language': 'ru',
+};
+
 export function useGeo(): UseGeoReturn {
-  const config = {
+  const httpError = ref<boolean>(false);
+  const httpLoading = ref<boolean>(false);
+
+  const api: AxiosInstance = axios.create({
+    baseURL: 'https://nominatim.openstreetmap.org',
     headers: {
-      'X-CSCAPI-KEY': import.meta.env.VITE_GEO_API_KEY,
+      'Content-Type': 'application/json',
     },
-  };
-
-  const {
-    httpError,
-    httpLoading,
-    callApi,
-  } = useApi();
-
-  const country = ref<any>({});
-  const countries = ref<any[]>([]);
+  });
 
   const cities = ref<any[]>([]);
+  const countries = ref<any[]>([]);
 
-  async function getCountries(): Promise<void> {
-    const data: any[] | undefined = await callApi<any[]>(
-      'get',
-      '/countries',
-      config,
-    );
+  async function getCountry(country: string): Promise<void> {
+    try {
+      httpLoading.value = true;
+      httpError.value = false;
 
-    if (data) {
-      countries.value = data;
+      const response = await api.get<any>('search', {
+        params: {
+          ...COMMON_PARAMS,
+          country,
+          featureType: 'country',
+        },
+      });
+
+      countries.value = response.data;
+    } catch (err: any) {
+      httpError.value = true;
+    } finally {
+      httpLoading.value = false;
     }
   }
 
-  async function getCountry(iso2: GEO_ISO2): Promise<void> {
-    const data: any | undefined = await callApi<any>(
-      'get',
-      `/countries/${iso2}`,
-      config,
-    );
+  async function getCity(city: string, country: string): Promise<void> {
+    try {
+      httpLoading.value = true;
+      httpError.value = false;
 
-    if (data) {
-      country.value = data;
-    }
-  }
+      const response = await api.get<any>('search', {
+        params: {
+          ...COMMON_PARAMS,
+          city,
+          country,
+          featureType: 'city',
+        },
+      });
 
-  async function getCities(iso2: GEO_ISO2): Promise<void> {
-    const data: any | undefined = await callApi(
-      'get',
-      `/countries/${iso2}/cities`,
-      config,
-    );
-
-    if (data) {
-      cities.value = data;
+      cities.value = response.data;
+    } catch (err: any) {
+      httpError.value = true;
+    } finally {
+      httpLoading.value = false;
     }
   }
 
   return {
     httpError,
     httpLoading,
-    country,
+    cities,
     countries,
+    getCity,
     getCountry,
-    getCountries,
-    getCities,
   };
 }

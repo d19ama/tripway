@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import {
   computed,
-  onMounted,
   ref,
   watch,
 } from 'vue';
+import { onClickOutside } from '@vueuse/core';
 import type {
   AppComboboxOption,
   AppComboboxProps,
@@ -22,6 +22,7 @@ const props = withDefaults(defineProps<AppComboboxProps>(), {
   multiple: false,
   disabled: false,
   required: false,
+  searchError: false,
 });
 
 const slots = defineSlots<AppComboboxSlots>();
@@ -36,7 +37,11 @@ const options = defineModel<AppComboboxOption[]>('options', {
   default: () => [],
 });
 
-const search = ref<string>('');
+const search = defineModel('search', {
+  required: false,
+  default: '',
+});
+
 const focus = ref<boolean>(false);
 const error = ref<boolean>(false);
 const opened = ref<boolean>(false);
@@ -102,23 +107,14 @@ const hasOptions = computed<boolean>(() => {
   return !props.loading && localOptions.value.length > 0;
 });
 
-onMounted(() => {
-  document.addEventListener('click', hideDropdown);
+onClickOutside(selectRef, () => {
+  focus.value = false;
+  opened.value = false;
+
+  if (!selected.value) {
+    search.value = '';
+  }
 });
-
-function hideDropdown(event: MouseEvent): void {
-  if (!selectRef.value) {
-    return;
-  }
-
-  const select = selectRef.value as HTMLElement;
-  const isOutside: boolean = select !== event.target && !select.contains(event.target as Node);
-
-  if (isOutside) {
-    opened.value = false;
-    focus.value = false;
-  }
-}
 
 function changeSelected(option: AppComboboxOption): void {
   localOptions.value = localOptions.value.map((item) => {
@@ -127,6 +123,7 @@ function changeSelected(option: AppComboboxOption): void {
       selected: item.id === option.id,
     };
   });
+
   selected.value = option.text;
   search.value = option.text;
   opened.value = false;
@@ -195,41 +192,41 @@ watch(focus, (value) => {
         :maxlength="props.maxLength"
       >
       <span class="app-combobox__arrow" />
-    </div>
-    <div
-      v-if="isDropdownVisible"
-      class="app-combobox__dropdown"
-    >
-      <ul
-        v-if="hasOptions"
-        class="app-combobox__options"
-      >
-        <li
-          v-for="item in localOptions"
-          :key="item.id"
-          class="app-combobox__option"
-          :class="optionClass(item)"
-          @click="changeSelected(item)"
-        >
-          <slot
-            :name="`checkbox-${String(item.id)}`"
-            :text="item.text"
-          >
-            {{ item.text }}
-          </slot>
-        </li>
-      </ul>
-      <AppSpinner
-        v-else-if="props.loading"
-        :active="props.loading"
-        class="app-combobox__loading"
-        auto-width
-      />
       <div
-        v-else
-        class="app-combobox__empty"
+        v-if="isDropdownVisible"
+        class="app-combobox__dropdown"
       >
-        Не удалось загрузить данные.<br>Проверьте подключение к интернету и попробуйте еще раз.
+        <ul
+          v-if="hasOptions"
+          class="app-combobox__options"
+        >
+          <li
+            v-for="item in localOptions"
+            :key="item.id"
+            class="app-combobox__option"
+            :class="optionClass(item)"
+            @click="changeSelected(item)"
+          >
+            <slot
+              :name="`checkbox-${String(item.id)}`"
+              :text="item.text"
+            >
+              {{ item.text }}
+            </slot>
+          </li>
+        </ul>
+        <AppSpinner
+          v-else-if="props.loading"
+          :active="props.loading"
+          class="app-combobox__loading"
+          auto-width
+        />
+        <div
+          v-else-if="props.searchError"
+          class="app-combobox__empty"
+        >
+          Не удалось загрузить данные.<br>Проверьте подключение к интернету и попробуйте еще раз.
+        </div>
       </div>
     </div>
     <span
@@ -279,7 +276,6 @@ watch(focus, (value) => {
 
   &__container {
     width: 100%;
-    overflow: hidden;
     position: relative;
     border-radius: .5rem;
     background-color: var(--color-gray-lite);
@@ -421,7 +417,7 @@ watch(focus, (value) => {
     width: calc(100% + 2px);
     overflow: auto;
     position: absolute;
-    top: calc(100% + .5rem);
+    top: calc(100% + .25rem);
     left: -1px;
     z-index: 10;
     border-radius: .5rem;
@@ -481,6 +477,8 @@ watch(focus, (value) => {
   }
 
   &__loading {
+    display: flex;
+    align-self: center;
     width: 2rem;
     height: 2rem;
     margin: 1rem auto;
