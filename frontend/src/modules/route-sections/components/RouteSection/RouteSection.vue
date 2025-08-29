@@ -122,8 +122,8 @@ function price(value: string | undefined): string {
   cursor: pointer;
 
   @include breakpoint(xl) {
-    min-width: 20%;
-    max-width: 25%;
+    min-width: 25%;
+    max-width: calc(100% / 3);
   }
 
   @include breakpoint(lg) {
