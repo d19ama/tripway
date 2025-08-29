@@ -28,11 +28,11 @@
   --color-yellow-dark: #{$yellow-dark};
 
   // breakpoint
-  --breakpoint-default: #{$breakpoint-default};
-  --breakpoint-desktop: #{$breakpoint-desktop};
-  --breakpoint-tablet: #{$breakpoint-tablet};
-  --breakpoint-modile: #{$breakpoint-mobile};
-  --breakpoint-v-mobile: #{$breakpoint-v-mobile};
+  --display-xl: #{$display-xl};
+  --display-lg: #{$display-lg};
+  --display-md: #{$display-md};
+  --display-sm: #{$display-sm};
+  --display-xs: #{$display-xs};
 
   // vars
   --transition: #{$transition}

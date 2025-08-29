@@ -91,7 +91,7 @@ onMounted(async () => {
           theme="yellow"
           @click="openCreateRouteModal"
         >
-          <span class="icon icon-plus" />Создать маршрут
+          <span class="icon icon-plus" />Создать новое путешествие!
         </AppButton>
         <RouteCard
           v-for="item in routes"

@@ -48,7 +48,7 @@ const elementClass = computed<HTMLElementClass>(() => {
       background-position: center;
       background-image: url('@/app/assets/images/bg.jpg');
       background-attachment: fixed;
-      filter: blur(4px);
+      filter: blur(2px);
     }
   }
 }

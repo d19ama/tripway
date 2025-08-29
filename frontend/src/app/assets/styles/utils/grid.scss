@@ -16,12 +16,12 @@
         margin-top: 0;
     }
 
-    @include breakpoint(tablet) {
+    @include breakpoint(md) {
         margin-left: -.75rem;
         margin-right: -.75rem;
     }
 
-    @include breakpoint(mobile) {
+    @include breakpoint(sm) {
         margin-left: -.5rem;
         margin-right: -.5rem;
     }
@@ -74,12 +74,12 @@
     padding-left: 0.9375rem;
     box-sizing: border-box;
 
-    @include breakpoint(tablet) {
+    @include breakpoint(md) {
         padding-left: .75rem;
         padding-right: .75rem;
     }
 
-    @include breakpoint(mobile) {
+    @include breakpoint(sm) {
         padding-left: .5rem;
         padding-right: .5rem;
     }

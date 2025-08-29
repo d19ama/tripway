@@ -98,11 +98,11 @@ watch(visible, () => {
 <template>
   <AppModal
     v-model:visible="visible"
-    title="Редактировать маршрут"
+    title="Редактировать название путешествия"
   >
     <AppInput
       v-model:value="form.name"
-      label="Название маршрута"
+      label="Название путешествия"
       placeholder="Введите название"
       :hint="hint"
       :validation="validation.name"

@@ -11,15 +11,13 @@ import { usePageLoadingIndicator } from '@/common/composables';
 import { UnknownHttpErrorModal } from '@/modules/http';
 import { RouteNames } from '@/app/router/route-names';
 import {
+  BorderCard,
   CreateRouteSectionModal,
   RouteSection,
   useRouteSection,
 } from '@/modules/route-sections';
 import { AppPage } from '@/common/components';
-import {
-  BorderCard,
-  useRoutes,
-} from '@/modules/routes';
+import { useRoutes } from '@/modules/routes';
 
 const {
   httpError: isRouteError,
@@ -51,6 +49,14 @@ function returnToList(): void {
   });
 }
 
+function isLastSection(index: number): boolean {
+  return routeSections.value.length === (index + 1);
+}
+
+function isFirstSection(index: number): boolean {
+  return index === 0;
+}
+
 onMounted(async () => {
   await showUntil(readRoute(String(route.params.id)));
   await showUntil(readRouteSections(String(route.params.id)));
@@ -63,16 +69,20 @@ onMounted(async () => {
       <div class="route-page">
         <BorderCard
           icon="icon-home"
+          class="route-page__border-left"
         />
         <template v-if="routeSections.length > 0">
           <RouteSection
-            v-for="item in routeSections"
+            v-for="(item, index) in routeSections"
             :key="item.id"
             :data="item"
+            :is-last="isLastSection(index)"
+            :is-first="isFirstSection(index)"
           />
         </template>
         <BorderCard
           icon="icon-plus"
+          class="route-page__border-right"
           @click="openCreateRouteSectionModal"
         />
       </div>
@@ -99,6 +109,14 @@ onMounted(async () => {
   align-content: flex-start;
   align-items: center;
   flex-grow: 1;
-  gap: 2rem;
+  gap: 2rem 0;
+
+  &__border-left {
+    margin-right: 2rem;
+
+    @include breakpoint(sm) {
+      margin: 0;
+    }
+  }
 }
 </style>

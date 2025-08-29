@@ -7,11 +7,11 @@ interface Navigation {
 
 export const navigation: Navigation[] = [
   {
-    label: 'home',
+    label: 'Главная',
     routeName: RouteNames.Home,
   },
   {
-    label: 'routes',
+    label: 'Путешествия',
     routeName: RouteNames.Routes,
   },
 ];

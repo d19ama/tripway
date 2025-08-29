@@ -28,7 +28,7 @@ defineSlots<AppListItemSlots>();
   line-height: 1.5;
   font-size: .875rem;
 
-  @include breakpoint(tablet) {
+  @include breakpoint(md) {
     font-size: .75rem;
   }
 

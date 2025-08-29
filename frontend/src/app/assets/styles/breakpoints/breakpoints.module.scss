@@ -1,13 +1,13 @@
-$breakpoint-default: 1600px;
-$breakpoint-desktop: 1240px;
-$breakpoint-tablet: 1024px;
-$breakpoint-mobile: 768px;
-$breakpoint-v-mobile: 480px;
+$display-xl: 1920px;
+$display-lg: 1440px;
+$display-md: 1024px;
+$display-sm: 768px;
+$display-xs: 320px;
 
 :export {
-  breakpoint-default: $breakpoint-default;
-  breakpoint-desktop: $breakpoint-desktop;
-  breakpoint-tablet: $breakpoint-tablet;
-  breakpoint-mobile: $breakpoint-mobile;
-  breakpoint-v-mobile: $breakpoint-v-mobile;
+  display-xl: $display-xl;
+  display-lg: $display-lg;
+  display-md: $display-md;
+  display-sm: $display-sm;
+  display-xs: $display-xs;
 }
