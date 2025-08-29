@@ -1,10 +1,18 @@
 <script lang="ts" setup>
 import {
   computed,
+  onMounted,
+  onUnmounted,
   ref,
+  watch,
 } from 'vue';
+import iMask, {
+  type FactoryOpts,
+  type InputMask,
+} from 'imask';
 import type {
   AppInputEmits,
+  AppInputMaskValues,
   AppInputProps,
   AppInputSlots,
 } from './types';
@@ -20,6 +28,7 @@ const props = withDefaults(defineProps<AppInputProps>(), {
   required: false,
   placeholder: '',
   position: 'left',
+  maskVisibility: 'always',
 });
 
 const emit = defineEmits<AppInputEmits>();
@@ -41,8 +50,23 @@ const [
   },
 });
 
+// Значение без маски
+const unmasked = defineModel<string>('unmasked', {
+  required: false,
+  default: '',
+});
+
+// значение по типу
+const typed = defineModel<string>('typed', {
+  required: false,
+  default: '',
+});
+
 const error = ref<boolean>(false);
 const focus = ref<boolean>(false);
+
+const inputRef = ref<HTMLInputElement | null>(null);
+const maskRef = ref<InputMask<FactoryOpts> | undefined>(undefined);
 
 const hasLabel = computed<boolean>(() => {
   return !!slots.label! || props.label;
@@ -84,6 +108,18 @@ const elementClass = computed<HTMLElementClass>(() => {
   };
 });
 
+const maskParams = computed<FactoryOpts | undefined>(() => {
+  if (props.mask) {
+    return {
+      ...props.mask,
+      lazy: props.maskVisibility === 'onFocus',
+      eager: props.maskVisibility === 'onFocus',
+    };
+  }
+
+  return undefined;
+});
+
 function onChange(): void {
   emit('change', value.value);
 }
@@ -107,6 +143,90 @@ function validate(): void {
   props.validation?.$touch();
   error.value = !!props.validation?.$error;
 }
+
+function initMask(): void {
+  if (!maskParams.value) {
+    return;
+  }
+
+  const mask: InputMask<FactoryOpts> = iMask(inputRef.value as HTMLInputElement, maskParams.value)
+    .on('accept', onMaskAccept);
+
+  maskRef.value = mask;
+
+  if (typed.value) {
+    mask.typedValue = typed.value;
+  }
+
+  if (unmasked.value) {
+    mask.unmaskedValue = unmasked.value;
+  }
+
+  onMaskAccept();
+}
+
+function updateMask(): void {
+  if (!maskParams.value) {
+    return;
+  }
+
+  maskRef.value?.updateOptions(maskParams.value);
+}
+
+function destroyMask(): void {
+  maskRef.value?.destroy();
+}
+
+function getValues(): AppInputMaskValues {
+  const typedValue = maskRef.value!.typedValue;
+  const unmaskedValue = maskRef.value!.unmaskedValue;
+  const maskedValue = maskRef.value!.value;
+
+  return {
+    typedValue,
+    unmaskedValue,
+    maskedValue,
+  };
+}
+
+function onMaskAccept(): void {
+  const {
+    typedValue,
+    maskedValue,
+    unmaskedValue,
+  }: AppInputMaskValues = getValues();
+
+  value.value = maskedValue;
+  typed.value = typedValue;
+  unmasked.value = unmaskedValue;
+}
+
+onMounted(initMask);
+onUnmounted(destroyMask);
+
+watch(unmasked, (value) => {
+  if (maskRef.value) {
+    maskRef.value.unmaskedValue = value || '';
+  }
+});
+
+watch(
+  maskParams,
+  (params) => {
+    if (params) {
+      if (!maskRef.value) {
+        initMask();
+      } else {
+        updateMask();
+      }
+    } else {
+      destroyMask();
+    }
+  },
+  {
+    deep: true,
+  },
+);
 </script>
 
 <template>
@@ -129,6 +249,7 @@ function validate(): void {
 
     <div class="app-input__wrapper">
       <input
+        ref="inputRef"
         v-model="value"
         autocomplete="off"
         class="app-input__input"

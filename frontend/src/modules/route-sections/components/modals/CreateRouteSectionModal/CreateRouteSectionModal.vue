@@ -2,6 +2,7 @@
 import {
   computed,
   ref,
+  watch,
 } from 'vue';
 import {
   type ValidationArgs,
@@ -35,6 +36,7 @@ import {
   required,
 } from '@/common/validators';
 import { dayjs } from '@/app/plugins/dayjs';
+import type { AppInputMaskParams } from '@/common/components/AppInput/types';
 
 interface Props {
   routeId: RouteEntity['id'];
@@ -47,6 +49,13 @@ interface Emits {
 const props = defineProps<Props>();
 
 const emit = defineEmits<Emits>();
+
+const COST_MASK: AppInputMaskParams = {
+  mask: Number,
+  min: 0,
+  scale: 0,
+  thousandsSeparator: ' ',
+};
 
 const {
   httpError,
@@ -146,6 +155,12 @@ async function onCreate(): Promise<void> {
     emit('create:route-section:success');
   }
 }
+
+watch(visible, () => {
+  form.value = {
+    ...DEFAULT_ROUTE_SECTION,
+  };
+});
 </script>
 
 <template>
@@ -222,8 +237,9 @@ async function onCreate(): Promise<void> {
         <AppInput
           v-model:value.trim="form.movingCost"
           :disabled="isMovingCostUnknown"
-          label="Стоимость дороги"
-          placeholder="Введите сумму"
+          label="Дорога, ₽"
+          placeholder="Сумма"
+          :mask="COST_MASK"
         />
       </div>
       <div class="col-default-3">
@@ -255,8 +271,8 @@ async function onCreate(): Promise<void> {
         <AppInput
           v-model:value.trim="form.stayingCost"
           :disabled="isStayingCostUnknown"
-          label="Стоимость проживания"
-          placeholder="Введите сумму"
+          label="Проживание, ₽"
+          placeholder="Сумма"
         />
       </div>
       <div class="col-default-3">
