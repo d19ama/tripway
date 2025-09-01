@@ -12,7 +12,7 @@ const props = withDefaults(defineProps<AppLinkProps>(), {
   text: '',
   hover: 'red',
   prevent: false,
-  underline: true,
+  underline: false,
   target: '_blank',
   theme: 'primary',
 });
@@ -78,10 +78,18 @@ function onClick(event: Event): void {
 
   &--primary {
     color: var(--color-red);
+
+    &:hover {
+      color: var(--color-blue-dark);
+    }
   }
 
   &--secondary {
     color: var(--color-gray-middle);
+
+    &:hover {
+      color: var(--color-gray-dark);
+    }
   }
 }
 </style>

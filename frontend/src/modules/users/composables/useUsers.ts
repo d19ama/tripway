@@ -11,10 +11,15 @@ import {
 
 interface UseUsersReturn extends HttpStates {
   user: ComputedRef<UserEntity | undefined>;
+  isAuthorized: ComputedRef<boolean>;
   readUser: (email: UserEntity['email']) => Promise<void>;
 }
 
 const _user = ref<UserEntity | undefined>();
+
+const isAuthorized = computed<boolean>(() => {
+  return _user.value !== undefined;
+});
 
 export function useUsers(): UseUsersReturn {
   const {
@@ -43,6 +48,7 @@ export function useUsers(): UseUsersReturn {
 
   return {
     user,
+    isAuthorized,
     httpError,
     httpLoading,
     readUser,
