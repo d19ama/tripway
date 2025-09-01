@@ -8,18 +8,11 @@ export interface AppTooltipActions {
 export interface AppTooltipProps {
   title?: string;
   visible?: boolean;
+  trigger?: Props['trigger'];
+  appendTo?: Props['appendTo'];
   placement?: Props['placement'];
+  interactive?: Props['interactive'];
 }
-
-export type AppTooltipTippyProps = Pick<
-  Props,
-  'placement'
-  | 'offset'
-  | 'interactive'
-  | 'appendTo'
-  | 'trigger'
->;
-
 export interface AppTooltipSlots {
   activator?: () => VNode[];
   default?: (scope: { close?: Function }) => VNode[];

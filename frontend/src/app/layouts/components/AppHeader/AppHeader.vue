@@ -1,19 +1,79 @@
 <script lang="ts" setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { AppLogo } from '../';
 import {
-  AppLogo,
   AppNavigation,
-} from '../';
-import { AppProfile } from '@/app/layouts';
+  AppProfile,
+} from '@/app/layouts';
+import { AuthModal } from '@/modules/auth';
+import { RegistrationModal } from '@/modules/registration';
+import {
+  type UserEntity,
+  useUsers,
+} from '@/modules/users';
+import { RouteNames } from '@/app/router/route-names';
+import { usePageLoadingIndicator } from '@/common/composables';
+
+const {
+  isAuthorized,
+  readUser,
+} = useUsers();
+
+const {
+  showUntil,
+} = usePageLoadingIndicator();
+
+const router = useRouter();
+
+const isAuthModalVisible = ref<boolean>(false);
+const isRegistrationModalVisible = ref<boolean>(false);
+
+function openAuthModal(): void {
+  isAuthModalVisible.value = true;
+}
+
+async function onAuthSuccess(email: UserEntity['email']): Promise<void> {
+  await showUntil(readUser(email));
+  await router.replace({
+    name: RouteNames.RoutesList,
+  });
+}
+
+function openRegistrationModal(): void {
+  isRegistrationModalVisible.value = true;
+}
+
+function onRegistrationSuccess(): void {
+  router.replace({
+    name: RouteNames.RoutesList,
+  });
+}
 </script>
 
 <template>
   <header class="app-header">
     <AppLogo />
-    <AppNavigation />
+
+    <div class="app-header__divider margin-left--auto" />
+    <AppNavigation
+      v-if="isAuthorized"
+    />
     <AppProfile
-      class="app-header__profile"
+      @open:auth-modal="openAuthModal"
     />
   </header>
+
+  <AuthModal
+    v-model:visible="isAuthModalVisible"
+    @auth:success="onAuthSuccess"
+    @open:registration-modal="openRegistrationModal"
+  />
+
+  <RegistrationModal
+    v-model:visible="isRegistrationModalVisible"
+    @registration:success="onRegistrationSuccess"
+  />
 </template>
 
 <style lang="scss">
@@ -24,7 +84,7 @@ import { AppProfile } from '@/app/layouts';
   justify-content: flex-start;
   width: 100%;
   flex: 0 0 auto;
-  gap: 0 3rem;
+  gap: 0 .5rem;
   height: 3.5rem;
   padding: 0 1rem;
   position: fixed;
@@ -32,10 +92,11 @@ import { AppProfile } from '@/app/layouts';
   left: 0;
   z-index: 100;
   background-color: var(--color-white);
-  box-shadow: inset 0 1px 0 0 rgba($gray-dark, .2), 6px 6px 20px rgba($black, 0.2);
+  box-shadow: 6px 6px 20px rgba($black, 0.2);
 
-  &__profile {
-    margin-left: auto;
+  &__divider {
+    width: 0;
+    height: 100%;
   }
 }
 </style>

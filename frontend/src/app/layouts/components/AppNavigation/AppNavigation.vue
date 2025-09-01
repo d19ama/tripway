@@ -50,7 +50,7 @@ function goTo(name: RouteNames): RouteLocationRaw {
     padding: 0 1rem;
     position: relative;
     color: var(--color-red);
-    font-size: .875rem;
+    font-size: .75rem;
     transition: color var(--transition), box-shadow var(--transition);
 
     &--active {

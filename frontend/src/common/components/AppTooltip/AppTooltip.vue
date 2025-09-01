@@ -18,7 +18,12 @@ import 'tippy.js/dist/tippy.css';
 const props = withDefaults(defineProps<AppTooltipProps>(), {
   title: '',
   visible: true,
+  trigger: 'mouseenter focus',
   placement: 'top',
+  offset: () => [
+    0,
+    4,
+  ],
 });
 
 defineSlots<AppTooltipSlots>();
@@ -33,12 +38,6 @@ const instance = ref<TippyComponent>();
 const actions = computed<AppTooltipActions>(() => ({
   close: instance.value?.hide,
 }));
-
-const trigger = computed<TippyComponent['trigger']>(() => {
-  return props.visible
-    ? 'mouseenter focus'
-    : 'manual';
-});
 </script>
 
 <template>
@@ -48,7 +47,7 @@ const trigger = computed<TippyComponent['trigger']>(() => {
     content-class="app-tooltip__content"
     :placement="props.placement"
     :offset="OFFSET"
-    :trigger="trigger"
+    :trigger="props.trigger"
     :append-to-body="true"
     interactive
   >

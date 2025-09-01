@@ -26,7 +26,7 @@ import { usePageLoadingIndicator } from '@/common/composables';
 import type { UserEntity } from '@/modules/users';
 
 interface Emits {
-  'open:registration': [];
+  'open:registration-modal': [];
   'auth:success': [email: UserEntity['email']];
 }
 
@@ -76,7 +76,7 @@ async function onAuth(): Promise<void> {
 
 function onRegistration(): void {
   visible.value = false;
-  emit('open:registration');
+  emit('open:registration-modal');
 }
 
 watch(visible, () => {
@@ -89,7 +89,7 @@ watch(visible, () => {
   <AppModal
     v-model:visible="visible"
     size="xs"
-    title="Авторизация"
+    title="Вход"
   >
     <AppInput
       v-model:value="form.email"
@@ -108,9 +108,13 @@ watch(visible, () => {
       :validation="validation.password"
       required
     />
-    <AppLink @click.prevent="onRegistration">
-      Регистрация
-    </AppLink>
+    <div class="auth-modal__options">
+      <AppLink
+        @click.prevent="onRegistration"
+      >
+        Регистрация
+      </AppLink>
+    </div>
     <template #footer="{ close }">
       <AppModalActions>
         <AppButton
@@ -139,3 +143,16 @@ watch(visible, () => {
     v-model:visible="httpError"
   />
 </template>
+
+<style lang="scss">
+.auth-modal {
+
+  &__options {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+  }
+}
+</style>

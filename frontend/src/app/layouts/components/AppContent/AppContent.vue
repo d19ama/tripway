@@ -24,5 +24,6 @@ const {
   overflow: hidden;
   padding: 6rem 0 8rem;
   position: relative;
+  z-index: 1;
 }
 </style>
