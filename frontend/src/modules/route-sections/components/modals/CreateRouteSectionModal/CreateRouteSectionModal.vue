@@ -110,6 +110,9 @@ const rules = computed<ValidationArgs>(() => {
       maxLength: maxLength(100),
       minLength: minLength(2),
     },
+    transportType: {
+      required,
+    },
   };
 });
 
@@ -270,6 +273,7 @@ watch(city, async (city) => {
           :options="transportTypeOptions"
           label="Вид транспорта"
           placeholder="Выберите вид транспорта"
+          required
         />
       </div>
       <div class="col-default-3">

@@ -2,10 +2,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import {
+  IsArray,
   IsBoolean,
   IsNumber,
   IsOptional,
@@ -19,6 +22,7 @@ import {
   ROUTE_STATE_ENUM,
   RouteStateEnum,
 } from '../../../common/schemas';
+import { RouteSectionEntity } from '../../route-sections/entities';
 
 @Entity({
   name: 'routeEntity',
@@ -158,25 +162,24 @@ export class RouteEntity {
   })
   state: RouteStateEnum;
 
-  @Column({
-    name: 'Идентификаторы секций',
-    type: 'text',
-    array: true,
-    default: [],
-  })
-  @IsString({
+  @OneToMany(
+    () => RouteSectionEntity,
+    (section) => section.routeId,
+    {
+      eager: true,
+      cascade: true,
+    },
+  )
+  @JoinColumn()
+  @IsArray({
     each: true,
   })
   @ApiProperty({
     description: 'Массив идентификаторов секций в маршруте',
-    example: [
-      '1234',
-      '5678',
-    ],
     type: [
-      String,
+      RouteSectionEntity,
     ],
     required: true,
   })
-  routeSectionsIds: string[];
+  routeSections: RouteSectionEntity[];
 }

@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -15,6 +16,7 @@ import {
   IsString,
 } from 'class-validator';
 import { TRANSPORT_TYPE_ENUM } from '../../../common/schemas';
+import { RouteEntity } from '../../routes/entities';
 
 @Entity({
   name: 'routeSectionEntity',
@@ -53,10 +55,10 @@ export class RouteSectionEntity {
   })
   updatedAt: string;
 
-  @Column({
-    name: 'Идентификатор маршрута',
-    type: 'text',
-  })
+  @ManyToOne(
+    () => RouteEntity,
+    (route) => route.routeSections,
+  )
   @IsString()
   @ApiProperty({
     description: 'Идентификатор маршрута',
@@ -64,7 +66,7 @@ export class RouteSectionEntity {
     type: String,
     required: true,
   })
-  routeId: string;
+  routeId: RouteEntity['id'];
 
   @Column({
     name: 'Город назначения',

@@ -14,21 +14,15 @@ import {
   BorderCard,
   CreateRouteSectionModal,
   RouteSection,
-  useRouteSection,
 } from '@/modules/route-sections';
 import { AppPage } from '@/common/components';
 import { useRoutes } from '@/modules/routes';
 
 const {
-  httpError: isRouteError,
+  httpError,
+  activeRoute,
   readRoute,
 } = useRoutes();
-
-const {
-  httpError: isRouteSectionError,
-  routeSections,
-  readRouteSections,
-} = useRouteSection();
 
 const {
   showUntil,
@@ -50,7 +44,7 @@ function returnToList(): void {
 }
 
 function isLastSection(index: number): boolean {
-  return routeSections.value.length === (index + 1);
+  return activeRoute.value?.routeSections.length === (index + 1);
 }
 
 function isFirstSection(index: number): boolean {
@@ -59,7 +53,6 @@ function isFirstSection(index: number): boolean {
 
 onMounted(async () => {
   await showUntil(readRoute(String(route.params.id)));
-  await showUntil(readRouteSections(String(route.params.id)));
 });
 </script>
 
@@ -71,9 +64,9 @@ onMounted(async () => {
           icon="icon-home"
           class="route-page__border-left"
         />
-        <template v-if="routeSections.length > 0">
+        <template v-if="activeRoute && activeRoute.routeSections.length > 0">
           <RouteSection
-            v-for="(item, index) in routeSections"
+            v-for="(item, index) in activeRoute.routeSections"
             :key="item.id"
             :data="item"
             :is-last="isLastSection(index)"
@@ -92,11 +85,11 @@ onMounted(async () => {
   <CreateRouteSectionModal
     v-model:visible="isCreateRouteSectionModalVisible"
     :route-id="String(route.params.id)"
-    @create:route-section:success="showUntil(readRouteSections(String(route.params.id)))"
+    @create:route-section:success="showUntil(readRoute(String(route.params.id)))"
   />
 
   <UnknownHttpErrorModal
-    :visible="isRouteError || isRouteSectionError"
+    :visible="httpError"
     @update:visible="returnToList"
   />
 </template>
