@@ -4,4 +4,5 @@ export type {
   AppComboboxOption,
   AppComboboxProps,
   AppComboboxSlots,
+  AppComboboxEmits,
 } from './types';

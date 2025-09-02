@@ -23,6 +23,11 @@ export interface AppComboboxOption<ID extends string | number | symbol = string>
   disabled: boolean;
 }
 
+export interface AppComboboxEmits {
+  focus: [];
+  blur: [];
+}
+
 export interface AppComboboxSlots {
   [key: `checkbox-${AppComboboxOption['id']}`]: (scope: {
     text: string;

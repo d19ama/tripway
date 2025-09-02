@@ -1,22 +1,25 @@
 <script lang="ts" setup>
 import {
   computed,
+  onMounted,
   ref,
   useTemplateRef,
   watch,
 } from 'vue';
-import {
-  onClickOutside,
-  useDebounceFn,
-} from '@vueuse/core';
+import { useDebounceFn } from '@vueuse/core';
 import type {
+  AppComboboxEmits,
   AppComboboxOption,
   AppComboboxProps,
   AppComboboxSlots,
 } from './types';
 import type { HTMLElementClass } from '@/common/types';
 import { AppSpinner } from '@/common/components';
-import { DEFAULT_DELAY } from '@/common/constants';
+import {
+  DEFAULT_DELAY,
+  DEFAULT_SEARCH_LENGTH,
+} from '@/common/constants';
+import { componentName } from '@/common/helpers';
 
 const props = withDefaults(defineProps<AppComboboxProps>(), {
   hint: '',
@@ -29,6 +32,8 @@ const props = withDefaults(defineProps<AppComboboxProps>(), {
   required: false,
   searchError: false,
 });
+
+const emit = defineEmits<AppComboboxEmits>();
 
 const slots = defineSlots<AppComboboxSlots>();
 
@@ -51,9 +56,7 @@ const error = ref<boolean>(false);
 const opened = ref<boolean>(false);
 const focused = ref<boolean>(false);
 const localSearch = ref<string>('');
-const inputRef = useTemplateRef<HTMLElement>('inputRef');
-const selectRef = useTemplateRef<HTMLElement>('selectRef');
-const placeholderRef = useTemplateRef<HTMLElement>('placeholderRef');
+const rootRef = useTemplateRef<HTMLElement>('rootRef');
 
 const hasLabel = computed<boolean>(() => {
   return !!slots.label! || props.label;
@@ -64,14 +67,8 @@ const hasHint = computed<boolean>(() => {
 });
 
 const isDropdownVisible = computed<boolean>(() => {
-  return focused.value
-    && search.value.length > 1;
-});
-
-const isPlaceholderVisible = computed<boolean>(() => {
-  return props.placeholder.length > 0
-    && !focused.value
-    && (!localSearch.value && !value.value);
+  return opened.value
+    && search.value.length > DEFAULT_SEARCH_LENGTH;
 });
 
 const selectClass = computed<HTMLElementClass>(() => {
@@ -108,6 +105,19 @@ const updateSearch = useDebounceFn((value) => {
   search.value = value;
 }, DEFAULT_DELAY);
 
+function hideDropdown(event: MouseEvent): void {
+  if (!rootRef.value) {
+    return;
+  }
+
+  const isOutside: boolean = rootRef.value !== event.target
+    && !rootRef.value.contains(event.target as Node);
+
+  if (isOutside) {
+    opened.value = false;
+  }
+}
+
 function changeSelected(option: AppComboboxOption): void {
   options.value = options.value.map((item) => {
     return {
@@ -116,15 +126,19 @@ function changeSelected(option: AppComboboxOption): void {
     };
   });
 
-  value.value = option.text;
   opened.value = false;
-  focused.value = false;
-  search.value = '';
+  value.value = option.text;
+  localSearch.value = option.text;
 }
 
-function onClick(): void {
+function onFocus(): void {
   focused.value = true;
-  inputRef.value?.focus();
+  emit('focus');
+}
+
+function onBlur(): void {
+  focused.value = false;
+  emit('blur');
 }
 
 function validate(): void {
@@ -139,26 +153,18 @@ function optionClass(item: AppComboboxOption): HTMLElementClass {
   };
 }
 
-onClickOutside(
-  selectRef,
-  () => {
-    focused.value = false;
-    opened.value = false;
-
-    if (!value.value) {
-      search.value = '';
-    }
-  },
-  {
-    ignore: [
-      inputRef,
-      placeholderRef,
-    ],
-  },
-);
+onMounted(() => {
+  document.addEventListener('click', hideDropdown);
+});
 
 watch(localSearch, (value) => {
-  updateSearch(value);
+  const searchable = value.length > DEFAULT_SEARCH_LENGTH;
+
+  opened.value = searchable;
+
+  if (searchable) {
+    updateSearch(value);
+  }
 });
 
 watch(focused, (value) => {
@@ -170,9 +176,9 @@ watch(focused, (value) => {
 
 <template>
   <div
+    ref="rootRef"
     class="app-combobox"
     :class="selectClass"
-    @click="onClick"
   >
     <div
       v-if="hasLabel"
@@ -186,23 +192,19 @@ watch(focused, (value) => {
         class="app-combobox__label-asterisk"
       >*</span>
     </div>
+
     <div class="app-combobox__container">
-      <span
-        v-if="isPlaceholderVisible"
-        ref="placeholderRef"
-        class="app-combobox__placeholder"
-      >
-        {{ props.placeholder }}
-      </span>
       <input
-        ref="inputRef"
         v-model="localSearch"
-        name=""
+        :name="componentName('app-combobox')"
+        :maxlength="props.maxLength"
+        :disabled="props.disabled"
+        :placeholder="props.placeholder"
         autocomplete="off"
         class="app-combobox__input"
         type="text"
-        :disabled="props.disabled"
-        :maxlength="props.maxLength"
+        @focus="onFocus"
+        @blur="onBlur"
       >
       <div
         v-if="isDropdownVisible"
@@ -241,6 +243,7 @@ watch(focused, (value) => {
         </div>
       </div>
     </div>
+
     <span
       v-if="isErrorVisible"
       class="app-combobox__error"
@@ -249,8 +252,9 @@ watch(focused, (value) => {
         {{ errorMessage }}
       </slot>
     </span>
+
     <span
-      v-if="hasHint && !isErrorVisible"
+      v-else-if="hasHint"
       class="app-combobox__hint"
     >
       <slot name="hint">
@@ -274,22 +278,15 @@ watch(focused, (value) => {
   position: relative;
   user-select: none;
 
-  &--opened {
-
-    #{$parent}__arrow {
-      transform: rotate(180deg);
-    }
-  }
-
   &--disabled {
-    opacity: .4;
+    opacity: .5;
     pointer-events: none;
   }
 
   &__container {
     width: 100%;
     height: 3.5rem;
-    padding: 1rem 2.5rem 1rem 1rem;
+    padding: 1rem;
     position: relative;
     border-radius: .5rem;
     background-color: var(--color-gray-lite);
@@ -319,16 +316,12 @@ watch(focused, (value) => {
     color: var(--color-red);
   }
 
-  &__input,
-  &__placeholder {
+  &__input {
+    width: 100%;
     font-weight: 400;
     line-height: 1.5rem;
     font-size: .875rem;
     color: var(--color-gray-dark);
-  }
-
-  &__input {
-    width: 100%;
     border: none;
     background-color: transparent;
 
@@ -344,65 +337,12 @@ watch(focused, (value) => {
     &::-ms-clear {
       display: none;
     }
-  }
 
-  &__placeholder {
-    display: block;
-    opacity: .5;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    pointer-events: none;
-  }
-
-  &__clear {
-    display: inline-block;
-    vertical-align: middle;
-    width: 24px;
-    height: 24px;
-    position: absolute;
-    top: 50%;
-    right: 42px;
-    z-index: 2;
-    border-radius: 50%;
-    background-color: var(--color-white);
-    box-shadow: inset 0 0 0 1px var(--color-gray-dark);
-    transform: translateY(-50%);
-    transition: background-color var(--transition), box-shadow var(--transition);
-
-    &:before,
-    &:after {
-      content: '';
-      display: block;
-      width: .75rem;
-      height: .125rem;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: var(--color-gray-dark);
-      margin: auto;
-      transition: background-color var(--transition);
-      z-index: 1;
-    }
-
-    &:before {
-      transform: rotate(45deg);
-    }
-
-    &:after {
-      transform: rotate(-45deg);
-    }
-
-    &:hover {
-      background-color: var(--color-gray-lite);
-      box-shadow: none;
-
-      &:before,
-      &:after {
-        background-color: var(--color-red-dark);
-      }
+    &::placeholder {
+      opacity: .5;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
 
@@ -423,19 +363,16 @@ watch(focused, (value) => {
   }
 
   &__dropdown {
-    width: calc(100% + 2px);
+    width: 100%;
     overflow: auto;
     position: absolute;
     top: calc(100% + .25rem);
-    left: -1px;
+    left: 0;
     z-index: 10;
     border-radius: .5rem;
+    border: 1px solid transparent;
     background-color: var(--color-gray-lite);
     transition: opacity var(--transition);
-
-    &--opened {
-      display: block;
-    }
   }
 
   &__options {
@@ -476,7 +413,7 @@ watch(focused, (value) => {
     }
 
     &--disabled {
-      opacity: .4;
+      opacity: .5;
       pointer-events: none;
     }
   }
