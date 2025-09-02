@@ -4,7 +4,10 @@ import {
   ref,
   watch,
 } from 'vue';
-import { onClickOutside } from '@vueuse/core';
+import {
+  onClickOutside,
+  useDebounceFn,
+} from '@vueuse/core';
 import type {
   AppComboboxOption,
   AppComboboxProps,
@@ -27,7 +30,7 @@ const props = withDefaults(defineProps<AppComboboxProps>(), {
 
 const slots = defineSlots<AppComboboxSlots>();
 
-const selected = defineModel<string>('selected', {
+const value = defineModel<string>('value', {
   required: false,
   default: '',
 });
@@ -37,9 +40,16 @@ const options = defineModel<AppComboboxOption[]>('options', {
   default: () => [],
 });
 
-const search = defineModel('search', {
+const updateSearch = useDebounceFn(async (search: string) => {
+  return search;
+}, 1000);
+
+const search = defineModel<string>('search', {
   required: false,
   default: '',
+  set(value: string) {
+    return updateSearch(value);
+  },
 });
 
 const focus = ref<boolean>(false);
@@ -73,7 +83,7 @@ const isDropdownVisible = computed<boolean>(() => {
 
 const isPlaceholderVisible = computed<boolean>(() => {
   return props.placeholder.length > 0
-    && (!search.value && !selected.value);
+    && (!search.value && !value.value);
 });
 
 const selectClass = computed<HTMLElementClass>(() => {
@@ -111,7 +121,7 @@ onClickOutside(selectRef, () => {
   focus.value = false;
   opened.value = false;
 
-  if (!selected.value) {
+  if (!value.value) {
     search.value = '';
   }
 });
@@ -124,7 +134,7 @@ function changeSelected(option: AppComboboxOption): void {
     };
   });
 
-  selected.value = option.text;
+  value.value = option.text;
   search.value = option.text;
   opened.value = false;
   focus.value = false;

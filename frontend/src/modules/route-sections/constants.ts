@@ -16,6 +16,9 @@ export const DEFAULT_ROUTE_SECTION: RouteSectionEntity = {
   stayingPlace: '',
   transportType: undefined,
   updatedAt: '',
+  position: 0,
+  latitude: '',
+  longitude: '',
 };
 
 export const ROUTE_SECTION_TRANSPORT_TYPE_MAP: Record<TransportType, string> = {

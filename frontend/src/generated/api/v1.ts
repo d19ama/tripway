@@ -7,7 +7,7 @@
 export interface paths {
   "/api/v1/routes": {
     /** Получение всех маршрутов */
-    get: operations["readAllRoutes"];
+    get: operations["readRoutes"];
     /** Создание нового маршрута */
     post: operations["createRoute"];
   };
@@ -34,6 +34,10 @@ export interface paths {
   "/api/v1/auth/login": {
     /** Авторизация */
     post: operations["login"];
+  };
+  "/api/v1/auth": {
+    /** Аутентификация */
+    get: operations["authenticate"];
   };
   "/api/v1/registration": {
     /** Регистрация */
@@ -470,6 +474,21 @@ export interface components {
        * @example 0
        */
       stayingCost?: string;
+      /**
+       * @description Номер позиции в маршруте
+       * @example 1
+       */
+      position: number;
+      /**
+       * @description Координаты широты
+       * @example 64.6863136
+       */
+      latitude: string;
+      /**
+       * @description Координаты долготы
+       * @example 97.7453061
+       */
+      longitude: string;
     };
     CreateRouteSectionRequestDto: {
       /**
@@ -532,6 +551,21 @@ export interface components {
        * @example 0
        */
       stayingCost?: string;
+      /**
+       * @description Номер позиции в маршруте
+       * @example 1
+       */
+      position: number;
+      /**
+       * @description Координаты широты
+       * @example 64.6863136
+       */
+      latitude: string;
+      /**
+       * @description Координаты долготы
+       * @example 97.7453061
+       */
+      longitude: string;
     };
     CreateRouteSectionResponseDto: {
       /**
@@ -594,6 +628,21 @@ export interface components {
        * @example 0
        */
       stayingCost?: string;
+      /**
+       * @description Номер позиции в маршруте
+       * @example 1
+       */
+      position: number;
+      /**
+       * @description Координаты широты
+       * @example 64.6863136
+       */
+      latitude: string;
+      /**
+       * @description Координаты долготы
+       * @example 97.7453061
+       */
+      longitude: string;
     };
     UserEntity: {
       /**
@@ -767,7 +816,7 @@ export type external = Record<string, never>;
 export interface operations {
 
   /** Получение всех маршрутов */
-  readAllRoutes: {
+  readRoutes: {
     responses: {
       200: {
         content: {
@@ -784,7 +833,7 @@ export interface operations {
       };
     };
     responses: {
-      201: {
+      200: {
         content: {
           "application/json": components["schemas"]["CreateRouteResponseDto"];
         };
@@ -842,7 +891,7 @@ export interface operations {
       };
     };
     responses: {
-      201: {
+      200: {
         content: {
           "application/json": components["schemas"]["CreateRouteSectionResponseDto"];
         };
@@ -857,7 +906,7 @@ export interface operations {
       };
     };
     responses: {
-      201: {
+      200: {
         content: {
           "application/json": components["schemas"]["UserEntity"];
         };
@@ -875,6 +924,16 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["LoginResponseDto"];
+        };
+      };
+    };
+  };
+  /** Аутентификация */
+  authenticate: {
+    responses: {
+      200: {
+        content: {
+          "application/json": Record<string, never>;
         };
       };
     };

@@ -177,4 +177,43 @@ export class RouteSectionEntity {
     required: false,
   })
   stayingCost?: string;
+
+  @Column({
+    name: 'Позиция в маршруте',
+    type: 'integer',
+  })
+  @IsString()
+  @ApiProperty({
+    description: 'Номер позиции в маршруте',
+    example: 1,
+    type: Number,
+    required: true,
+  })
+  position: number;
+
+  @Column({
+    name: 'Широта',
+    type: 'text',
+  })
+  @IsString()
+  @ApiProperty({
+    description: 'Координаты широты',
+    example: '64.6863136',
+    type: String,
+    required: true,
+  })
+  latitude: string;
+
+  @Column({
+    name: 'Долгота',
+    type: 'text',
+  })
+  @IsString()
+  @ApiProperty({
+    description: 'Координаты долготы',
+    example: '97.7453061',
+    type: String,
+    required: true,
+  })
+  longitude: string;
 }

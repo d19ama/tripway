@@ -8,7 +8,6 @@ import {
   type ValidationArgs,
   useVuelidate,
 } from '@vuelidate/core';
-import { useDebounceFn } from '@vueuse/core';
 import { useRouteSection } from '../../../composables';
 import {
   DEFAULT_ROUTE_SECTION,
@@ -88,14 +87,6 @@ const isStayingCostUnknown = ref<boolean>(false);
 
 const city = ref<string>('');
 const country = ref<string>('');
-
-const updateCountry = useDebounceFn(async (country: string) => {
-  await getCountry(country);
-}, 1000);
-
-const updateCity = useDebounceFn(async (city: string, country: string) => {
-  await getCity(city, country);
-}, 1000);
 
 const transportTypeOptions = ref<AppSelectOption<TransportType>[]>([
   {
@@ -201,18 +192,20 @@ async function onCreate(): Promise<void> {
   }
 }
 
+function setCoordinates(): void {}
+
 watch(visible, () => {
   form.value = {
     ...DEFAULT_ROUTE_SECTION,
   };
 });
 
-watch(country, async (value) => {
-  await updateCountry(value);
+watch(country, async (country) => {
+  await getCountry(country);
 });
 
 watch(city, async (city) => {
-  await updateCity(city, country.value);
+  await getCity(city, country.value);
 });
 </script>
 
@@ -230,7 +223,7 @@ watch(city, async (city) => {
       </div>
       <div class="col-default-6">
         <AppCombobox
-          v-model:selected="form.destinationCountry"
+          v-model:value="form.destinationCountry"
           v-model:search="country"
           :loading="httpLoading"
           :search-error="geoHttpError"
@@ -244,7 +237,7 @@ watch(city, async (city) => {
       </div>
       <div class="col-default-6">
         <AppCombobox
-          v-model:selected="form.destinationCity"
+          v-model:value="form.destinationCity"
           v-model:search="city"
           :loading="httpLoading"
           :search-error="geoHttpError"
@@ -255,6 +248,7 @@ watch(city, async (city) => {
           placeholder="Введите город назначения"
           hint="Прим. Лондон"
           required
+          @update:selected="setCoordinates"
         />
       </div>
     </div>
