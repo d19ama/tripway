@@ -2,6 +2,7 @@ import type { VNode } from 'vue';
 import type { BaseValidation } from '@vuelidate/core';
 
 export interface AppComboboxProps {
+  name?: string;
   hint?: string;
   label?: string;
   loading?: boolean;

@@ -47,12 +47,13 @@ const search = defineModel<string>('search', {
   default: '',
 });
 
-const focus = ref<boolean>(false);
 const error = ref<boolean>(false);
 const opened = ref<boolean>(false);
+const focused = ref<boolean>(false);
 const localSearch = ref<string>('');
+const inputRef = useTemplateRef<HTMLElement>('inputRef');
 const selectRef = useTemplateRef<HTMLElement>('selectRef');
-const optionsRef = useTemplateRef<HTMLElement>('optionsRef');
+const placeholderRef = useTemplateRef<HTMLElement>('placeholderRef');
 
 const hasLabel = computed<boolean>(() => {
   return !!slots.label! || props.label;
@@ -63,18 +64,18 @@ const hasHint = computed<boolean>(() => {
 });
 
 const isDropdownVisible = computed<boolean>(() => {
-  return focus.value
+  return focused.value
     && search.value.length > 1;
 });
 
 const isPlaceholderVisible = computed<boolean>(() => {
   return props.placeholder.length > 0
+    && !focused.value
     && (!localSearch.value && !value.value);
 });
 
 const selectClass = computed<HTMLElementClass>(() => {
   return {
-    'app-combobox--opened': opened.value,
     'app-combobox--disabled': props.disabled,
   };
 });
@@ -107,23 +108,6 @@ const updateSearch = useDebounceFn((value) => {
   search.value = value;
 }, DEFAULT_DELAY);
 
-onClickOutside(
-  selectRef,
-  () => {
-    focus.value = false;
-    opened.value = false;
-
-    if (!value.value) {
-      search.value = '';
-    }
-  },
-  {
-    ignore: [
-      optionsRef,
-    ],
-  },
-);
-
 function changeSelected(option: AppComboboxOption): void {
   options.value = options.value.map((item) => {
     return {
@@ -134,11 +118,13 @@ function changeSelected(option: AppComboboxOption): void {
 
   value.value = option.text;
   opened.value = false;
-  focus.value = false;
+  focused.value = false;
+  search.value = '';
 }
 
-function onFocus(): void {
-  focus.value = true;
+function onClick(): void {
+  focused.value = true;
+  inputRef.value?.focus();
 }
 
 function validate(): void {
@@ -153,11 +139,29 @@ function optionClass(item: AppComboboxOption): HTMLElementClass {
   };
 }
 
+onClickOutside(
+  selectRef,
+  () => {
+    focused.value = false;
+    opened.value = false;
+
+    if (!value.value) {
+      search.value = '';
+    }
+  },
+  {
+    ignore: [
+      inputRef,
+      placeholderRef,
+    ],
+  },
+);
+
 watch(localSearch, (value) => {
   updateSearch(value);
 });
 
-watch(focus, (value) => {
+watch(focused, (value) => {
   if (!value) {
     validate();
   }
@@ -166,10 +170,9 @@ watch(focus, (value) => {
 
 <template>
   <div
-    ref="selectRef"
     class="app-combobox"
     :class="selectClass"
-    @click="onFocus"
+    @click="onClick"
   >
     <div
       v-if="hasLabel"
@@ -186,22 +189,23 @@ watch(focus, (value) => {
     <div class="app-combobox__container">
       <span
         v-if="isPlaceholderVisible"
+        ref="placeholderRef"
         class="app-combobox__placeholder"
       >
         {{ props.placeholder }}
       </span>
       <input
+        ref="inputRef"
         v-model="localSearch"
+        name=""
         autocomplete="off"
         class="app-combobox__input"
         type="text"
         :disabled="props.disabled"
         :maxlength="props.maxLength"
       >
-      <span class="app-combobox__arrow" />
       <div
         v-if="isDropdownVisible"
-        ref="optiosnRef"
         class="app-combobox__dropdown"
       >
         <ul
@@ -284,6 +288,8 @@ watch(focus, (value) => {
 
   &__container {
     width: 100%;
+    height: 3.5rem;
+    padding: 1rem 2.5rem 1rem 1rem;
     position: relative;
     border-radius: .5rem;
     background-color: var(--color-gray-lite);
@@ -295,7 +301,7 @@ watch(focus, (value) => {
   &__hint {
     font-size: .75rem;
     font-weight: 400;
-    line-height: 1.4;
+    line-height: 1.5;
   }
 
   &__label {
@@ -315,9 +321,8 @@ watch(focus, (value) => {
 
   &__input,
   &__placeholder {
-    padding: 1rem 2.5rem 1rem 1rem;
     font-weight: 400;
-    line-height: 1.5;
+    line-height: 1.5rem;
     font-size: .875rem;
     color: var(--color-gray-dark);
   }
@@ -345,10 +350,6 @@ watch(focus, (value) => {
     display: block;
     opacity: .5;
     overflow: hidden;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
     white-space: nowrap;
     text-overflow: ellipsis;
     pointer-events: none;

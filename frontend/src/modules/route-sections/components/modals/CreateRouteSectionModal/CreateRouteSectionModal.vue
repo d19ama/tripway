@@ -108,7 +108,7 @@ const rules = computed<ValidationArgs>(() => {
     destinationCountry: {
       required,
       maxLength: maxLength(100),
-      minLength: minLength(3),
+      minLength: minLength(2),
     },
   };
 });
