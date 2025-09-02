@@ -11,5 +11,5 @@ export const DEFAULT_ROUTE: RouteEntity = {
   endDate: '',
   createdAt: '',
   updatedAt: '',
-  routeSectionsIds: [],
+  routeSections: [],
 };

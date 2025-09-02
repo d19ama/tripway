@@ -4,7 +4,6 @@ import { RoutesModule } from '../routes/routes.module';
 import { RouteSectionEntity } from './entities';
 import { RouteSectionsService } from './route-sections.service';
 import { RouteSectionsController } from './route-sections.controller';
-import { CreateRouteSectionSubscriber } from './subscribers/create-route-section.subscriber';
 
 @Module({
   imports: [
@@ -18,7 +17,6 @@ import { CreateRouteSectionSubscriber } from './subscribers/create-route-section
   ],
   providers: [
     RouteSectionsService,
-    CreateRouteSectionSubscriber,
   ],
 })
 export class RoutesSectionsModule {}

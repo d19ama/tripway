@@ -8,6 +8,7 @@ import type {
   AppInputFileProps,
   AppInputFileSlots,
 } from './types';
+import { componentName } from '@/common/helpers';
 
 const props = withDefaults(defineProps<AppInputFileProps>(), {
   hint: '',
@@ -145,6 +146,7 @@ function validate(): void {
       </span>
       <input
         type="file"
+        :name="componentName('app-input-file')"
         :multiple="props.multiple"
         :accept="ACCEPT_SETTINGS[props.acceptType]"
         class="app-input-file__input"

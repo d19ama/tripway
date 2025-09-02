@@ -1,7 +1,5 @@
 import {
   type Ref,
-  type WritableComputedRef,
-  computed,
   ref,
 } from 'vue';
 import type { RouteEntity } from '../';
@@ -13,7 +11,7 @@ import {
 
 interface UseRoutesReturn extends HttpStates {
   activeRoute: Ref<RouteEntity | undefined>;
-  routes: WritableComputedRef<RouteEntity[]>;
+  routes: Ref<RouteEntity[]>;
   readRoutes: () => Promise<void>;
   readRoute: (id: RouteEntity['id']) => Promise<void>;
   deleteRoute: (id: RouteEntity['id']) => Promise<void>;
@@ -21,8 +19,7 @@ interface UseRoutesReturn extends HttpStates {
   createRoute: (name: RouteEntity['name']) => Promise<RouteEntity['id'] | undefined>;
 }
 
-const _routes = ref<RouteEntity[]>([]);
-
+const routes = ref<RouteEntity[]>([]);
 const activeRoute = ref<RouteEntity | undefined>();
 
 export function useRoutes(): UseRoutesReturn {
@@ -32,20 +29,13 @@ export function useRoutes(): UseRoutesReturn {
     callApi,
   } = useApi();
 
-  const routes = computed<RouteEntity[]>({
-    get() {
-      return _routes.value;
-    },
-    set(value) {
-      _routes.value = value;
-    },
-  });
-
   async function readRoutes(): Promise<void> {
+    routes.value = [];
+
     const data: RouteEntity[] | undefined = await callApi<RouteEntity[]>('get', '/routes');
 
     if (data) {
-      _routes.value = data;
+      routes.value = data;
     }
   }
 
@@ -65,11 +55,13 @@ export function useRoutes(): UseRoutesReturn {
   }
 
   async function readRoute(id: RouteEntity['id']): Promise<void> {
+    activeRoute.value = undefined;
+
     const data: RouteEntity | undefined = await callApi<RouteEntity>('get', `/routes/${id}`);
 
     if (data) {
       activeRoute.value = data;
-      _routes.value = [
+      routes.value = [
         {
           ...data,
           opened: true,

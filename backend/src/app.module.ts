@@ -10,7 +10,6 @@ import { RoutesSectionsModule } from './modules/route-sections/route-sections.mo
 import { UsersModule } from './modules/users/users.module';
 import { RegistrationModule } from './modules/registration/registration.module';
 import { AuthSubscriber } from './modules/auth/subscribers/auth.subscriber';
-import { CreateRouteSectionSubscriber } from './modules/route-sections/subscribers/create-route-section.subscriber';
 import { RouteEntity } from './modules/routes/entities';
 import { RouteSectionEntity } from './modules/route-sections/entities';
 import { UserEntity } from './modules/users/entities';
@@ -42,7 +41,6 @@ import { AuthGuard } from './guards';
       synchronize: process.env.ENV !== 'production',
       subscribers: [
         AuthSubscriber,
-        CreateRouteSectionSubscriber,
       ],
       entities: [
         UserEntity,

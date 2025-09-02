@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -10,10 +11,12 @@ import {
   ApiPropertyOptional,
 } from '@nestjs/swagger';
 import {
+  IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
 import { TRANSPORT_TYPE_ENUM } from '../../../common/schemas';
+import { RouteEntity } from '../../routes/entities';
 
 @Entity({
   name: 'routeSectionEntity',
@@ -52,10 +55,10 @@ export class RouteSectionEntity {
   })
   updatedAt: string;
 
-  @Column({
-    name: 'Идентификатор маршрута',
-    type: 'text',
-  })
+  @ManyToOne(
+    () => RouteEntity,
+    (route) => route.routeSections,
+  )
   @IsString()
   @ApiProperty({
     description: 'Идентификатор маршрута',
@@ -63,7 +66,7 @@ export class RouteSectionEntity {
     type: String,
     required: true,
   })
-  routeId: string;
+  routeId: RouteEntity['id'];
 
   @Column({
     name: 'Город назначения',
@@ -177,4 +180,43 @@ export class RouteSectionEntity {
     required: false,
   })
   stayingCost?: string;
+
+  @Column({
+    name: 'Позиция в маршруте',
+    type: 'integer',
+  })
+  @IsNumber()
+  @ApiProperty({
+    description: 'Номер позиции в маршруте',
+    example: 1,
+    type: Number,
+    required: true,
+  })
+  position: number;
+
+  @Column({
+    name: 'Широта',
+    type: 'text',
+  })
+  @IsString()
+  @ApiProperty({
+    description: 'Координаты широты',
+    example: '64.6863136',
+    type: String,
+    required: true,
+  })
+  latitude: string;
+
+  @Column({
+    name: 'Долгота',
+    type: 'text',
+  })
+  @IsString()
+  @ApiProperty({
+    description: 'Координаты долготы',
+    example: '97.7453061',
+    type: String,
+    required: true,
+  })
+  longitude: string;
 }

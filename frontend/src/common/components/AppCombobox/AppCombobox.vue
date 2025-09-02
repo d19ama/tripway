@@ -1,17 +1,25 @@
 <script lang="ts" setup>
 import {
   computed,
+  onMounted,
   ref,
+  useTemplateRef,
   watch,
 } from 'vue';
-import { onClickOutside } from '@vueuse/core';
+import { useDebounceFn } from '@vueuse/core';
 import type {
+  AppComboboxEmits,
   AppComboboxOption,
   AppComboboxProps,
   AppComboboxSlots,
 } from './types';
 import type { HTMLElementClass } from '@/common/types';
 import { AppSpinner } from '@/common/components';
+import {
+  DEFAULT_DELAY,
+  DEFAULT_SEARCH_LENGTH,
+} from '@/common/constants';
+import { componentName } from '@/common/helpers';
 
 const props = withDefaults(defineProps<AppComboboxProps>(), {
   hint: '',
@@ -25,9 +33,11 @@ const props = withDefaults(defineProps<AppComboboxProps>(), {
   searchError: false,
 });
 
+const emit = defineEmits<AppComboboxEmits>();
+
 const slots = defineSlots<AppComboboxSlots>();
 
-const selected = defineModel<string>('selected', {
+const value = defineModel<string>('value', {
   required: false,
   default: '',
 });
@@ -37,26 +47,16 @@ const options = defineModel<AppComboboxOption[]>('options', {
   default: () => [],
 });
 
-const search = defineModel('search', {
+const search = defineModel<string>('search', {
   required: false,
   default: '',
 });
 
-const focus = ref<boolean>(false);
 const error = ref<boolean>(false);
 const opened = ref<boolean>(false);
-const selectRef = ref<HTMLElement | null>(null);
-
-const localOptions = computed<AppComboboxOption[]>({
-  get() {
-    return options.value.filter((item) => {
-      return item.text.toLowerCase().includes(search.value.toLowerCase());
-    });
-  },
-  set(value) {
-    options.value = value;
-  },
-});
+const focused = ref<boolean>(false);
+const localSearch = ref<string>('');
+const rootRef = useTemplateRef<HTMLElement>('rootRef');
 
 const hasLabel = computed<boolean>(() => {
   return !!slots.label! || props.label;
@@ -67,18 +67,12 @@ const hasHint = computed<boolean>(() => {
 });
 
 const isDropdownVisible = computed<boolean>(() => {
-  return focus.value
-    && search.value.length > 1;
-});
-
-const isPlaceholderVisible = computed<boolean>(() => {
-  return props.placeholder.length > 0
-    && (!search.value && !selected.value);
+  return opened.value
+    && search.value.length > DEFAULT_SEARCH_LENGTH;
 });
 
 const selectClass = computed<HTMLElementClass>(() => {
   return {
-    'app-combobox--opened': opened.value,
     'app-combobox--disabled': props.disabled,
   };
 });
@@ -104,34 +98,47 @@ const isErrorVisible = computed<boolean>(() => {
 });
 
 const hasOptions = computed<boolean>(() => {
-  return !props.loading && localOptions.value.length > 0;
+  return !props.loading && options.value.length > 0;
 });
 
-onClickOutside(selectRef, () => {
-  focus.value = false;
-  opened.value = false;
+const updateSearch = useDebounceFn((value) => {
+  search.value = value;
+}, DEFAULT_DELAY);
 
-  if (!selected.value) {
-    search.value = '';
+function hideDropdown(event: MouseEvent): void {
+  if (!rootRef.value) {
+    return;
   }
-});
+
+  const isOutside: boolean = rootRef.value !== event.target
+    && !rootRef.value.contains(event.target as Node);
+
+  if (isOutside) {
+    opened.value = false;
+  }
+}
 
 function changeSelected(option: AppComboboxOption): void {
-  localOptions.value = localOptions.value.map((item) => {
+  options.value = options.value.map((item) => {
     return {
       ...item,
       selected: item.id === option.id,
     };
   });
 
-  selected.value = option.text;
-  search.value = option.text;
   opened.value = false;
-  focus.value = false;
+  value.value = option.text;
+  localSearch.value = option.text;
 }
 
 function onFocus(): void {
-  focus.value = true;
+  focused.value = true;
+  emit('focus');
+}
+
+function onBlur(): void {
+  focused.value = false;
+  emit('blur');
 }
 
 function validate(): void {
@@ -146,11 +153,21 @@ function optionClass(item: AppComboboxOption): HTMLElementClass {
   };
 }
 
-watch(options, (value) => {
-  localOptions.value = value;
+onMounted(() => {
+  document.addEventListener('click', hideDropdown);
 });
 
-watch(focus, (value) => {
+watch(localSearch, (value) => {
+  const searchable = value.length > DEFAULT_SEARCH_LENGTH;
+
+  opened.value = searchable;
+
+  if (searchable) {
+    updateSearch(value);
+  }
+});
+
+watch(focused, (value) => {
   if (!value) {
     validate();
   }
@@ -159,10 +176,9 @@ watch(focus, (value) => {
 
 <template>
   <div
-    ref="selectRef"
+    ref="rootRef"
     class="app-combobox"
     :class="selectClass"
-    @click="onFocus"
   >
     <div
       v-if="hasLabel"
@@ -176,22 +192,20 @@ watch(focus, (value) => {
         class="app-combobox__label-asterisk"
       >*</span>
     </div>
+
     <div class="app-combobox__container">
-      <span
-        v-if="isPlaceholderVisible"
-        class="app-combobox__placeholder"
-      >
-        {{ props.placeholder }}
-      </span>
       <input
-        v-model="search"
+        v-model="localSearch"
+        :name="componentName('app-combobox')"
+        :maxlength="props.maxLength"
+        :disabled="props.disabled"
+        :placeholder="props.placeholder"
         autocomplete="off"
         class="app-combobox__input"
         type="text"
-        :disabled="props.disabled"
-        :maxlength="props.maxLength"
+        @focus="onFocus"
+        @blur="onBlur"
       >
-      <span class="app-combobox__arrow" />
       <div
         v-if="isDropdownVisible"
         class="app-combobox__dropdown"
@@ -201,7 +215,7 @@ watch(focus, (value) => {
           class="app-combobox__options"
         >
           <li
-            v-for="item in localOptions"
+            v-for="item in options"
             :key="item.id"
             class="app-combobox__option"
             :class="optionClass(item)"
@@ -229,6 +243,7 @@ watch(focus, (value) => {
         </div>
       </div>
     </div>
+
     <span
       v-if="isErrorVisible"
       class="app-combobox__error"
@@ -237,8 +252,9 @@ watch(focus, (value) => {
         {{ errorMessage }}
       </slot>
     </span>
+
     <span
-      v-if="hasHint && !isErrorVisible"
+      v-else-if="hasHint"
       class="app-combobox__hint"
     >
       <slot name="hint">
@@ -262,20 +278,15 @@ watch(focus, (value) => {
   position: relative;
   user-select: none;
 
-  &--opened {
-
-    #{$parent}__arrow {
-      transform: rotate(180deg);
-    }
-  }
-
   &--disabled {
-    opacity: .4;
+    opacity: .5;
     pointer-events: none;
   }
 
   &__container {
     width: 100%;
+    height: 3.5rem;
+    padding: 1rem;
     position: relative;
     border-radius: .5rem;
     background-color: var(--color-gray-lite);
@@ -287,7 +298,7 @@ watch(focus, (value) => {
   &__hint {
     font-size: .75rem;
     font-weight: 400;
-    line-height: 1.4;
+    line-height: 1.5;
   }
 
   &__label {
@@ -305,17 +316,12 @@ watch(focus, (value) => {
     color: var(--color-red);
   }
 
-  &__input,
-  &__placeholder {
-    padding: 1rem 2.5rem 1rem 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    font-size: .875rem;
-    color: var(--color-gray-dark);
-  }
-
   &__input {
     width: 100%;
+    font-weight: 400;
+    line-height: 1.5rem;
+    font-size: .875rem;
+    color: var(--color-gray-dark);
     border: none;
     background-color: transparent;
 
@@ -331,69 +337,12 @@ watch(focus, (value) => {
     &::-ms-clear {
       display: none;
     }
-  }
 
-  &__placeholder {
-    display: block;
-    opacity: .5;
-    overflow: hidden;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    pointer-events: none;
-  }
-
-  &__clear {
-    display: inline-block;
-    vertical-align: middle;
-    width: 24px;
-    height: 24px;
-    position: absolute;
-    top: 50%;
-    right: 42px;
-    z-index: 2;
-    border-radius: 50%;
-    background-color: var(--color-white);
-    box-shadow: inset 0 0 0 1px var(--color-gray-dark);
-    transform: translateY(-50%);
-    transition: background-color var(--transition), box-shadow var(--transition);
-
-    &:before,
-    &:after {
-      content: '';
-      display: block;
-      width: .75rem;
-      height: .125rem;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: var(--color-gray-dark);
-      margin: auto;
-      transition: background-color var(--transition);
-      z-index: 1;
-    }
-
-    &:before {
-      transform: rotate(45deg);
-    }
-
-    &:after {
-      transform: rotate(-45deg);
-    }
-
-    &:hover {
-      background-color: var(--color-gray-lite);
-      box-shadow: none;
-
-      &:before,
-      &:after {
-        background-color: var(--color-red-dark);
-      }
+    &::placeholder {
+      opacity: .5;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
 
@@ -414,19 +363,16 @@ watch(focus, (value) => {
   }
 
   &__dropdown {
-    width: calc(100% + 2px);
+    width: 100%;
     overflow: auto;
     position: absolute;
     top: calc(100% + .25rem);
-    left: -1px;
+    left: 0;
     z-index: 10;
     border-radius: .5rem;
+    border: 1px solid transparent;
     background-color: var(--color-gray-lite);
     transition: opacity var(--transition);
-
-    &--opened {
-      display: block;
-    }
   }
 
   &__options {
@@ -467,7 +413,7 @@ watch(focus, (value) => {
     }
 
     &--disabled {
-      opacity: .4;
+      opacity: .5;
       pointer-events: none;
     }
   }

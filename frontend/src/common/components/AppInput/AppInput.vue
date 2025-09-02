@@ -17,6 +17,7 @@ import type {
   AppInputSlots,
 } from './types';
 import type { HTMLElementClass } from '@/common/types';
+import { componentName } from '@/common/helpers';
 
 const props = withDefaults(defineProps<AppInputProps>(), {
   hint: '',
@@ -251,23 +252,19 @@ watch(
       <input
         ref="inputRef"
         v-model="value"
+        :name="componentName('app-input')"
         autocomplete="off"
         class="app-input__input"
         :type="props.type"
         :disabled="props.disabled"
         :maxlength="props.maxLength"
+        :placeholder="props.placeholder"
         @blur="onBlur"
         @focus="onFocus"
         @input="onInput"
         @change="onChange"
         @keyup.enter="onChange"
       >
-      <span
-        v-if="isPlaceholderVisible"
-        class="app-input__placeholder"
-      >
-        {{ props.placeholder }}
-      </span>
     </div>
     <span
       v-if="isErrorVisible"
@@ -298,6 +295,11 @@ watch(
   flex-flow: column nowrap;
   gap: .25rem;
   position: relative;
+
+  &--disabled {
+    opacity: .5;
+    pointer-events: none;
+  }
 
   &__wrapper {
     width: 100%;
@@ -347,28 +349,20 @@ watch(
     &::-ms-clear {
       display: none;
     }
+
+    &::placeholder {
+      opacity: .5;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
   }
 
-  &__input,
-  &__placeholder {
+  &__input {
     font-weight: 400;
     line-height: 1.5;
     font-size: .875rem;
     color: var(--color-gray-dark);
-  }
-
-  &__placeholder {
-    display: block;
-    max-width: 100%;
-    opacity: .5;
-    overflow: hidden;
-    padding: $padding;
-    position: absolute;
-    top: 0;
-    left: 0;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    pointer-events: none;
   }
 
   &__hint {
@@ -378,11 +372,6 @@ watch(
 
   &__error {
     color: var(--color-red);
-  }
-
-  &--disabled {
-    opacity: .4;
-    pointer-events: none;
   }
 }
 </style>

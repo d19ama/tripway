@@ -36,7 +36,6 @@ const {
 } = usePageLoadingIndicator();
 
 const isMenuVisible = ref<boolean>(false);
-
 const menuRef = useTemplateRef<HTMLElement>('menuRef');
 
 const initials = computed<string>(() => {

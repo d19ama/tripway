@@ -2,6 +2,7 @@ import type { VNode } from 'vue';
 import type { BaseValidation } from '@vuelidate/core';
 
 export interface AppComboboxProps {
+  name?: string;
   hint?: string;
   label?: string;
   loading?: boolean;
@@ -20,6 +21,11 @@ export interface AppComboboxOption<ID extends string | number | symbol = string>
   text: string;
   selected: boolean;
   disabled: boolean;
+}
+
+export interface AppComboboxEmits {
+  focus: [];
+  blur: [];
 }
 
 export interface AppComboboxSlots {

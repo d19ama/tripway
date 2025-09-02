@@ -9,6 +9,7 @@ import type {
   AppTextareaSlots,
 } from './types';
 import type { HTMLElementClass } from '@/common/types';
+import { componentName } from '@/common/helpers';
 
 const props = withDefaults(defineProps<AppTextareaProps>(), {
   hint: '',
@@ -117,6 +118,7 @@ function validate(): void {
         v-model="value"
         cols="30"
         rows="10"
+        :name="componentName('app-textarea')"
         maxLength="999"
         class="app-textarea__textarea"
         :disabled="props.disabled"
