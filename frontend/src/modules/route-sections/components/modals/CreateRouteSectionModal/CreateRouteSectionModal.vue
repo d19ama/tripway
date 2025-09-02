@@ -11,7 +11,7 @@ import {
 import { useRouteSection } from '../../../composables';
 import {
   DEFAULT_ROUTE_SECTION,
-  ROUTE_SECTION_TRANSPORT_TYPE_MAP,
+  ROUTE_SECTION_TRANSPORT_TYPE_OPTIONS,
 } from '../../../constants';
 import type {
   RouteSectionEntity,
@@ -22,9 +22,11 @@ import {
   AppButton,
   AppCheckbox,
   AppCombobox,
+  type AppComboboxOption,
   AppDatePicker,
   AppDivider,
   AppInput,
+  type AppInputMaskParams,
   AppModal,
   AppModalActions,
   AppSelect,
@@ -37,7 +39,6 @@ import {
   required,
 } from '@/common/validators';
 import { dayjs } from '@/app/plugins/dayjs';
-import type { AppInputMaskParams } from '@/common/components/AppInput/types';
 import { useGeo } from '@/modules/geo';
 
 interface Props {
@@ -78,53 +79,17 @@ const visible = defineModel<boolean>('visible', {
   default: false,
 });
 
+const city = ref<string>('');
+const country = ref<string>('');
+const isMovingCostUnknown = ref<boolean>(false);
+const isStayingCostUnknown = ref<boolean>(false);
+
 const form = ref<RouteSectionEntity>({
   ...DEFAULT_ROUTE_SECTION,
 });
 
-const isMovingCostUnknown = ref<boolean>(false);
-const isStayingCostUnknown = ref<boolean>(false);
-
-const city = ref<string>('');
-const country = ref<string>('');
-
 const transportTypeOptions = ref<AppSelectOption<TransportType>[]>([
-  {
-    id: 'airplane',
-    text: ROUTE_SECTION_TRANSPORT_TYPE_MAP.airplane,
-    selected: false,
-    disabled: false,
-  },
-  {
-    id: 'train',
-    text: ROUTE_SECTION_TRANSPORT_TYPE_MAP.train,
-    selected: false,
-    disabled: false,
-  },
-  {
-    id: 'bus',
-    text: ROUTE_SECTION_TRANSPORT_TYPE_MAP.bus,
-    selected: false,
-    disabled: false,
-  },
-  {
-    id: 'car',
-    text: ROUTE_SECTION_TRANSPORT_TYPE_MAP.car,
-    selected: false,
-    disabled: false,
-  },
-  {
-    id: 'bicycle',
-    text: ROUTE_SECTION_TRANSPORT_TYPE_MAP.bicycle,
-    selected: false,
-    disabled: false,
-  },
-  {
-    id: 'other',
-    text: ROUTE_SECTION_TRANSPORT_TYPE_MAP.other,
-    selected: false,
-    disabled: false,
-  },
+  ...ROUTE_SECTION_TRANSPORT_TYPE_OPTIONS,
 ]);
 
 const rules = computed<ValidationArgs>(() => {
@@ -150,7 +115,7 @@ const rules = computed<ValidationArgs>(() => {
 
 const validation = useVuelidate<RouteSectionEntity>(rules, form);
 
-const citiesOptions = computed<AppSelectOption[]>(() => {
+const citiesOptions = computed<AppComboboxOption[]>(() => {
   return cities.value.map((item) => {
     return {
       id: item.place_id,
@@ -161,7 +126,7 @@ const citiesOptions = computed<AppSelectOption[]>(() => {
   });
 });
 
-const countriesOptions = computed<AppSelectOption[]>(() => {
+const countriesOptions = computed<AppComboboxOption[]>(() => {
   return countries.value.map((item) => {
     return {
       id: item.place_id,
@@ -182,17 +147,36 @@ const minArrivalDate = computed<string>(() => {
     : '';
 });
 
+const coordinates = computed<Pick<RouteSectionEntity, 'latitude' | 'longitude'>>(() => {
+  const city = cities.value.find((item) => {
+    return item.name === form.value.destinationCity;
+  });
+
+  if (!city) {
+    return {
+      latitude: '',
+      longitude: '',
+    };
+  }
+
+  return {
+    latitude: city.lat,
+    longitude: city.lon,
+  };
+});
+
 async function onCreate(): Promise<void> {
   visible.value = false;
 
-  await createRouteSection(props.routeId, form.value);
+  await createRouteSection(props.routeId, {
+    ...form.value,
+    ...coordinates.value,
+  });
 
   if (!httpError.value) {
     emit('create:route-section:success');
   }
 }
-
-function setCoordinates(): void {}
 
 watch(visible, () => {
   form.value = {
@@ -248,7 +232,6 @@ watch(city, async (city) => {
           placeholder="Введите город назначения"
           hint="Прим. Лондон"
           required
-          @update:selected="setCoordinates"
         />
       </div>
     </div>

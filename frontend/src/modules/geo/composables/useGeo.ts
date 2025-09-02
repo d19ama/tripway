@@ -6,7 +6,9 @@ import axios, { type AxiosInstance } from 'axios';
 import type { HttpStates } from '@/modules/http/types';
 
 interface UseGeoReturn extends HttpStates {
+  // TODO Убрать any!
   cities: Ref<any[]>;
+  // TODO Убрать any!
   countries: Ref<any[]>;
   getCountry: (country: string) => Promise<void>;
   getCity: (city: string, country: string) => Promise<void>;
@@ -28,7 +30,9 @@ export function useGeo(): UseGeoReturn {
     },
   });
 
+  // TODO Убрать any!
   const cities = ref<any[]>([]);
+  // TODO Убрать any!
   const countries = ref<any[]>([]);
 
   async function getCountry(country: string): Promise<void> {
@@ -36,6 +40,7 @@ export function useGeo(): UseGeoReturn {
       httpLoading.value = true;
       httpError.value = false;
 
+      // TODO Убрать any!
       const response = await api.get<any>('search', {
         params: {
           ...COMMON_PARAMS,
@@ -45,7 +50,7 @@ export function useGeo(): UseGeoReturn {
       });
 
       countries.value = response.data;
-    } catch (err: any) {
+    } catch (error) {
       httpError.value = true;
     } finally {
       httpLoading.value = false;
@@ -57,6 +62,7 @@ export function useGeo(): UseGeoReturn {
       httpLoading.value = true;
       httpError.value = false;
 
+      // TODO Убрать any!
       const response = await api.get<any>('search', {
         params: {
           ...COMMON_PARAMS,
@@ -67,7 +73,7 @@ export function useGeo(): UseGeoReturn {
       });
 
       cities.value = response.data;
-    } catch (err: any) {
+    } catch (error) {
       httpError.value = true;
     } finally {
       httpLoading.value = false;

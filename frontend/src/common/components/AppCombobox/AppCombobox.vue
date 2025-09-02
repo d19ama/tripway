@@ -2,6 +2,7 @@
 import {
   computed,
   ref,
+  useTemplateRef,
   watch,
 } from 'vue';
 import {
@@ -15,6 +16,7 @@ import type {
 } from './types';
 import type { HTMLElementClass } from '@/common/types';
 import { AppSpinner } from '@/common/components';
+import { DEFAULT_DELAY } from '@/common/constants';
 
 const props = withDefaults(defineProps<AppComboboxProps>(), {
   hint: '',
@@ -40,33 +42,17 @@ const options = defineModel<AppComboboxOption[]>('options', {
   default: () => [],
 });
 
-const updateSearch = useDebounceFn(async (search: string) => {
-  return search;
-}, 1000);
-
 const search = defineModel<string>('search', {
   required: false,
   default: '',
-  set(value: string) {
-    return updateSearch(value);
-  },
 });
 
 const focus = ref<boolean>(false);
 const error = ref<boolean>(false);
 const opened = ref<boolean>(false);
-const selectRef = ref<HTMLElement | null>(null);
-
-const localOptions = computed<AppComboboxOption[]>({
-  get() {
-    return options.value.filter((item) => {
-      return item.text.toLowerCase().includes(search.value.toLowerCase());
-    });
-  },
-  set(value) {
-    options.value = value;
-  },
-});
+const localSearch = ref<string>('');
+const selectRef = useTemplateRef<HTMLElement>('selectRef');
+const optionsRef = useTemplateRef<HTMLElement>('optionsRef');
 
 const hasLabel = computed<boolean>(() => {
   return !!slots.label! || props.label;
@@ -83,7 +69,7 @@ const isDropdownVisible = computed<boolean>(() => {
 
 const isPlaceholderVisible = computed<boolean>(() => {
   return props.placeholder.length > 0
-    && (!search.value && !value.value);
+    && (!localSearch.value && !value.value);
 });
 
 const selectClass = computed<HTMLElementClass>(() => {
@@ -114,20 +100,32 @@ const isErrorVisible = computed<boolean>(() => {
 });
 
 const hasOptions = computed<boolean>(() => {
-  return !props.loading && localOptions.value.length > 0;
+  return !props.loading && options.value.length > 0;
 });
 
-onClickOutside(selectRef, () => {
-  focus.value = false;
-  opened.value = false;
+const updateSearch = useDebounceFn((value) => {
+  search.value = value;
+}, DEFAULT_DELAY);
 
-  if (!value.value) {
-    search.value = '';
-  }
-});
+onClickOutside(
+  selectRef,
+  () => {
+    focus.value = false;
+    opened.value = false;
+
+    if (!value.value) {
+      search.value = '';
+    }
+  },
+  {
+    ignore: [
+      optionsRef,
+    ],
+  },
+);
 
 function changeSelected(option: AppComboboxOption): void {
-  localOptions.value = localOptions.value.map((item) => {
+  options.value = options.value.map((item) => {
     return {
       ...item,
       selected: item.id === option.id,
@@ -135,7 +133,6 @@ function changeSelected(option: AppComboboxOption): void {
   });
 
   value.value = option.text;
-  search.value = option.text;
   opened.value = false;
   focus.value = false;
 }
@@ -156,8 +153,8 @@ function optionClass(item: AppComboboxOption): HTMLElementClass {
   };
 }
 
-watch(options, (value) => {
-  localOptions.value = value;
+watch(localSearch, (value) => {
+  updateSearch(value);
 });
 
 watch(focus, (value) => {
@@ -194,7 +191,7 @@ watch(focus, (value) => {
         {{ props.placeholder }}
       </span>
       <input
-        v-model="search"
+        v-model="localSearch"
         autocomplete="off"
         class="app-combobox__input"
         type="text"
@@ -204,6 +201,7 @@ watch(focus, (value) => {
       <span class="app-combobox__arrow" />
       <div
         v-if="isDropdownVisible"
+        ref="optiosnRef"
         class="app-combobox__dropdown"
       >
         <ul
@@ -211,7 +209,7 @@ watch(focus, (value) => {
           class="app-combobox__options"
         >
           <li
-            v-for="item in localOptions"
+            v-for="item in options"
             :key="item.id"
             class="app-combobox__option"
             :class="optionClass(item)"
