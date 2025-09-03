@@ -1,6 +1,6 @@
 import { isString } from '@sniptt/guards';
-import dayjs from 'dayjs';
 import type { RawValue } from './format.types';
+import { dayjs } from '@/app/plugins';
 
 type DateISO8601 = string;
 

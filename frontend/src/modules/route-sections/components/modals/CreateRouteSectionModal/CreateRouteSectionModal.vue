@@ -26,7 +26,6 @@ import {
   AppDatePicker,
   AppDivider,
   AppInput,
-  type AppInputMaskParams,
   AppModal,
   AppModalActions,
   AppSelect,
@@ -38,7 +37,10 @@ import {
   minLength,
   required,
 } from '@/common/validators';
-import { dayjs } from '@/app/plugins/dayjs';
+import {
+  dayjs,
+  maskNumber,
+} from '@/app/plugins';
 import { useGeo } from '@/modules/geo';
 
 interface Props {
@@ -52,13 +54,6 @@ interface Emits {
 const props = defineProps<Props>();
 
 const emit = defineEmits<Emits>();
-
-const COST_MASK: AppInputMaskParams = {
-  mask: Number,
-  min: 0,
-  scale: 0,
-  thousandsSeparator: ' ',
-};
 
 const {
   httpError,
@@ -282,7 +277,7 @@ watch(city, async (city) => {
           :disabled="isMovingCostUnknown"
           label="Дорога, ₽"
           placeholder="Сумма"
-          :mask="COST_MASK"
+          :mask="maskNumber"
         />
       </div>
       <div class="col-default-3">
