@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import {
+  AppTitle,
+  type HTMLElementClass,
+} from '@d19ama/common';
 import type {
   AppPageProps,
   AppPageSlots,
 } from './type';
-import {
-  AppNoData,
-  AppTitle,
-} from '@/common/components';
-import type { HTMLElementClass } from '@/common/types';
+import { AppNoData } from '@/common/components';
 
 const props = withDefaults(defineProps<AppPageProps>(), {
   fullWidth: false,

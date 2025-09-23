@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import {
+  type HTMLElementClass,
+  format,
+} from '@d19ama/common';
 import type {
   RouteSectionEntity,
   TransportType,
 } from '../../types';
-import {
-  currency,
-  date,
-} from '@/common/format';
 import { DASH_SYMBOL } from '@/common/constants';
 import {
   iconAirplane,
@@ -16,7 +16,6 @@ import {
   iconCar,
   iconTrain,
 } from '@/app/assets/images/icons';
-import type { HTMLElementClass } from '@/common/types';
 
 interface Props {
   data: RouteSectionEntity;
@@ -48,7 +47,7 @@ const elementClass = computed<HTMLElementClass>(() => {
 
 function price(value: string | undefined): string {
   return value
-    ? currency(+value)
+    ? format.currency(+value)
     : DASH_SYMBOL;
 }
 </script>
@@ -62,9 +61,9 @@ function price(value: string | undefined): string {
       <div class="route-section__info">
         <div class="route-section__date">
           <span class="icon icon-calendar" />
-          {{ date(props.data.departure) }}
+          {{ format.date(props.data.departure) }}
           &dash;
-          {{ date(props.data.arrival) }}
+          {{ format.date(props.data.arrival) }}
           <div
             v-if="transport"
             class="route-section__transport"

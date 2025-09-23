@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { useRoute } from 'vue-router';
 import { computed } from 'vue';
-import type { HTMLElementClass } from '@/common/types';
+import type { HTMLElementClass } from '@d19ama/common';
 
 const route = useRoute();
 

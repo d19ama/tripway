@@ -4,8 +4,8 @@ import {
   useRoute,
 } from 'vue-router';
 import { computed } from 'vue';
+import type { HTMLElementClass } from '@d19ama/common';
 import type { NavigationBreadcrumbs } from '../../types';
-import type { HTMLElementClass } from '@/common/types';
 
 const route = useRoute();
 

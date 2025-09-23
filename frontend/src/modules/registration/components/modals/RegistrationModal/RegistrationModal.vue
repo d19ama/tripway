@@ -7,14 +7,14 @@ import {
   type ValidationArgs,
   useVuelidate,
 } from '@vuelidate/core';
-import { useRegistration } from '../../../composables';
-import { DEFAULT_REGISTRATION } from '../../../constants';
-import type { RegistrationRequestDto } from '../../../types';
 import {
   AppButton,
   AppModal,
   AppModalActions,
-} from '@/common/components';
+} from '@d19ama/common';
+import { useRegistration } from '../../../composables';
+import { DEFAULT_REGISTRATION } from '../../../constants';
+import type { RegistrationRequestDto } from '../../../types';
 import { usePageLoadingIndicator } from '@/common/composables';
 
 interface Emits {
@@ -66,9 +66,8 @@ async function onRegistration(): Promise<void> {
     <template #footer="{ close }">
       <AppModalActions layout="column">
         <AppButton
-          rounded
           size="l"
-          theme="blue-dark"
+          theme="primary"
           :disabled="validation.$invalid"
           @click="onRegistration"
         >
@@ -76,9 +75,8 @@ async function onRegistration(): Promise<void> {
         </AppButton>
 
         <AppButton
-          rounded
           size="l"
-          theme="gray-lite"
+          theme="unaccented"
           @click="close"
         >
           Отмена
@@ -87,9 +85,3 @@ async function onRegistration(): Promise<void> {
     </template>
   </AppModal>
 </template>
-
-<style lang="scss">
-.container {
-  // styles
-}
-</style>

@@ -4,7 +4,7 @@ import {
   AppButton,
   AppModal,
   AppModalActions,
-} from '@/common/components';
+} from '@d19ama/common';
 import { useNavigation } from '@/modules/navigation';
 
 const {
@@ -35,18 +35,16 @@ function closeModal(): void {
     <template #footer="{ close }">
       <AppModalActions>
         <AppButton
-          rounded
           size="l"
-          theme="blue-dark"
+          theme="primary"
           @click="closeModal"
         >
           Закрыть
         </AppButton>
 
         <AppButton
-          rounded
           size="l"
-          theme="gray-lite"
+          theme="unaccented"
           @click="close"
         >
           Отмена

@@ -8,16 +8,6 @@ import {
   type ValidationArgs,
   useVuelidate,
 } from '@vuelidate/core';
-import { useRouteSection } from '../../../composables';
-import {
-  DEFAULT_ROUTE_SECTION,
-  ROUTE_SECTION_TRANSPORT_TYPE_OPTIONS,
-} from '../../../constants';
-import type {
-  RouteSectionEntity,
-  TransportType,
-} from '../../../types';
-import type { RouteEntity } from '@/modules/routes';
 import {
   AppButton,
   AppCheckbox,
@@ -31,12 +21,18 @@ import {
   AppSelect,
   type AppSelectOption,
   AppTitle,
-} from '@/common/components';
+  validators,
+} from '@d19ama/common';
+import { useRouteSection } from '../../../composables';
 import {
-  maxLength,
-  minLength,
-  required,
-} from '@/common/validators';
+  DEFAULT_ROUTE_SECTION,
+  ROUTE_SECTION_TRANSPORT_TYPE_OPTIONS,
+} from '../../../constants';
+import type {
+  RouteSectionEntity,
+  TransportType,
+} from '../../../types';
+import type { RouteEntity } from '@/modules/routes';
 import {
   dayjs,
   maskNumber,
@@ -54,6 +50,12 @@ interface Emits {
 const props = defineProps<Props>();
 
 const emit = defineEmits<Emits>();
+
+const {
+  maxLength,
+  minLength,
+  required,
+} = validators;
 
 const {
   httpError,
@@ -327,9 +329,8 @@ watch(city, async (city) => {
     <template #footer="{ close }">
       <AppModalActions>
         <AppButton
-          rounded
           size="l"
-          theme="blue-dark"
+          theme="primary"
           :disabled="validation.$invalid"
           @click="onCreate"
         >
@@ -337,9 +338,8 @@ watch(city, async (city) => {
         </AppButton>
 
         <AppButton
-          rounded
           size="l"
-          theme="gray-lite"
+          theme="unaccented"
           @click="close"
         >
           Отмена

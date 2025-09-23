@@ -4,6 +4,7 @@ import VueAxios from 'vue-axios';
 import App from '@/App.vue';
 import { router } from '@/app/router';
 
+import '@d19ama/common/dist/style.css';
 import '@/app/assets/styles/index.scss';
 
 const app = createApp(App);

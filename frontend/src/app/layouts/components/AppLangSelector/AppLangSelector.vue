@@ -1,12 +1,12 @@
 <script lang="ts" setup>
+import { AppButton } from '@d19ama/common';
 import type {
   AppLangSelectorProps,
   AppLangSelectorVariants,
 } from './types';
-import { AppButton } from '@/common/components';
 
 const props = withDefaults(defineProps<AppLangSelectorProps>(), {
-  storageKey: 'BOILERPLATE_',
+  storageKey: 'TRIPWAY_',
 });
 
 const lang = defineModel<AppLangSelectorVariants>('lang', {

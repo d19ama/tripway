@@ -8,19 +8,16 @@ import {
   type ValidationArgs,
   useVuelidate,
 } from '@vuelidate/core';
-import type { LoginRequestDto } from '../../../types';
-import { useAuth } from '../../../';
 import {
   AppButton,
   AppInput,
   AppLink,
   AppModal,
   AppModalActions,
-} from '@/common/components';
-import {
-  email,
-  required,
-} from '@/common/validators';
+  validators,
+} from '@d19ama/common';
+import type { LoginRequestDto } from '../../../types';
+import { useAuth } from '../../../';
 import { UnknownHttpErrorModal } from '@/modules/http';
 import { usePageLoadingIndicator } from '@/common/composables';
 import type { UserEntity } from '@/modules/users';
@@ -36,6 +33,11 @@ const visible = defineModel<boolean>('visible', {
   required: false,
   default: false,
 });
+
+const {
+  email,
+  required,
+} = validators;
 
 const {
   httpError,
@@ -118,9 +120,8 @@ watch(visible, () => {
     <template #footer="{ close }">
       <AppModalActions>
         <AppButton
-          rounded
           size="l"
-          theme="blue-dark"
+          theme="primary"
           :disabled="validation.$invalid"
           @click="onAuth"
         >
@@ -128,9 +129,8 @@ watch(visible, () => {
         </AppButton>
 
         <AppButton
-          rounded
           size="l"
-          theme="gray-lite"
+          theme="unaccented"
           @click="close"
         >
           Отмена

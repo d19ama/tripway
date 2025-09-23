@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AppSpinnerOverlay } from '@/common/components';
+import { AppSpinnerOverlay } from '@d19ama/common';
 import { usePageLoadingIndicator } from '@/common/composables';
 
 const {

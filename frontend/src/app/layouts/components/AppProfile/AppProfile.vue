@@ -6,11 +6,11 @@ import {
   useTemplateRef,
 } from 'vue';
 import { onClickOutside } from '@vueuse/core';
-import type { HTMLElementClass } from '@/common/types';
 import {
   AppLink,
   AppTooltip,
-} from '@/common/components';
+  type HTMLElementClass,
+} from '@d19ama/common';
 import { useAuth } from '@/modules/auth';
 import { useUsers } from '@/modules/users';
 import { usePageLoadingIndicator } from '@/common/composables';
