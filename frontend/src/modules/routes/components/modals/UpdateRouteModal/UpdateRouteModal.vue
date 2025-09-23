@@ -13,16 +13,12 @@ import {
   AppInput,
   AppModal,
   AppModalActions,
-} from '@/common/components';
+  validators,
+} from '@d19ama/common';
 import {
   type RouteEntity,
   useRoutes,
 } from '@/modules/routes';
-import {
-  maxLength,
-  minLength,
-  required,
-} from '@/common/validators';
 import { DASH_SYMBOL } from '@/common/constants';
 import { usePageLoadingIndicator } from '@/common/composables';
 import { UnknownHttpErrorModal } from '@/modules/http';
@@ -39,6 +35,12 @@ interface Emits {
 const props = defineProps<Props>();
 
 const emit = defineEmits<Emits>();
+
+const {
+  maxLength,
+  minLength,
+  required,
+} = validators;
 
 const {
   httpError,
@@ -112,9 +114,8 @@ watch(visible, () => {
     <template #footer="{ close }">
       <AppModalActions>
         <AppButton
-          rounded
           size="l"
-          theme="blue-dark"
+          theme="primary"
           :disabled="validation.$invalid"
           @click="onEdit"
         >
@@ -122,9 +123,8 @@ watch(visible, () => {
         </AppButton>
 
         <AppButton
-          rounded
           size="l"
-          theme="gray-lite"
+          theme="unaccented"
           @click="close"
         >
           Отмена

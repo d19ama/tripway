@@ -1,8 +1,8 @@
+import type { AppSelectOption } from '@d19ama/common';
 import type {
   RouteSectionEntity,
   TransportType,
 } from '@/modules/route-sections/types';
-import type { AppSelectOption } from '@/common/components';
 
 export const DEFAULT_ROUTE_SECTION: RouteSectionEntity = {
   arrival: '',

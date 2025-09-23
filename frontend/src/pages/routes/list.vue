@@ -4,6 +4,7 @@ import {
   ref,
 } from 'vue';
 import { useRouter } from 'vue-router';
+import { AppButton } from '@d19ama/common';
 import {
   CreateRouteModal,
   DeleteRouteConfirmationModal,
@@ -12,10 +13,7 @@ import {
   UpdateRouteModal,
   useRoutes,
 } from '@/modules/routes';
-import {
-  AppButton,
-  AppPage,
-} from '@/common/components';
+import { AppPage } from '@/common/components';
 import { usePageLoadingIndicator } from '@/common/composables';
 import { UnknownHttpErrorModal } from '@/modules/http';
 import { RouteNames } from '@/app/router/route-names';
@@ -86,9 +84,7 @@ onMounted(async () => {
       <div class="routes-list-page">
         <AppButton
           size="l"
-          rounded
-          shadow
-          theme="yellow"
+          theme="tertiary"
           @click="openCreateRouteModal"
         >
           <span class="icon icon-plus" />Создать новое путешествие!

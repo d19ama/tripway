@@ -3,7 +3,7 @@ import {
   AppButton,
   AppModal,
   AppModalActions,
-} from '@/common/components';
+} from '@d19ama/common';
 
 const visible = defineModel<boolean>('visible', {
   required: false,
@@ -26,7 +26,7 @@ const visible = defineModel<boolean>('visible', {
         <AppButton
           rounded
           size="l"
-          theme="blue-dark"
+          theme="primary"
           @click="close"
         >
           Понятно

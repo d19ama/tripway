@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AppButton } from '@/common/components';
+import { AppButton } from '@d19ama/common';
 
 function changeView(): void {
   console.warn('View changed!');
@@ -9,7 +9,7 @@ function changeView(): void {
 <template>
   <div class="view">
     <AppButton
-      theme="blue-dark"
+      theme="primary"
       size="l"
       class="view__button"
       @click="changeView"
@@ -17,7 +17,7 @@ function changeView(): void {
       <span class="icon icon-map" />
     </AppButton>
     <AppButton
-      theme="blue-dark"
+      theme="primary"
       size="l"
       class="view__button"
       @click="changeView"

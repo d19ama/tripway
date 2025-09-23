@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { RouteEntity } from '../../';
 import {
   AppButton,
   AppTitle,
   AppTooltip,
-} from '@/common/components';
-import {
-  currency,
-  date,
-} from '@/common/format';
+  format,
+} from '@d19ama/common';
+import type { RouteEntity } from '../../';
 import { DASH_SYMBOL } from '@/common/constants';
 
 interface Props {
@@ -29,7 +26,7 @@ const emit = defineEmits<Emits>();
 
 const costs = computed<string>(() => {
   return props.route.costs
-    ? currency(props.route.costs)
+    ? format.currency(props.route.costs)
     : DASH_SYMBOL;
 });
 
@@ -37,7 +34,7 @@ const dateRange = computed<string>(() => {
   const result: string[] = [];
 
   if (props.route.startDate.length > 0) {
-    result.push(date(props.route.startDate, 'Long'));
+    result.push(format.date(props.route.startDate, 'Long'));
   }
 
   if (props.route.startDate.length > 0 && props.route.endDate.length > 0) {
@@ -45,7 +42,7 @@ const dateRange = computed<string>(() => {
   }
 
   if (props.route.endDate.length > 0) {
-    result.push(date(props.route.endDate, 'Long'));
+    result.push(format.date(props.route.endDate, 'Long'));
   }
 
   return result.length > 0

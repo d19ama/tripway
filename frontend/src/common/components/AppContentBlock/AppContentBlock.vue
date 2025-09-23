@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { AppTitle } from '../';
+import { AppTitle } from '@d19ama/common';
 import { AppNoData } from '../AppNoData';
 import type {
   AppContentBlockProps,
