@@ -21,6 +21,7 @@ import {
   AppSelect,
   type AppSelectOption,
   AppTitle,
+  plugins,
   validators,
 } from '@d19ama/common';
 import { useRouteSection } from '../../../composables';
@@ -33,10 +34,6 @@ import type {
   TransportType,
 } from '../../../types';
 import type { RouteEntity } from '@/modules/routes';
-import {
-  dayjs,
-  maskNumber,
-} from '@/app/plugins';
 import { useGeo } from '@/modules/geo';
 
 interface Props {
@@ -50,6 +47,11 @@ interface Emits {
 const props = defineProps<Props>();
 
 const emit = defineEmits<Emits>();
+
+const {
+  dayjs,
+  maskNumber,
+} = plugins;
 
 const {
   maxLength,
